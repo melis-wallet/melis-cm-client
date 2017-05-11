@@ -1,0 +1,28 @@
+= if error
+  = leaf-note type='danger'
+    h4 = t 'tfa.recovery.error.title'
+    p = t 'tfa.recovery.error.caption'
+    .row
+      .col-xs-6.col-xs-offset-6
+        p = leaf-button icon='fa fa-check' type='default' on-click='resetRequest' block=true
+= else if doneRequest
+  = leaf-note type='success'
+    h4 = t 'tfa.recovery.done.title'
+    p = t 'tfa.recovery.done.caption'
+    .row
+      .col-xs-6.col-xs-offset-6
+        p = leaf-button icon='fa fa-check' type='default' on-click='resetRequest' block=true
+= else if recovering
+  = leaf-note type='warning'
+    h4 = t 'tfa.recovery.title'
+    p = t 'tfa.recovery.caption'
+    hr
+    .row
+      .col-xs-3
+        p = leaf-button icon='fa fa-trash' on-click='resetRequest' block=true
+      .col-xs-6.col-xs-offset-3
+        p = leaf-button icon='fa fa-check' type='warning' on-click='doRecovery' block=true
+
+= else if aa.tfaIsEnabled
+  a href='#' click='startRecovery'
+    = t 'tfa.recovery.action'

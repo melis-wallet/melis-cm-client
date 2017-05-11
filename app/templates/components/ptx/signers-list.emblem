@@ -1,0 +1,22 @@
+
+table.table class=table-class
+  tbody
+    = each signatures as |sig|
+      tr
+        td
+          = if (eq account.cmo.pubId sig.pubId)
+            b.text-light-gray.uppercase You
+          = else
+            b.text-light-gray.uppercase = sig.name
+          '
+          small
+            = if sig.isMaster
+              span.text-warning: i.fa.fa-star-o
+            '
+            = if sig.mandatory
+              span.text-info: i.fa.fa-certificate
+        td
+          = if sig.signed
+            span.text-success: i.fa.fa-check
+            '
+            = live-moment-from-now sig.signed

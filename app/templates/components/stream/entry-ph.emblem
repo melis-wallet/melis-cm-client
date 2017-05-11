@@ -1,0 +1,15 @@
+= if currentAddress.cmo.address
+  .col-md-12
+    .panel
+      .panel-body
+        .row
+          .col-sm-4
+            br
+            = misc/qr-code-expandable content=currentAddress.addressURL id='stream-qrcode'
+
+          .col-sm-8
+            h4.text-lg.text-semibold.text-light-gray = t 'stream.ph.started'
+            p = t 'stream.ph.welcome'
+
+            p.text-bold.text-light-gray = t 'stream.ph.address'
+            .label = currentAddress.cmo.address

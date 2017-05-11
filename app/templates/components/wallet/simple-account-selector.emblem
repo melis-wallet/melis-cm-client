@@ -1,0 +1,11 @@
+
+= leaf-pills-control selected-idx=accountType stacked=true as |ctrl|
+  = each accountTypes as | aType |
+    = leaf-pill title=( t (account-types aType.id prefix='acct.simple' list=accountTypes)) parent=ctrl idx=aType.id
+
+= leaf-navs-content selected-idx=accountType bordered=false as |content|
+  = each accountTypes as | aType |
+    = leaf-navs-panel parent=content idx=aType.id
+      = leaf-note type='info'
+        h4 = t ( account-types aType.id what='description' prefix='acct.simple' list=accountTypes )
+        p = t ( account-types aType.id what='explain' prefix='acct.simple' list=accountTypes )

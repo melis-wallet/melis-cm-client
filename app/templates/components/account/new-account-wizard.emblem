@@ -1,0 +1,173 @@
+// join from code
+= liquid-if joinAccount use='fade'
+  .panel-body
+    .row
+      .col-md-4
+        h4 = t 'account.wizard.j-side.title'
+        p = t 'account.wizard.j-side.caption'
+      .col-md-8
+        = leaf-note type='info'
+          h4 = t 'account.wizard.join.title'
+          p = t 'account.wizard.join.caption'
+          = account/join-in on-done='doneJoinAcc' on-cancel='cancelJoinAcc'
+
+// create new
+= else
+  = leaf-wizards-control selected-idx=step completed-steps=completed step-back=stepBack as |ctrl|
+    = leaf-wizard-step caption=(t 'account.wizard.t-type.caption') number=1 description=(t 'account.wizard.t-type.desc')  parent=ctrl idx=1
+    = leaf-wizard-step caption=(t 'account.wizard.t-server.caption') number=2 description=(t 'account.wizard.t-server.desc')  parent=ctrl idx=2
+    = if isMulti
+      = leaf-wizard-step caption=(t 'account.wizard.t-cosigners.caption') number=3 description=(t 'account.wizard.t-cosigners.desc') parent=ctrl idx=3
+      = leaf-wizard-step caption=(t 'account.wizard.t-name.caption') number=4 description=(t 'account.wizard.t-name.desc') parent=ctrl idx=4
+    = else
+      = leaf-wizard-step caption=(t 'account.wizard.t-name.caption') number=3 description=(t 'account.wizard.t-name.desc') parent=ctrl idx=3
+
+  // wizard is complete
+  = if wizardComplete
+    .panel-body
+      = if accountCreateTask.isRunning
+        .alert.alert-info
+          .row
+            .col-xs-10
+              strong Creating account
+            .col-xs-2
+              .spinner.bounce-middle
+
+
+      = else if newAccount
+        = leaf-note type='success'
+          h4 = t 'account.wizard.complete.title'
+          p = t 'account.wizard.complete.caption'
+          = if isMulti
+            p.text-semibold = t 'account.wizard.complete.multi'
+          = else
+            p.text-semibold = t 'account.wizard.complete.single'
+        table.table
+          tbody
+            tr
+              td: b = t 'account.wizard.complete.name'
+              td = newAccount.name
+            tr
+              td: b = t 'account.wizard.complete.type'
+              td: b = t (account-types newAccount.cmo.type)
+        = leaf-button type='primary' block='true' icon='fa fa-check' on-click='destroyWizard'
+
+      = else if serverLocked
+        .alert.alert-warning
+          strong = t 'account.wizard.locked'
+          p = t 'account.wizard.locked-explain'
+
+        = leaf-button type='primary' block='true' icon='fa fa-check' on-click='destroyWizard'
+      = else
+        .alert.alert-warning
+          strong = t 'account.wizard.error'
+          p = t 'account.wizard.error-explain'
+
+        = leaf-button type='primary' block='true' icon='fa fa-check' on-click='destroyWizard'
+
+  // wizard steps
+  = else
+    = leaf-navs-content class="wizard-content" bordered=true selected-idx=step delay-render=false as |content|
+
+      ////
+      = leaf-navs-panel parent=content idx=1
+        .row
+          .col-xs-4
+
+            h4 = t 'account.wizard.type.title'
+            p = t 'account.wizard.type.caption'
+          .col-xs-8
+            = leaf-note type='info'
+              ul.row.list-unstyled
+                li.col-xs-6.has-action click='singleAccount'
+                  .option-box.text-center class="{{ if (eq type 'single') 'active' }}"
+                    img src='images/icons/acc_sing.svg'  class='icon-side'
+
+                li.col-xs-6.has-action click='multiAccount'
+                  .option-box.text-center class="{{ if (eq type 'multi') 'active' }}"
+                    img src='images/icons/acc_multi.svg' class='icon-side'
+
+              = liquid-if type class='ll-down-up'
+                = if isMulti
+                  = partial 'components/account/info/multi'
+                = else
+                  = partial 'components/account/info/single'
+
+            = if type
+              = leaf-button type='primary' on-click='typeSelected' value=1 icon='fa fa-arrow-right' block=true
+
+            = else
+              = leaf-button block=true outline=true label=(t 'account.wizard.join.action') on-click='doJoinAcc'
+
+      ////
+      = leaf-navs-panel parent=content idx=2
+        .row
+          .col-xs-4
+            h4 = t 'account.wizard.server.title'
+            p = t 'account.wizard.server.caption'
+          .col-xs-8
+            = leaf-note type='info'
+
+              ul.row.list-unstyled
+
+                = if isMulti
+                  li.col-xs-6 click='withServer'
+                    .option-box.text-center class="{{ if wantsServer 'active' }}"
+                      img src='images/icons/acc_multi_server.svg'  class='icon-side'
+
+                  li.col-xs-6 click='noServer'
+                    .option-box.text-center class="{{ unless wantsServer 'active' }}"
+                      img src='images/icons/acc_multi.svg' class='icon-side'
+                = else
+                  li.col-xs-6 click='withServer'
+                    .option-box.text-center class="{{ if wantsServer 'active' }}"
+                      img src='images/icons/acc_sing_server.svg'  class='icon-side'
+
+                  li.col-xs-6 click='noServer'
+                    .option-box.text-center class="{{ unless wantsServer 'active' }}"
+                      img src='images/icons/acc_sing.svg' class='icon-side'
+
+              = if wantsServer
+                = partial 'components/account/info/with-server'
+              = else
+                = partial 'components/account/info/no-server'
+            = leaf-button type='primary' on-click='serverSelected' value=1 icon='fa fa-arrow-right' block=true
+
+
+      = if isMulti
+        ////
+        = leaf-navs-panel parent=content idx=3
+          = account/collect-cosigners accountType=accountType withServer=wantsServer on-done='doneCosigners'
+
+        ////
+        = leaf-navs-panel parent=content idx=4
+          = partial 'components/account/new-account-summary'
+
+          p.alert.alert-warning.alert-dark.animated.flash
+            = t 'account.wizard.summary.warn'
+
+          = leaf-note type='info'
+            h4 = t 'account.wizard.name.title'
+            p = t 'account.wizard.name.caption'
+
+          = em-form model=this submitButton=false action='doneNameSelect'
+            = em-input property='accountName' placeholder=(t 'account.wizard.advanced.name.ph')
+
+          = liquid-if isValid class='ll-down-up'
+            = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneNameSelect'
+
+
+      = else
+        ////
+        = leaf-navs-panel parent=content idx=3
+          = partial 'components/account/new-account-summary'
+
+          = leaf-note type='info'
+            h4 = t 'account.wizard.name.title'
+            p = t 'account.wizard.name.caption'
+
+          = em-form model=this submitButton=false action='doneNameSelect'
+            = em-input property='accountName' placeholder=(t 'account.wizard.advanced.name.ph')
+
+          = liquid-if isValid class='ll-down-up'
+            = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneNameSelect'

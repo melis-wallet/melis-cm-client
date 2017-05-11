@@ -1,0 +1,56 @@
+
+.panel
+  .note.note-info.no-margin-vr click='toggleMini'
+    h4 = t 'newaddr.current.title'
+    p = t 'newaddr.current.caption'
+
+  = liquid-unless minimized class='ll-down-up'
+    .panel-body
+      = if currentAddress
+        .row.padding-sm-vr
+          .col-md-4 style='border-right: 1px solid #eee;'
+            = if (and showCode code)
+              = misc/qr-code-expandable content=code img-class='qrcode-img' class='animated fadeIn'
+          .col-md-8
+            table.table.table-condensed
+              tbody
+                tr
+                  td colspan='2'
+                    = t 'newaddr.current.time' when=(live-moment-from-now currentAddress.time)
+
+                = if currentAddress.cmo.amount
+                  tr
+                    td = t 'stream.address.amount'
+                    td = = format-btc currentAddress.cmo.amount
+
+                = if currentAddress.cmo.meta.info
+                  tr
+                    td colspan='2': b = currentAddress.cmo.meta.info
+                tr
+                  td colspan='2'
+                    span.pull-right
+                      = leaf-clipboard size='xs' block=true outline=true content=currentAddress.cmo.address tooltip=(t 'newaddr.a.clip')
+                    = liquid-bind currentAddress.cmo.address use='toLeft' as |a|
+                      .label = a
+
+
+        .row
+          = if error
+            .col-xs-12
+              .alert.alert-warning.alert-dark
+                = t 'newaddr.gen-error'
+          = if noResources
+            .col-xs-12
+              .alert.alert-warning.alert-dark
+                = t 'newaddr.noresource-error'
+          .col-xs-3
+             = leaf-button type='default' icon='fa fa-recycle' block=true on-click='renew' tabindex='0' tooltip=(t 'newaddr.a.renew') disabled=apiOps.isRunning
+          .col-xs-3
+            = link-to 'main.account.address' cm.currentAccount.num class='btn btn-block'
+              i.fa.fa-list
+          .col-xs-6
+            = leaf-button type='primary' icon='fa fa-magic' block=true on-click='makeCurrentActive' tabindex='0' tooltip=(t 'newaddr.a.make-active') disabled=apiOps.isRunning
+      = else
+        | no current address
+  = else
+    | &nbsp;

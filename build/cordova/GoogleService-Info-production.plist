@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>534881682672-b7mhtidmsul2tt00e6oojgr2c0cmrouu.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.534881682672-b7mhtidmsul2tt00e6oojgr2c0cmrouu</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCfvijvZU1QJ7Qm63D7F7x3yxcA8a3JD7Y</string>
+	<key>GCM_SENDER_ID</key>
+	<string>534881682672</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>io.melis.clientwallet</string>
+	<key>PROJECT_ID</key>
+	<string>melis-46036</string>
+	<key>STORAGE_BUCKET</key>
+	<string>melis-46036.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:534881682672:ios:42041ca1bddd0f9e</string>
+	<key>DATABASE_URL</key>
+	<string>https://melis-46036.firebaseio.com</string>
+</dict>
+</plist>

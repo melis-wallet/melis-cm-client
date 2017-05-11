@@ -1,0 +1,42 @@
+= if apiOps.isRunning
+  .w-status.spinner.bounce-middle
+hr
+= if joinError
+  = leaf-alert type='danger' dark=true dismiss=false
+    = joinError
+= else if invalidCode
+  = leaf-alert type='warning' dark=true dismiss=false
+    = t 'account.multi.join.notfound'
+
+= if accountInfo
+  .row
+    .col-sm-6
+      .text-slg.text-light-gray
+        span: strong = accountInfo.info.minSignatures
+        span.text-xlg.text-slim
+          |/
+          = accountInfo.info.cosigners.length
+        = if accountInfo.info.serverSignature
+          img src='images/icons/server.svg'  class='account-icon'
+    .col-sm-6
+      span.text-light-gray.uppercase: strong = accountName
+      ul.list-unstyled
+        = each accountInfo.info.cosigners as |c|
+          li = c.name
+  .row
+    hr
+    .col-sm-4
+      p = leaf-button icon='fa fa-trash' type='default' block=true on-click='cancelJoin' disabled=apiOps.isRunning
+    .col-sm-8
+      = liquid-if isValid class='ll-down-up'
+        p = leaf-button icon='fa fa-check' type='primary' block=true on-click='doJoin' disabled=apiOps.isRunning
+
+= else
+  = em-form model=this submitButton=false action='enterJoinCode'
+    = em-input property='joinCode' type='text' label=(t 'account.multi.join.code.label') placeholder=(t 'account.multi.join.code.ph')
+  .row
+    .col-sm-4
+      p = leaf-button icon='fa fa-trash' type='default' block=true on-click='cancelJoin' disabled=apiOps.isRunning
+    .col-sm-8
+      = liquid-if isValid class='ll-down-up'
+        p = leaf-button icon='fa fa-check' type='primary' block=true on-click='enterJoinCode' disabled=apiOps.isRunning

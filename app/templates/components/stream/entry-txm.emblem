@@ -1,0 +1,44 @@
+
+.col-md-12
+  .panel.panel-transparent.no-margin-t
+    .panel-heading.light
+      span.icon: i.fa.fa-comments-o
+      /= leaf-tooltip tooltip=(moment-format entry.updated)
+        i.text-default = live-moment-from-now entry.updated
+    .panel-body.no-padding-vr
+      .row
+        .col-xs-2
+        .col-xs-10
+          = if isMessage
+            p.note
+              h5
+                = if msg.fromAlias
+                  b.text-light-gray = msg.fromAlias
+                = else
+                  b.text-light-gray = co-signer msg.fromPubId you=(t 'tx.you') account=ptx.account
+                '
+                = t 'stream.txm.has-contributed'
+                '
+                a href='' click="'goto' ptxAnchor"
+                  = t 'stream.txm.ptx'
+                '
+                = live-moment-from-now entry.updated
+                |.
+              = ptx/discussion-mini tx=ptx last=8 animate=false input=false
+
+          = else if isSignature
+            h5
+              b = co-signer msg.fromPubId you=(t 'tx.you') account=ptx.account
+              '
+              = t 'stream.txm.has-approved'
+
+              '
+              = if enoughSigners
+                = link-to 'main.account.ptx.detail' ptx.account.num ptx.id
+                  = t 'stream.txm.ptx'
+              = else
+                a href='' click="'goto' ptxAnchor"
+                  = t 'stream.txm.ptx'
+              '
+              = live-moment-from-now entry.updated
+              |.

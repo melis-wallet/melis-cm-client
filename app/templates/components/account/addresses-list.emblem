@@ -1,0 +1,36 @@
+
+/.history-controls
+
+ul.history-list
+  li.history-item
+    .h-lbl: span.label TXs
+    .h-amount: amount
+    .h-subject: span.data subject
+    .h-date date
+
+  = each addresses as |a|
+    li.history-item
+      = if a.numTxs
+        .h-lbl
+          span.label = a.numTxs
+      = else
+        .h-lbl
+          /span.label: i.fa.fa-hourglass-o
+
+      = if a.meta.amount
+        .h-amount: a.expandable click="'selectAddr' a"
+          span.data
+            = format-btc a.meta.amount compact=true withUnit=true
+      .h-subject: a.expandable click="'selectAddr' a"
+        .code-label = a.address
+        = if a.meta.info
+          .bar: b = a.meta.info
+      .h-date = moment-from-now a.lastRequested
+
+
+  = if pageOps.isRunning
+    .text-center
+      .spinner.bounce-middle
+  = else if hasNext
+    hr
+    p = leaf-button icon='fa fa-arrow-down' block=true outline=true on-click='nextPage'

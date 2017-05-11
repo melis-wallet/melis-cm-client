@@ -1,0 +1,20 @@
+.content-wrapper id='content-wrapper'
+  = if cm.walletOpenFailed
+      | Login failed
+  = else
+    .row
+      .col-md-8.col-md-offset-4
+        .account-identifier
+          span.account-id class=cm.currentAccount.color
+            cm.currentAccount.identifier
+          span.text-semibold: = cm.currentAccount.name
+
+    .row
+      .col-md-4
+        = tx/prepared-txs [
+          currentTx=activePtx
+          on-select-ptx='setActivePtx'
+          on-resume-tx='resumePayment'
+          max-height=250]
+
+      = outlet

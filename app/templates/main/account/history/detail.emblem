@@ -1,0 +1,6 @@
+
+.row.history-detail
+  .col-md-12
+    .panel.no-border
+      .panel-body
+        = tx/tx-detail tx=model on-change-tx-info='changeTxInfo' on-change-tx-labels='changeTxLabels'

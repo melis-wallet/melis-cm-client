@@ -1,0 +1,86 @@
+//
+// Widgets / addressbook
+// --------------------------------------------------
+
+.widget-ab {
+  .ab-entry {
+    padding: 0 0 10px 0;
+    position: relative;
+
+    & + .ab-entry {
+      border-top: 1px solid;
+      border-top-color: $table-border-color;
+      padding-top: 10px;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  .ab-entry-avatar {
+    &.cm {
+
+      background-color: #cea6a1;
+    }
+
+    background-color: #d1dce4;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 31px;
+
+    border-radius: 99999px;
+    display: block;
+    float: left;
+    height: 32px;
+    margin-right: 10px;
+    margin-top: 2px;
+    width: 32px;
+  }
+
+  .ab-entry-controls {
+    float: right;
+    margin-top: 4px;
+  }
+
+  .ab-entry-controls .btn > i {
+    font-size: 14px;
+    position: relative;
+    top: 1px;
+  }
+
+  .body {
+    line-height: 17px;
+  }
+
+  .ab-entry-name {
+    color: #333;
+    font-size: 13px;
+  }
+
+  .ab-entry-val {
+    color: #aaa;
+    font-size: 12px;
+  }
+
+  .ab-entry-labels {
+
+    .label {
+      font-size: 10px;
+      line-height: 12px;
+      margin: 0 0 0 4px;
+
+    }
+  }
+}
+
+.panel.widget-ab,
+.panel .widget-ab {
+  .ab-entry {
+    margin: 0 (-$panel-content-padding);
+    padding-left: $panel-content-padding;
+    padding-right: $panel-content-padding;
+  }
+}

@@ -1,0 +1,45 @@
+= if selected
+  .pseudo-input
+    span.m-sm.label.label-danger: i.fa.fa-vcard
+    = if selected.alias
+      span.m-sm.label.brk.label-info = selected.alias
+      span.m-sm.label.brk = selected.pubId
+    = else
+      span.m-sm.label.brk.label-info = selected.pubId
+    = leaf-button size='sm' type='default' icon='fa fa-trash' outline=true class='pull-right'  on-click='deleteValue'
+
+= else
+ .form-group class="{{if formError 'has-error has-feedback'}}{{if lookupError 'has-error has-feedback'}}{{if accountInfo 'has-success has-feedback'}} required"
+
+    .input-group
+      = input type='text' value=newValue class='form-control bordered' placeholder=(t 'paysend.form.pubid.ph')
+      span.input-group-btn
+        = leaf-button type='default' icon='fa fa-search' block=true on-click='lookupInfo' class=(if apiOps.isRunning 'btn-loading') disabled=(not isValid)
+    = if lookupError
+      span.help-block
+        = lookupError
+    = if formError
+      span.help-block
+        = formError
+    = if accountInfo
+      .help-block
+        table.table.table-compact.no-margin-b
+          tbody
+            tr
+              td
+              td.break-words.text-right: span.label.brk = accountInfo.pubId
+
+            tr
+              td
+                = t 'ab.table.alias'
+              td.break-words.text-right: b = accountInfo.alias
+
+            = if accountInfo.pubMeta.name
+              tr
+                td: b
+                  = t 'ab.table.name'
+                td.break-words.text-right = accountInfo.pubMeta.name
+
+            tr
+              td colspan=2
+                = leaf-button type='success' icon='fa fa-check' outline=true class='pull-right'  on-click='confirmInfo'

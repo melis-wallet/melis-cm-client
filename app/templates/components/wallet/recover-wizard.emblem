@@ -1,0 +1,136 @@
+= leaf-wizards-control selected-idx=step completed-steps=completed step-back=stepBack as |ctrl|
+  = if credentials.validCredentials
+    = leaf-wizard-step caption=(t 'wallet.import.w.t-check.caption')  number=1 description=(t 'wallet.import.w.t-check.desc')  parent=ctrl idx=1
+    = leaf-wizard-step caption=(t 'recover.import.qrcode.caption') number=2 description=(t 'recover.import.qrcode.descr')  parent=ctrl idx=2
+    = leaf-wizard-step caption=(t 'recover.import.pass.caption') number=3 description=(t 'recover.import.pass.descr')  parent=ctrl idx=3
+    = leaf-wizard-step caption=(t 'recover.import.pin.caption') number=4 description=(t 'recover.import.pin.descr')  parent=ctrl idx=4
+  = else
+    = leaf-wizard-step caption=(t 'recover.import.qrcode.caption') number=1 description=(t 'recover.import.qrcode.descr')  parent=ctrl idx=2
+    = leaf-wizard-step caption=(t 'recover.import.pass.caption') number=2 description=(t 'recover.import.pass.descr')  parent=ctrl idx=3
+    = leaf-wizard-step caption=(t 'recover.import.pin.caption') number=3 description=(t 'recover.import.pin.descr')  parent=ctrl idx=4
+
+
+= if wizardComplete
+  .panel-body
+
+    = if wrongSignature
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='danger'
+            h4 = t 'recover.import.wrongsig.title'
+            p = t 'recover.import.wrongsig.caption'
+            = if passphrase
+              p.text-warning: b = t 'recover.import.wrongsig.warn'
+
+          = leaf-button block=true label='restart' on-click='restart' type='primary'
+
+    = else if importError
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-alert type='warning' dark=true dismiss=false
+            = importError
+
+          = leaf-button block=true label='restart' on-click='restart' type='primary'
+
+    = else if cm.currentWallet
+      = if cm.currentAccount
+        .row
+          .col-sm-4.hidden-xs.text-center
+            i.fa.fa-smile-o.icon-side-lg.animated.fadeIn.delay-1s
+          .col-sm-8
+            = leaf-note type='success'
+              h4 = t 'recover.import.success.title'
+              p = t 'recover.import.success.caption'
+            = link-to 'main.account.summary' 0 class='btn btn-primary btn-block'
+              i.fa.fa-user
+              '
+              = t 'enroll.btn.summary'
+      = else
+        .row
+          .col-sm-4.hidden-xs.text-center
+            i.fa.fa-smile-o.icon-side-lg.animated.fadeIn.delay-1s
+          .col-sm-8
+            = leaf-note type='success'
+              h4 = t 'wallet.import.w.noacc.title'
+              p = t 'wallet.import.w.noacc.caption'
+            = link-to 'wallet.create-account' class='btn btn-primary btn-block'
+              = t 'wallet.import.w.createacct'
+
+    = else if apiOps.isRunning
+      .loader
+= else
+  = leaf-navs-content class="wizard-content" selected-idx=step delay-render=false as |content|
+    = leaf-navs-panel parent=content idx=1
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='warning'
+            h4 = t 'wallet.import.w.warn.title'
+            p  = t 'wallet.import.w.warn.caption'
+      .row
+        .col-xs-4
+          = link-to 'index' class='btn btn-block'
+            i.fa.fa-arrow-left
+        .col-xs-8
+          = leaf-button type='danger' on-click='confirmImport' value=1 icon='fa fa-arrow-right' block=true
+
+    = leaf-navs-panel parent=content idx=2
+      .row
+        .col-sm-4.hidden-xs.text-center
+          //i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
+          img.icon-side-lg.animated.fadeIn.delay-1s src='images/icons/scan-recover.svg'
+        .col-sm-8
+
+          = if importError
+            = leaf-alert type='warning' dark=true dismiss=false
+              = importError
+
+          = leaf-note type='warning'
+            h4 = t 'recover.import.title'
+            p = t 'recover.import.caption'
+          = leaf-button type='primary' icon='fa fa-camera' block=true on-click='openScanner'
+
+      = if cm.testMode
+        hr
+        .row
+          .col-sm-4.hidden-xs
+            .h5.uppercase Test Mode
+          .col-md-8
+            = leaf-note type='default'
+              = em-form model=this submitButton=false action='importFromData'
+                = em-text rows=4 property='importData' placeholder=(t 'recover.import.data.ph')
+            = leaf-button type='default' icon='fa fa-check' block=true on-click='importFromData'
+
+
+    = leaf-navs-panel parent=content idx=3
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-unlock-alt.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='warning'
+            h4 = t 'recover.import.passphrase.title'
+            p = t 'recover.import.passphrase.caption'
+          .row
+            .col-md-9
+              = em-form model=this submitButton=false action='doneInputPass'
+                = em-input property='passphrase' placeholder=(t 'recover.import.passphrase.ph')
+            .col-md-3
+              = liquid-if isValid class='ll-down-up'
+                = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneInputPass'
+
+
+    = leaf-navs-panel parent=content idx=4
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-lock.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='info'
+            h4 = t 'recover.import.setpin.title'
+            p = t 'recover.import.setpin.caption'
+
+            = wallet/set-pin-input on-set-pin='doneInputPin'

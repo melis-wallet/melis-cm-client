@@ -1,0 +1,50 @@
+.summary.animated.fadeIn
+  .canopy
+    .hero
+      .img
+        .bg.accented class=account.color
+      .img-summ
+
+      .content.valign-bottom
+        // room in the upper image
+
+
+      = liquid-bind account.name use='toLeft'  class='name' as |name|
+        h3.text-semibold = name
+
+      = liquid-bind account use='toDown' class='avatar-cnt' as |a|
+        .avatar.accented.animated.fadeInDown class=a.color
+          = a.identifier
+
+
+    .data
+      .spacer
+      .content
+        = liquid-bind account.amSummary use='toDown' as |amount|
+          span.text-xlg style='margin-right: 10px;'
+            span.text-lg.text-slim.lowercase = cm.btcUnit
+            strong = format-btc amount compact=true
+          '
+          span.text-lg.hidden-xs
+            span.text-bg.text-slim.lowercase = cm.globalCurrency
+            strong = to-currency amount compact=true
+  .subline.visible-xs
+    span.text-slim.lowercase = cm.globalCurrency
+    strong = to-currency account.amSummary compact=true
+
+.content-wrapper.no-padding-t id='content-wrapper'
+  /= content-wrapper class='no-padding-t' id='content-wrapper'
+  .stream-cnt.row
+    = stream/urgent-box class='col-sm-2' account=account
+    .col-sm-10
+      = wallet/backup-reminder
+      = if account.hasServer
+        = account/nlock-expiring-reminder account=account
+
+      = if (not account.isComplete)
+        = stream/incomplete-account account=account
+      = stream/main-view account=account
+
+  .row.footer
+
+

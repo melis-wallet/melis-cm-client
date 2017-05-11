@@ -1,0 +1,31 @@
+=  leaf-note type='default'
+    h4 = t 'wallet.prefs.notif.title'
+    p = t 'wallet.prefs.notif.caption'
+
+    = if notif.nativeSupported
+      = if notif.nativeDenied
+        .alert.alert-warning.alert-dark You have denied this application the permission to display notifications
+
+      table.table
+        tbody
+          tr
+            td
+              b = t 'wallet.prefs.notif.native.t'
+              p: i = t 'wallet.prefs.notif.native.c'
+            td  = leaf-switcher checked=notif.nativeEnabled size='sm' theme='modern'
+          tr
+            td
+              b = t 'wallet.prefs.notif.inapp.t'
+              p: i = t 'wallet.prefs.notif.inapp.c'
+            td  = leaf-switcher checked=notif.toastEnabled size='sm' theme='modern'
+          tr
+            td
+              b = t 'wallet.prefs.notif.push.t'
+              p: i = t 'wallet.prefs.notif.push.c'
+            td  = leaf-switcher checked=notif.pushEnabled size='sm' theme='modern' disabled=(not notif.hasPush)
+
+
+
+
+    = else
+      .alert.alert-warning.alert-dark Notifications are not supported

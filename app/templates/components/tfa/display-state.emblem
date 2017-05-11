@@ -1,0 +1,79 @@
+= leaf-note type='default'
+
+  h3 = t 'tfa.state.title'
+  p = t 'tfa.state.caption'
+  br
+
+  = log devices
+  = if incompleteDevices
+    .panel.panel-info.panel-body-colorful
+      .panel-body
+        h4 = t 'tfa.state.incomplete.title'
+        p = t 'tfa.state.incomplete.caption'
+        table.table
+          tbody
+            = each incompleteDevices as |d|
+              tr
+                td
+                  span.label: i class="{{tfa-device-icon d}}"
+                td: b = tfa-device-name d
+                td: = d.value
+                td = leaf-button size='sm' icon='fa fa-trash' on-click='disableDevice' value=d outline=true
+              = if (not d.verified)
+                tr
+                  td colspan=4
+                    = partial 'components/tfa/prompts-enroll'
+                    = tfa/enter-token device=d on-valid-token='enrollFinish'
+
+  = if completeDevices
+    h4.text-default.text-semibold = t 'tfa.state.complete.title'
+  table.table
+    tbody
+      = each completeDevices as |d|
+        tr
+          td
+            span.label: i class="{{tfa-device-icon d}}"
+          td: b = tfa-device-name d
+          td: = d.value
+          td = leaf-button size='sm' icon='fa fa-trash' on-click='disableDevice' value=d  outline=true
+        = if (not d.verified)
+          tr
+            td colspan=4
+              = partial 'components/tfa/prompts-enroll'
+              = tfa/enter-token device=d on-valid-token='enrollFinish'
+  = unless devices
+    p: b = t 'tfa.state.disabled'
+    = unless showEnroll
+      p = leaf-button type='primary' label=(t 'tfa.actions.enable') block=true on-click='enrollShow' outline=true
+
+  = if currentError
+    = leaf-alert type='danger' dark='true' dismiss=false
+      = currentError
+
+
+= if showEnroll
+  = leaf-accordion selected-idx=1 type=accordion as |chord|
+    = leaf-accordion-panel title=(t 'tfa.types.email') icon=(tfa-device-icon 'email') simple-header=true parent=chord body=false
+      = tfa/email-enroll on-new-enroll='refreshState'
+
+    = leaf-accordion-panel title=(t 'tfa.types.telegram') icon=(tfa-device-icon 'telegram') simple-header=true parent=chord body=false
+      = tfa/telegram-enroll on-new-complete-enroll='refreshState' on-enroll-abort='refreshState'
+
+    = leaf-accordion-panel title=(t 'tfa.types.sms') icon=(tfa-device-icon 'sms') simple-header=true parent=chord body=false
+      = tfa/sms-enroll on-new-enroll='refreshState'
+
+    = leaf-accordion-panel title=(t 'tfa.types.xmpp') icon=(tfa-device-icon 'xmpp')  simple-header=true parent=chord body=false
+      = tfa/xmpp-enroll on-new-enroll='refreshState'
+
+    = leaf-accordion-panel title=(t 'tfa.types.totp') icon=(tfa-device-icon 'totp')  simple-header=true parent=chord body=false
+      = tfa/totp-enroll on-new-complete-enroll='refreshState' on-enroll-abort='refreshState'
+
+    = if cm.testMode
+      = leaf-accordion-panel title=(t 'tfa.types.regtest') icon=(tfa-device-icon 'regtest')  simple-header=true parent=chord body=false
+        = tfa/regtest-enroll on-new-enroll='refreshState'
+
+    /= leaf-accordion-panel title=(t 'tfa.types.u2f') simple-header=true parent=chord body=false
+    /  = tfa/u2f-enroll
+
+= else if aa.tfaIsEnabled
+  p = leaf-button type='primary' icon='fa fa-plus' block=true on-click='enrollShow'

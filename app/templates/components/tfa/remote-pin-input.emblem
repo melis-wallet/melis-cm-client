@@ -1,0 +1,26 @@
+= if data.invalidDevice
+  = leaf-note type='danger'
+    h4 = t 'tfa.pin.nocreds.title'
+    p = t 'tfa.pin.nocreds.caption'
+
+= else
+
+  p = em-form model=this submitButton=false action='enterPIN'
+    = liquid-if data.wrongPin class='ll-down-up'
+      p
+        = leaf-label type='danger'
+          = t 'tfa.pin.wrong'
+        '
+        = leaf-label type=attemptsType class='animated shake'
+          = t 'tfa.pin.left' count=data.attemptsLeft
+        '
+        = if (eq data.attemptsLeft 1)
+          = leaf-label type=attemptsType class='animated shake' type='warning'
+            = t 'tfa.pin.last-attempt'
+        '
+    = em-input property='pin' type='password' label=(t 'tfa.pin.label') placeholder=(t 'tfa.pin.ph') cid='pin_input'
+
+  br
+  = if isValid
+    = leaf-button type='primary' block=true icon='fa fa-check' on-click='enterPIN' id='enter-pin'
+

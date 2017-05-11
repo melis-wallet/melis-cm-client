@@ -1,0 +1,79 @@
+= if (or refreshLimits.isRunning setLimit.isRunning)
+  .w-status.spinner.bounce-middle
+
+= if (not cm.currentAccount.hasServer)
+  = leaf-note type='warning'
+    h4 = t 'account.limits.no-server.title'
+    p = t 'account.limits.no-server.caption'
+
+= leaf-note type='default'
+  h4 = t 'account.limits.soft.title'
+  p = t 'account.limits.soft.caption'
+  = if aa.tfaIsEnabled
+    p
+      table.table.table-compact
+        thead
+          tr
+            th = t 'account.limits.period'
+            th: .pull-right = t 'account.limits.treshold' unit=cm.btcUnit
+            th
+            th = t 'account.limits.lastModified'
+
+        tbody
+          = each allLimits as |lim|
+            tr
+              = with (get softLimits lim.name) as |l|
+                td: b = t ( concat 'account.limits.' lim.name )
+                td: .pull-right = leaf-editable-number value=(scale-btc l.limit) on-change='setSoftLimit' ident=lim.name positive=true allowBlank=true as |v|
+                  = format-btc-limit l.limit blank='[ not set ]'
+                td = leaf-button size='sm' outline=true icon='fa fa-trash' on-click='removeSoftLimit' value=lim.name
+                td
+                  = if l.dateRequested
+                    = live-moment-from-now l.dateRequested
+
+    .pull-right: = leaf-button icon='fa fa-refresh' outline=true on-click='refreshLimits'
+    .clearfix
+  = else
+    p.alert.alert-warning
+      p = t 'account.limits.no-tfa'
+      p = link-to 'main.wallet' (query-params tab='security')
+        = t 'account.limits.set-tfa'
+
+= leaf-note type='warning'
+  h4 = t 'account.limits.hard.title'
+  p = t 'account.limits.hard.caption'
+  p
+    table.table.table-compact
+      thead
+        tr
+          th = t 'account.limits.period'
+          th: .pull-right = t 'account.limits.treshold' unit=cm.btcUnit
+          th
+          th = t 'account.limits.lastModified'
+
+      tbody
+        = each allLimits as |lim|
+          = with (get hardLimits lim.name) as |l|
+            tr
+              td: b = t ( concat 'account.limits.' lim.name )
+              td: .pull-right = leaf-editable-number value=(scale-btc l.limit) on-change='setHardLimit' ident=lim.name positive=true allowBlank=true as |v|
+                = format-btc l.limit blank='[ not set ]'
+              td = leaf-button size='sm' outline=true icon='fa fa-trash' on-click='removeHardLimit' value=lim.name
+              td
+                = if l.dateRequested
+                  = live-moment-from-now l.dateRequested
+          = with (get changes lim.name) as |c|
+            = if c.dateExecutable
+              tr.danger
+                td.text-right
+                  = t 'account.limits.willchange' when=(live-moment-from-now c.dateExecutable)
+                td: .pull-right  = format-btc-limit c.limit
+                td
+                td
+                 = if c.dateRequested
+                   = live-moment-from-now c.dateRequested
+
+
+
+  .pull-right: = leaf-button icon='fa fa-refresh' outline=true on-click='refreshLimits'
+  .clearfix

@@ -1,0 +1,17 @@
+= leaf-note type="info"
+  h4 = t 'noserver.title'
+  p = t 'noserver.caption'
+  table.table.table.striped
+    tbody
+      = each entries as |e|
+        tr
+          td
+            span.label = e.accountInfo.pubId
+            br
+            = if e.accountInfo.meta.name
+              b = e.accountInfo.meta.name
+              br
+            i
+              = t 'noserver.updated' when=(moment-from-now e.ts)
+          td.text-right
+            = misc/download-property data=e filename=(concat e.accountInfo.pubId filenameBase) btnClass='btn-sm btn-outline'

@@ -1,0 +1,78 @@
+= leaf-wizards-control selected-idx=step completed-steps=completed step-back=true as |ctrl|
+  = leaf-wizard-step caption=(t 'wallet.backup.w.t-pin.caption') number=1 description=(t 'wallet.backup.w.t-pin.desc')  parent=ctrl idx=1
+  = leaf-wizard-step caption=(t 'wallet.backup.w.t-export.caption')  number=2 description=(t 'wallet.backup.w.t-export.desc')   parent=ctrl idx=2
+  = leaf-wizard-step caption=(t 'wallet.backup.w.t-backup.caption')  number=3 description=(t 'wallet.backup.w.t-backup.desc')   parent=ctrl idx=3
+  = leaf-wizard-step caption=(t 'wallet.backup.w.t-confirm.caption')  number=4 description=(t 'wallet.backup.w.t-confirm.desc')  parent=ctrl idx=4
+
+= if wizardComplete
+  .panel-body
+    //= leaf-note
+      h4 = t 'wallet.backup.w.complete.title'
+      p = t 'wallet.backup.w.complete.caption'
+    br
+    = link-to 'main.account.summary' 0  class='btn btn-primary btn-block'
+      i.fa.fa-user
+      = t 'wallet.backup.w.complete.summary'
+
+= else
+  = leaf-navs-content class="wizard-content" selected-idx=step as |content|
+
+    = leaf-navs-panel parent=content idx=1
+      = leaf-note type='info'
+        h4 = t 'wallet.backup.w.pin.title'
+        p = t 'wallet.backup.w.pin.caption'
+      = wallet/pin-input on-valid-pin='doneEnterPIN' on-wrong-pin='failedPIN' inline=true
+
+    = leaf-navs-panel parent=content idx=2
+      = leaf-note type='info'
+        h4 = t 'wallet.backup.w.pass.title'
+        p = t 'wallet.backup.w.pass.caption'
+        = leaf-switcher checked=encryptedBack size='sm' class='sw-baseline'
+        '
+        b = t 'wallet.backup.w.pass.encrypted'
+        br
+
+        = if encryptedBack
+          br
+          p.text-warning: b = t 'wallet.backup.w.pass.warn'
+
+      = if encryptedBack
+        = wallet/set-passphrase on-set-phrase='doneSetPhrase'
+          p: a href='#' click='doneSetNoPhrase' class='btn btn-default btn-block'
+            = t 'wallet.backup.w.pass.unencrypted'
+      = else
+        a href='#' click='doneSetNoPhrase' class='btn btn-default btn-block'
+          = t 'wallet.backup.w.pass.unencrypted'
+
+
+    = leaf-navs-panel parent=content idx=3
+      = liquid-if exportedGenerator class='ll-down-up'
+        = liquid-if showQC class='ll-down-up'
+          = leaf-note type='default'
+            .dummy style='min-height: 270px;'
+              = misc/qr-code content=exportedGeneratorQR id='exportedMnemonicQR' height=256 width=256
+        = else
+          = leaf-note type='warning'
+            h4 = t 'wallet.backup.w.mnemonic.title'
+            p = t 'wallet.backup.w.mnemonic.caption'
+            = leaf-alert dark=true dismiss=false
+              = exportedMnemonic
+            .row
+              .col-md-2
+                p = leaf-clipboard  content=exportedMnemonic size='sm' tooltip=(t 'wallet.backup.w.mnemonic.clip') tooltip-placement='right'
+              .col-md-10
+                = misc/select-locale on-change='changeLocale' selected=locale
+        .col-xs-3
+          = link-to 'info.export' class='btn btn-block' before-action='copyExportData'
+            i.fa.fa-print
+        /.col-xs-3
+          = leaf-button icon='fa fa-qrcode' type='default'  block='true' on-click='toggleQC'
+        .col-xs-6.col-xs-offset-3
+          = leaf-button icon='fa fa-check' type='primary'  block='true' on-click='doneQC'
+
+    = leaf-navs-panel parent=content idx=4
+      = leaf-note type='info'
+        h4 = t 'wallet.backup.w.store.title'
+        p = t 'wallet.backup.w.store.caption'
+      = leaf-button icon='fa fa-check' type='primary'  block='true' on-click='confirmBackup'
+

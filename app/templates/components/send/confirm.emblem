@@ -1,0 +1,96 @@
+
+.panel-body.no-padding-b
+  = if preparedTx.isVerified
+
+    = if preparedTx.cosignRequired
+      / Normal multi signature
+      = leaf-note title=(t 'paysend.tx.review-multi.title') type='warning' class='no-margin-vr'
+        p = t 'paysend.tx.review-multi.caption'
+
+      .row.padding-sm-vr
+        .col-xs-5.text-right style='border-right: 1px solid #ccc;'
+          .text-default.text-semibold.uppercase = t 'paysend.tx.info.sigs-req'
+          .text-slg.text-light-gray
+            span: strong = preparedTx.account.cmo.minSignatures
+            span.text-xlg.text-slim
+              |/
+              = preparedTx.account.totalSignatures
+          = if preparedTx.account.isMandatory
+            .label = t 'paysend.tx.info.mandatory'
+        .col-xs-7
+          .text-default.text-semibold.uppercase = t 'paysend.tx.info.cosig'
+          br
+          ul.list-unstyled
+            = each preparedTx.account.info.cosigners as |co|
+              li.text-light-gray.uppercase
+                = co.name
+          hr
+          = tx/prepared-tx-discussion tx=preparedTx max-height=120 view='send' prompt=(t 'paysend.tx.disc.prompt')
+
+
+      .row.padding-sm-vr
+        .col-xs-2
+          = leaf-button icon='fa fa-trash' on-click='cancelTx' block=true tooltip=(t 'paysend.tx.a.cancel') disabled=busy
+        .col-xs-5
+          = leaf-button icon='fa fa-send' on-click='proposeTx' block=true tooltip=(t 'paysend.tx.a.propose') disabled=busy
+        .col-xs-5
+          = leaf-button icon='fa fa-check' type='warning' on-click='confirmTx' block=true tooltip=(t 'paysend.tx.a.confirm') disabled=busy
+
+
+
+    = else if preparedTx.isMultisig
+      / Multi signature TX were ONE signature is enough to confirm
+
+      = leaf-note title=(t 'paysend.tx.review-onemulti.title') type='warning' class='no-margin-vr'
+        p = t 'paysend.tx.review-onemulti.caption'
+
+      .row.padding-sm-vr
+        .col-xs-5.text-right style='border-right: 1px solid #ccc;'
+          .text-default.text-semibold.uppercase = t 'paysend.tx.info.sigs-req'
+          .text-slg.text-light-gray
+            span: strong = preparedTx.account.cmo.minSignatures
+            span.text-xlg.text-slim
+              |/
+              = preparedTx.account.totalSignatures
+        .col-xs-7
+          .text-default.text-semibold.uppercase = t 'paysend.tx.info.cosig'
+          br
+          ul.list-unstyled
+            = each preparedTx.account.info.cosigners as |co|
+              li.text-light-gray.uppercase
+                = co.name
+          hr
+          = tx/prepared-tx-discussion tx=preparedTx max-height=120 view='send' prompt=(t 'paysend.tx.disc.prompt')
+
+      .row.padding-sm-vr
+        .col-xs-2
+          = leaf-button icon='fa fa-trash' on-click='cancelTx' block=true tooltip=(t 'paysend.tx.a.cancel') disabled=busy
+        .col-xs-5
+          = leaf-button icon='fa fa-send' on-click='proposeTx' block=true tooltip=(t 'paysend.tx.a.propose') disabled=busy
+        .col-xs-5
+          = leaf-button icon='fa fa-check' type='warning' on-click='confirmTx' block=true tooltip=(t 'paysend.tx.a.confirm') disabled=busy
+
+
+
+    = else
+      / Single signature TX
+      = leaf-note title=(t 'paysend.tx.review.title') type='warning' class='no-margin-vr'
+        p = t 'paysend.tx.review.caption'
+
+      .row.padding-sm-vr
+        .col-xs-5
+          = leaf-button icon='fa fa-trash' on-click='cancelTx' block=true tooltip=(t 'paysend.tx.a.cancel') disabled=busy
+        .col-xs-7
+          = leaf-button icon='fa fa-check' type='warning' on-click='confirmTx' block=true  block=true tooltip=(t 'paysend.tx.a.approve') disabled=busy
+
+  = else if preparedTx
+    .row.padding-sm-vr
+      .note.note-danger
+        h4 = t 'paysend.tx.failv.title'
+        p = t 'paysend.tx.failv.caption'
+        .label.label-danger = preparedTx.state.summary.error
+        .row.padding-sm-vr
+          .col-xs-2
+            = leaf-button icon='fa fa-check' type='warning' on-click='confirmTx' block=true  block=true tooltip=(t 'paysend.tx.a.approve') disabled=busy type='danger'
+          .col-xs-10
+            = leaf-button icon='fa fa-trash' on-click='cancelTx' block=true type='primary'

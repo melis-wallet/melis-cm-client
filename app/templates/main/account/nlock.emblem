@@ -1,0 +1,11 @@
+.row
+  .col-md-12
+    = if cm.currentAccount.has-server
+      h3 = t 'view.nlock.title'
+      p = t 'view.nlock.caption'
+    = else
+      h3 = t 'view.recovery.title'
+      p = t 'view.recovery.caption'
+    hr
+
+    = prefs/manage-nlock account=cm.currentAccount

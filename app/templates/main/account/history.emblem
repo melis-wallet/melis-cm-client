@@ -1,0 +1,19 @@
+.content-wrapper.history id='content-wrapper'
+  = if cm.walletOpenFailed
+      | Login failed
+  = else
+    .history-nav
+      /.navigation
+        ul.sections
+          li.active: a href='#'
+            i.fa.fa-code
+            | Now
+          li: a href='#'
+            i.fa.fa.code
+            | last day
+          li: a href='#' last week
+          li: a href='#' last month
+      .history-nav-header
+        | hello world
+    = tx/txs-list account=cm.currentAccount selected=activeModel on-toggle-star='toggleStar' on-select-tx='selectTx' as |tx list|
+      == outlet

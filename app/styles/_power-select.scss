@@ -1,0 +1,73 @@
+
+
+$theme-color: #7a6f6f;
+
+$ember-power-select-default-border-radius: $input-border-radius;
+$ember-power-select-line-height: 2.3;
+
+// Backgrounds
+$ember-power-select-background-color: $input-bg;
+$ember-power-select-disabled-background-color: $input-bg-disabled;
+$ember-power-select-highlighted-background: lighten($primary-color, 20%);
+$ember-power-select-selected-background: $primary-color;
+$ember-power-select-multiple-selection-background-color: $primary-color;
+
+// Texts
+$ember-power-select-text-color: inherit;
+$ember-power-select-placeholder-color: #999999;
+$ember-power-select-disabled-option-color: #999999;
+$ember-power-select-multiple-selection-color: white;
+
+
+// Borders
+$ember-power-select-border-color: $input-border;
+$ember-power-select-focus-border-color: $primary-color;
+
+
+$ember-power-select-multiple-option-border-color: $primary-color;
+
+$ember-power-select-trigger-ltr-padding: 0 32px 0 8px;
+$ember-power-select-trigger-rtl-padding: 0 8px 0 32px;
+
+@import 'ember-power-select';
+
+.ember-power-select-trigger {
+  padding: 0 32px 0 8px;
+  min-height: 32px;
+
+}
+.ember-power-select-status-icon {
+  margin-right: 5px;
+  margin-left: 10px;
+}
+
+.ember-power-select-dropdown {
+  padding: 8px;
+
+}
+
+
+
+
+
+// Test, make a proper theme
+
+.ember-power-select-option--highlighted {
+  background-color: $theme-color;
+}
+
+.ember-power-select-option--selected {
+  background-color: lighten($theme-color, 20%);
+}
+
+.ember-power-select-trigger:focus {
+  border: 1px solid $theme-color;
+}
+
+.ember-power-select-search input:focus {
+  border: 1px solid $theme-color;
+}
+
+.ember-power-select-multiple-option {
+  margin: 4px 0 4px 3px;
+}

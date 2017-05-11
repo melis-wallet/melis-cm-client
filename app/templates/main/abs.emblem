@@ -1,0 +1,39 @@
+.content-wrapper id='content-wrapper'
+
+  == outlet
+
+  .row
+    .col-md-12
+      = leaf-panel class='widget-ab'
+        = if empty
+          = leaf-note type='info'
+            h4 = t 'ab.empty.title'
+            p = t 'ab.empty.caption'
+
+        = else if noMatches
+          = leaf-note type='default'
+            h4 = t 'ab.nomatch.title'
+            p = t 'ab.nomatch.caption'
+
+        = else
+          .panel-body
+            = each filteredEntries as |e|
+              .ab-entry
+                = link-to 'main.abs.detail' e
+                  /img.ab-entry-avatar src=e.avatarUrl
+                  span.ab-entry-avatar class="{{if e.isCm 'cm' }}"
+                    e.identifier
+                .body
+                  .ab-entry-controls
+                    .spaced = leaf-button icon='fa fa-trash' outline=true type='danger' size='xs' on-click='deleteEntry' value=e
+                    = link-to 'main.abs.edit' e class='btn btn-outline btn-primary btn-xs'
+                      i.fa.fa-edit
+                  = link-to 'main.abs.detail' e class='ab-entry-name'
+                    = e.name
+                  br
+                  = link-to 'main.abs.detail' e class='ab-entry-val'
+                    = e.val
+                  if e.labels
+                    span.ab-entry-labels
+                      = each e.labels as |l|
+                        span.label.label-info = l

@@ -1,0 +1,15 @@
+
+.signin-form
+  h3 = t 'welcome.enroll.title'
+  p = t 'welcome.enroll.caption'
+
+  hr
+
+  = link-to 'wallet.pair-import' class='animated fadeIn delay-1s expandable' class='btn btn-default  btn-block'
+    = t 'welcome.enroll.import.title'
+  p  = t 'welcome.enroll.import.caption'
+
+  br
+  = link-to 'wallet.enroll' class='animated fadeIn delay-1s expandable' class='btn btn-default   btn-block'
+    = t 'welcome.enroll.new.title'
+  p  = t 'welcome.enroll.new.caption'

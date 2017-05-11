@@ -1,0 +1,3 @@
+br
+br
+= account/address-detail address=model on-address-change='addressUpdated'

@@ -1,0 +1,166 @@
+h3 GENERAL TERMS AND CONDITIONS
+br
+br
+
+h3 Art.1 – Definitions and contractual documents.
+p General terms and agreemnt conditions:
+ul
+  li “Melis”: Melis S.r.l., with registered office at (20123) Milano Via Giosuè Carducci n.31, provider and manager of Bitcoin services;
+  li “User”: every public or private legal entity that requests the use of the services provided by Melis, and that subscribes its related agreement;
+  li “Parts”: Melis and User when referred jointly;
+  li “Agreement”: every public or private legal entity that requests the use of the services provided by Melis, and that subscribes its related agreement;
+  li “Service”: All the written or electronic materials, data, texts, audio, video, images or other contents (“Contents”) and the Software available through the website www.melis.io (“Website”) or available when the application is installed;
+  li “Website”: the website www.melis.io
+
+
+h3 Art.2 – Service Activation.
+p The Agreement will be activated when the User utilizes the Service from the website or registering an account with Melis
+
+h3 Art.3 – Relation between Melis and User.
+ul
+  li
+    b 3.1
+    '
+    | The User guarantees that he/she obtained the consent to use the necessary equipment for the Service. The User also guarantees the truthfulness and precision of all the data and informations he/she is supposed to give to Melis. Therefore the User will maintain Melis out of third party claims related to these obligations.
+  li
+    b 3.2
+    '
+    | Melis can modify the Terms and Conditions at anytime. The new Terms and Conditions will be published in the Website. If the User has a Melis account Melis will send the User a message informing him/her of the Terms and Conditions modifications.
+  li
+    b 3.3
+    '
+    | Terms and Conditions will be effective as soon as they will be published in the website and/or when Melis will communicate them.
+  li
+    b 3.4
+    '
+    | Users are required to verify periodically on the website or on the account the potential Terms and Conditions modifications. No objection can be accepted from Melis if the User ignores the Terms and Conditions and their changes.
+
+
+
+h3 Art.4 – Object of the Service.
+h4 4.1 Bitcoin and the Bitcoin network.
+p The Service allows to communicate with the Bitcoin network in order to display and transmit information on a public cryptographic key commonly known as “Bitcoin address” or “Bitcoin account”. In order to transmit efficiently information from a Bitcoin account to the Bitcoin network a variable number of cryptographic keys linked to every Bitcoin account are needed. As soon as the Bitcoin network recognizes and authenticates the informations that the Service has sent the informations will be communicated to other individuals and companies of the Bitcoin network.
+p The Service cannot be used by the user in order to cancel or divert Bitcoin-to-Bitcoin transactions. The Service does not allow to transmit or receive money.
+h4 4.2 Keys Management.
+p If the User creates a Bitcoin account with a “Server signature” the User acknowledges that Melis controls only one of the private key. The User remains the responsible of the safety of the other private keys. Melis is not responsible if the User appoints third parties as the managers of one or more private keys, even if the designation happens through the Service.
+h4 4.3 Bitcoin accounts.
+p The User is the owner and the responsible of the Bitcoin accounts. Melis do not handle the Bitcoin accounts. Melis cannot conduct transactions using the Bitcoin accounts.
+p The Service can become aware of the Bitcoin Accounts of the User only if the User itself contacts Melis to find a solution for a possible technical problem of the Service and/or software. If it’s necessary to use the private keys not controlled by Melis the User has to provide the keys. The User will always remain the only person responsible of the use of the keys.
+h4 4.4 Password and safety.
+p It’s responsibility of the User to control and to safely keep every Login ID, Password, Private Bitcoin keys, Personal Identification Number (PIN) and other codes needed to access the Service. The User is the only responsible for the backup and memorisation of every private keys and PIN. The User must keep the ID account, the password and/or other account credentials confidential. The User must not approve potential third parties to access or use the Service for its own account, unless the User itself, on written request, asks Melis to make available an approved mechanism for such use. If the User suspects the improper use of its account or a security violation is suspected, the User must instantly contact the Melis customer service, sending an e-mail to support@melis.io. The user is the only person responsible for the activities taking place with the Melis Service, the Bitcoin account and with the software made available to the User by Melis. If that use is not authorized it’s illegal and the User must take all the necessary measures in order to stop the use and cooperate with potential Melis requests.
+h4 4.5 Identity authentication.
+p To activate a Melis Account the User shall be at least 18 years of age. The User assumes every one of its responsibilities for the data provided to Melis. Melis cannot be held liable if the information provided by the User is false. Melis is not obliged to control the thrutfulness of the data.
+p If the User utilizes the Service on behalf of an organization and/or a company, the present Terms and Conditions, with the rights and obligation provided for therein, are considered accepted also by the organization and/or company. These Terms and Conditions are therefore binding for the organization and/or company, for every member, employee, representative and, generally, for anyone associated to this organization and/or company, whatever the reason.
+h4 4.6 Third parties applications.
+p If Melis, upon the User written request, has to give to third parties the authorisation to connect to the Melis Account, using the Service or third party products, Melis cannot be held liable for the use of the Account carried out by the third party and/or the User on their own account and/or on behalf of the third party.
+h4 4.7 Taxes.
+p The User has the exclusive obligation to ascertain the existing legislation and to apply it to the implemented or received transaction. Consequently, the User has the obligation to pay the taxes and/or levies and/or tributes required by the legislation. The User has also the exclusive obligation to ask potential authorizations required by the existing legislation for the transactions that the User wants to make using the Service. Melis is not required to give this kind of information to the User.
+h4 4.8 Bitcoin risks.
+p The User acknowledges and accepts that Melis has no control over the Bitcoin price or the Bitcoin network security. The User acknowledges that the bitcoin value can quickly and unexpectedly change, increase or decrease and that the value can also falls to zero.
+p The User acknowledges that a Bitcoin transaction can be confirmed in a variable length of time and it can be incomplete if stuck. These events cannot be considered as resulting from Melis and/or the use of the Service and/or from anomalies or malfunctioning of the Service.
+p The user recognizes that the Bitcoin network participation involves risks that are not caused by Melis and/or by the use of the Service and/or by anomalies or malfunctioning of the Service.
+
+h3 Art.5. Use of service
+h4 5.1. Your privacy.
+p Every version of the privacy policy is published at the address www.melis.io/privacy (“Privacy Policy”). The user accepts the collection, use and disclosure of informations as described in the Privacy Policy. Accepting the Agreement implies the User knows and accepts the Privacy Policy as published.
+
+h4 5.2 Communication.
+p Melis can provide the User with notification messages about the Service, including alerts, updates and changes in the terms and conditions; moreover, Melis can also send notifications with promotional content about its own products and services.  The User accepts to receive such notifications.
+
+h4 5.3 Suspension and ending.
+p Melis reserves itself the rights to temporarily suspend, or discontinue the User’s ability to access the Service in every moment, at its sole discretion, with or without a cause, with or without a notification, without incurring into ay kind of liability. As a mere, non exaustive, exemplification,  Melis can suspend or terminate the User’s ability to use or access the service for the following reasons:
+ul
+  li (a) an actual or suspected violation of these terms and conditions;
+  li (b) an usage of the Service on behalf of the User of any third party that can produce or cause Melis to have any legal liability or disrupt the usage of the Service for others;
+  li (c) recurring line inactivity times or unscheduled technical problems or interruptions
+
+h4 5.4 Inappropriate use.
+p The Users should not themselves, or encourage or help others:
+ul
+  li (a) use unauthorized tools or instruments to access the Service, or use any kind of automated service or tool (for instance, bots, spiders, or any tool that accesses Melis archive informations or caches) to access the Service, distribute instructions, software or tools with that purpose.
+  li (b) modify, alter, tamper or compromise the Service or create derivatives of the Service;
+  li (c) create interference, or disrupt the servers or the networks used by Melis to provide the Service;
+  li (d) damage, disable, overload or disrupt the Service (or any network connected to the Service);
+  li (e) use an account associated to a different user. Except in the case of a provided mechanism for doing so, and with the express authorization of that user;
+  li (f) use the Service in any way and for any purpose not expressly authorized in the present Terms and Conditions, the Privacy Policy or any other guide or documentation available through the Service.
+  li (g) engage in illegal or fraudulent activities, or perpetrate fraud, counterfeit, manipulation or deception;
+  li (h) send messages or unsolicited mail, spam, chain letters, pyramid schemes, or any other form of unsolicited messages, of a commercial nature or otherwise;
+p If there is a suspicion that the User engages in such illegal activities, Melis will be in charge to raise appropriate legal action with civil and criminal charges against the User, with the purpose stop such illegal activity and including compensations for damages.
+h4 5.5 Products updates.
+p Melis can, at its own discretion, perform implementations, unscheduled changes, updates and modifications to the Service in any moment. Melis can add or remove functionalities or aspects, and can interrupt the service. Melis can moreover, depending on the device settings, perform automatic checks for the application version and download and install on the device  updates or new version of the application, without having any responsibility or liability as the consequence of these actions.
+h4 5.6 Restrictions and licence.
+p Melis provides the Service free of charge. However, in the case Melis should provide payment access to a component of the software or the service, the access to said service is conditioned to the payment of the relevant charges and fees.
+p No title or property right is transferred to the User. Melis concedes a nonexclusive non-trasferrable license to utilise the Service. This License is bound to and limited by the current License and terms and conditions, and it is for personal, non commercial use.
+p The user can not copy, modify, created a derived work, decode, decompile, reverse-engineer or otherwise try to extract the source code for the Service, or part of it, unless (and only in the case) it is otherwise permitted by the applicable law. The User can not transfer (or sub-license) his usage rights for the Service, or otherwise transfer a portion of his rights. All rights not expressly granted are reserved to Melis.
+
+h4 5.7 Melis brands and feedback.
+p The following brands or trademarks, logos and slogans are property of Melis or its subsidiaries: the “Melis Logo” and “Melis”. Melis gives no license or authorization to use or show the Melis brands and trademarks in any way. In the case the User should provide comments, suggestions or reccomendations pertaining the Service (including modifications and ameliorative changes) or “Feedback”, the User gives Melis a perpetual, non revocable license to utilize or incorporate those changes or suggestions in the Service and its updates, extensions or subsequent versions.
+
+h3 Art.6. Contents.
+h4 6.1 Contents
+p The User is responsible for the content he provides or makes available through the Service (‘User provided Content’) or other users make available. Melis has no responsibility of any kind for the cancellation, correction, destruction, damage, encryption, loss or storage failure regarding any User provided Content. If the Service is suspended or discontinued, the User can not access his User Provided content
+h4 6.2 Contents sharing
+p The user acknowledges that, in the eventuality he enables the functions for sharing his Content with other Users, those user whoever they might be (including the general public) might or will have access to his provided Content
+h4 6.3 Licence
+p The User provides Melis and its subsidiaries with the rights to utilize, modify, adapt, reproduce, distribute, transmit, visualize and broadcast his User provided Content, as is reasonably necessary to provide the Service, or as otherwise permitted by these Conditions, authorizing Melis and/or its subsidiaries to freely exercise this right.
+p The User declares and guarantees that
+ul
+  li (a) has tall the rights on the User provided Content necessary to utilize the Service.
+  li (b) the storage, use, view, reproduction, distribution, modification, adaptation or transmission of such Content is not in violation of the current Terms and Conditions or any applicable law
+h4 6.4 Responsibility
+p The User:
+ul
+  li (a) is the only responsible for the nature, the quality and the accuracy of the User provided Content;
+  li (b) ensures the User Provided content (including its conservation and transmission) is compliant with the Terms and Conditions and the applicable law;
+  li (c) promptly handles and resolves notification from those raising issues about the User provided Content, including those notifying that the Content might be infringing the rights of other people or organizations;
+  li (d) maintains security and protection and back up copies of the User provided Content, including the utilization of encryption technology to protect the Content from unauthorized access;
+
+h4 6.5 Illegal and/or inappropriate Content
+p The user can not archive or transmit an illegal or inappropriate User provided Content, including, as a non exaustive exemplification:
+ul
+  li (a) illegal, defamatory, threatening, pornographic, abusive, libelous Content or otherwise objectionable of any kind or nature;
+  li (b) material that encourages conduct that could constitute a criminal offense;
+  li (c) material that violates intellectual property rights or rights of publicity or privacy of others;
+  li (d) materials that contain or are using viruses or other harmful or deleterious computer code, files or programs such as Trojan horses, worms, time bombs, or spyware;
+  li (e) material that damage, threat or harass another person, organization or Melis.
+h4 6.6 Global Storage
+p User recognizes and agrees to storage and processing of Content for User and for eventually others personal data in Italy. Melis reserve the right to memorize and process the personal information outside of Italy.
+
+h3 Art.7. Absence of Melis warranty.
+p: b THE USE OF THE MELIS SOFTWARE AND THE SERVICE IS ENTIRELY ON USER’S RISK. MELIS PROVIDES THE SOFTWARE “AS IS”, “WITH ALL THE FAULTS” AND “AS AVAILABLE” WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, LEGAL OR OTHERWISE, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. MELIS GIVES NO WARRANTY THAT THE SOFTWARE, THE SERVICE, OR PARTS OF THEM WILL BE ALWAYS AVAILABLE, WITHOUT FAULTS OR THAT THE CONTENT WILL BE SECURE AND WILL NOT BE LOST OR DAMAGED.
+p: b IN NO EVENT SHALL MELIS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE SERVICE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE OR SERVICE.
+p: p IF THE COUNTRY WHERE THE USER INTENDS TO USE THE SERVICE OR SOFTWARE DOES NOT ALLOW SUCH EXCLUSION OF WARRANTY AND RESPONSIBILITY, THE USER CAN NOT UTILIZE THE MELIS SERVICE OR SOFTWARE AS SUCH CONDITIONS ARE FORBIDDEN BY THE APPLICABLE LAW.
+
+h3 Art.8. User responsibility.
+p Users have the duty to lift Melis and his subsidiaries, affiliates, officers, agents, employees, partners, suppliers and licensors from any claim for damages arising out of or related to:
+ul
+  li (a) user Contents;
+  li (b) service use;
+  li (c) the violation of these conditions or thir party rights;
+
+h3 Art.9. Melis limitation of liability.
+p: b In no case Melis or his relatives, affiliates, officers, agents, employees, partners, suppliers, licensors, shall be responsible for any direct or indirect, incidental or consequential damage, related or arising out of the Service use and/or software provided by Melis (including, without limitation, damage for the loss of profits, benefits, use or content).
+h3 Art.10. Exclusive and competent jurisdiction.
+p
+  b 10.1
+  '
+  | The relations between Melis and the User, regulated from this Agreement are under Italian law jurisdiction. The parts expressly exclude the application of UN Convention relative to International Commercial Sales of good and Uniform Computer Information Transactions Act.
+p
+  b 10.2
+  '
+  | For any controversy related to this Contract application and interpretation, the sole competent court is Milan court.
+
+h3 Art.11. Mandatory complaints and means of extrajudicial dispute resolution.
+p If a dispute arises between the parties concerning the interpretation and application of the Contract before the action is brought before the Judicial Authority, the User shall be required to file a complaint within and not later than the 15 day time from the  the fact of the claim itself, to the detriment of any right of action. You must submit a complaint detailing your comments, arguments and requests to Melis S.r.l., Via Giosuè Carducci, 31 20123 Milan, via email: info@melis.io or pec: info@pec.melis.io. Melis answers within thirty days. If you do not feel satisfied, within a deadline of 15 days from Melis's response, you will have to initiate an assisted / mediated negotiation procedure aimed at conciliating the dispute with the Milan Chamber of Commerce or the rganismo di Conciliazione dell’Ordine degli Avvocati del Tribunale di Milano. Only in the event that the procedure fails, there may be legal action.
+br
+br
+p Milano, October 4, 2016
+br
+br
+h3 Specify statement approval and others declarations.
+p: b You acknowledge that you are well acquainted with the content of the "Agreement" and hereby declares that you accept all the Terms and, in particular, specifically approve the terms of the previous Articles 2 (Activation of the Service); 3 (Relationship between Melis and User); 4 (Object of the Service); 5 (Use of Service); 6 (Contents); 7 (absence of Melis guarantee); responsibility); 8 (User Responsibility); 9 (Melis Limitation of Liability); 10 (Exclusive and competent jurisdiction); 11 (Mandatory complaints and means of extrajudicial dispute resolution).
+br
+br
+p Milano, October 4, 2016
+
+

@@ -1,0 +1,24 @@
+
+= if userMediaFailed
+  = leaf-alert type='warning' dark='true' dismiss=false
+    = t 'qr.scan.errors.no-um'
+= else
+  = if mediaError
+    = leaf-alert type='danger' dark='true' dismiss=false
+      = t 'qr.scan.errors.no-perms'
+
+  .camera class={scanning:working valid:valid}
+    video.camera-canvas id='camera-video' autoplay=true
+    = if showGrid
+      .grid
+    .overlay
+      = leaf-label type='success' content=lastFound class='animated bounceIn'
+  canvas id='qr-canvas'
+
+  = if showControls
+    .panel-footer
+      if scanning
+        = leaf-button icon='fa fa-stop' on-click='stopScan' block=true
+      else
+        = leaf-button icon='fa fa-play' on-click='startScan' type='primary' block=true
+

@@ -1,0 +1,11 @@
+/= tfa/display-state
+
+.row
+  .col-md-12
+    h4 Limits
+    hr
+
+.row
+  .col-md-12
+    = prefs/change-limits
+

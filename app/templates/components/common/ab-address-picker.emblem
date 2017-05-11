@@ -1,0 +1,2 @@
+= leaf-modal id=modalId bottom=true as |mod|
+  = leaf-modal-header title='Authorization' modal=mod class='top-accent-success'

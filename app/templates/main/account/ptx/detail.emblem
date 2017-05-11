@@ -1,0 +1,7 @@
+= if model
+  = tx/prepared-tx [
+    class='col-md-8'
+    tx=model
+    compact=false
+    on-cancel-tx='cancelTx'
+    on-approve-tx='resumePayment' ]

@@ -1,0 +1,89 @@
+
+/.history-controls
+
+.history-list
+  .row.padding-sm-vr.no-padding-t
+    .col-md-3
+      /span.label.m-sm-r: i.fa.fa-bitcoin
+      = misc/qr-code-expandable  content=code img-class='qrcode-img' class='animated fadeIn'
+      = if address.labels
+        hr
+        = each address.labels as |label|
+          .label.label-info.label-tag.m-sm-r = label
+
+    .col-md-8.col-md-offset-1
+
+      table.table
+        tbody
+          tr
+            = if address.meta
+              h4 = t 'newaddr.type.request'
+            = else
+              h4 = t 'newaddr.type.generic'
+
+          tr
+            td.text-right colspan=2
+              span.label = address.address
+
+
+          = if address.lastRequested
+            tr
+              td: i.fa.fa-calendar
+              td.text-right
+                = live-moment-from-now address.lastRequested
+          /tr.bg-light-gray
+            td.lowercase = cm.btcUnit
+            td: .pull-right
+              = leaf-editable-number [
+                positive=true
+                allowBlank=true
+                size='lg'
+                value=(scale-btc address.meta.amount)
+                on-change='changeAmount'
+                if-empty=(t 'newaddr.empty.amount')
+                inputClass='text-right text-bold']
+                = if address.meta.amount
+                  span.text-xlg.text-default.text-semibold = format-btc address.meta.amount
+                = else
+                  = t 'newaddr.empty.amount'
+
+          = if address.meta.amount
+            tr.bg-light-gray
+              td.lowercase = cm.btcUnit
+              td.text-right.text-lg.text-semibold.text-default = format-btc address.meta.amount compact=true
+
+          = if address.meta.amount
+            tr
+              td.lowercase = cm.globalCurrency
+              td.text-right = to-currency address.meta.amount
+
+
+          tr style='height: 48px;'
+            td: i.fa.fa-file-text
+            td.text-right
+              = leaf-editable-text class='info-input' value=address.meta.info if-empty=(t 'newaddr.empty.info') on-change='changeInfo' max-length=160
+                b.break-words = address.meta.info
+
+          tr style='height: 58px;'
+            td: i.fa.fa-tags
+            td.text-right
+              = misc/tags-list selection=address.labels labelsSet='txLabels' on-done-edit='changeLabels' control='right'
+
+          tr
+            td: b = t 'newaddr.txs.label'
+            td.text-right
+              = if address.numTxs
+                span.label.label-warning = address.numTxs
+              = else
+                = t 'newaddr.txs.none'
+
+
+  .row
+    .col-xs-6
+      = link-to 'main.account.address' cm.currentAccount.num class='btn btn-default btn-block' activeClass="a-cr"
+        i.fa.fa-arrow-left
+    .col-xs-3
+    .col-xs-3
+      = if isActive
+        = leaf-button icon='fa fa-trash' on-click='releaseAddr' block=true
+

@@ -1,0 +1,5 @@
+div.sly.frame id='main-menu-inner'
+  .slidee
+    = yield this
+  .scrollbar
+    .handle

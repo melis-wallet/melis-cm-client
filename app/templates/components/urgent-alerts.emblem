@@ -1,0 +1,11 @@
+= liquid-if show class='ll-down-up'
+  .panel.panel-warning
+    .note.note-warning.no-margin-b
+      h4 = t 'urgent.tx.title'
+      p
+        = t 'urgent.tx.caption'
+        '
+        = link-to 'main.account.ptx.detail' firstPtx
+          = t 'urgent.tx.link'
+    .panel-body
+      = tx/prepared-tx tx=firstPtx view='alert'

@@ -1,0 +1,52 @@
+= if error
+  = leaf-alert type='danger' dark=true
+    = error
+= else if success
+  = leaf-alert type='success' dark=true
+    = success
+= else
+
+  = if recipient
+    .note.note-info
+      h4 = t 'quicksend.title'
+      p = t 'quicksend.caption'
+    table.table
+      tbody
+        tr
+          td: b = t 'quicksend.to'
+          td
+            if recipient.alias
+              = recipient.alias
+            else
+              = recipient.pubId
+        tr
+          td: b = cm.btcUnit
+          td
+            b = format-btc recipient.amount
+            '
+            = cm.btcUnit
+            '
+            |(
+            = currency
+            '
+            = format-money currencyAmount
+            |)
+
+        = unless cm.simpleMode
+          tr
+            td
+              b = t 'quicksend.account'
+              br
+              = if activeAccount
+                .label.colored-bg class=activeAccount.color style='min-width: 60px;'
+                  = activeAccount.identifier
+            td
+              = em-form model=this submitButton=false
+                = em-select content=selectableAccts property='selectedAccount'
+        tr
+          td: b = t 'quicksend.balance'
+          td class="{{ if enoughBalance 'success' 'danger' }}"
+            = format-btc activeAccount.amSummary
+
+    = liquid-if enoughBalance class='ll-down-up'
+      = leaf-button icon='fa fa-check' type='warning' on-click='payNow' block=true

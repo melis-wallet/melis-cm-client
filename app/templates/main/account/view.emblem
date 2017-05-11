@@ -1,0 +1,82 @@
+.content-wrapper id='content-wrapper'
+  .page-profile
+    .profile-full-name
+      span.account-id class=account.color
+        account.identifier
+      span.text-semibold: = account.cmo.meta.name
+      =t 'view.details'
+    .profile-row
+      .left-col
+        = partial 'main/account/sidebar'
+
+      .right-col
+        = leaf-alert-area alerts=elementAlerts dark=true
+        = if showCredWarning
+          = leaf-note type='warning'
+            h4 = t 'backup.needed.title'
+            p = t 'backup.needed.caption'
+            = leaf-button type='warning' label=(t 'backup.needed.action') on-click='doCredBackup'
+
+        = if credentialsBackup
+          = leaf-panel simple-header=false class='panel-warning panel-dark'
+            = leaf-panel-header title='Credentials Backup' class='no-border-b'
+               = leaf-button type='warning' outline=true icon='fa fa-times' size='sm' on-click='doneCredBackup'
+            = wallet/backup-wizard on-wizard-complete='doneCredBackup'
+
+
+        hr.profile-content-hr.no-grid-gutter-h
+        .profile-content
+          = if account.isComplete
+            = leaf-tabs-control-slide selected-idx=tab as |control|
+
+              = leaf-tab parent=control idx='preferences' title=(t 'view.tabs.preferences') icon='fa fa-cog'
+              /= if cm.testMode
+              = leaf-tab parent=control idx='utilities' title=(t 'view.tabs.utilities') icon='fa fa-cog'
+              = if account.isMultisig
+                = leaf-tab parent=control idx='vitals' title=(t 'view.tabs.vitals') icon='fa fa-bitcoin'
+              = leaf-tab parent=control idx='limits' title=(t 'view.tabs.limits') icon='fa fa-key'
+              = leaf-tab parent=control idx='nlock' title=(t 'view.tabs.nlock') icon='fa fa-cog'
+              = leaf-tab parent=control idx='maintenance' title=(t 'view.tabs.maintenance') icon='fa fa-cog'
+
+
+            = leaf-navs-content  bordered=true class='panel-padding' selected-idx=tab as |content|
+
+              = leaf-navs-panel parent=content idx='preferences'
+                = partial 'main/account/preferences'
+
+              = if account.isMultisig
+                = leaf-navs-panel parent=content idx='vitals'
+                  = account/cosigners-status account=account
+
+              = leaf-navs-panel parent=content idx='utilities'
+                = partial 'main/account/utilities'
+
+              = leaf-navs-panel parent=content idx='limits'
+                = partial 'main/account/security'
+
+              = leaf-navs-panel parent=content idx='nlock'
+                = partial 'main/account/nlock'
+
+              = leaf-navs-panel parent=content idx='maintenance'
+                = partial 'main/account/maintenance'
+
+          = else
+            = leaf-tabs-control-slide selected-idx=tab as |control|
+              = leaf-tab parent=control idx='preferences' title=(t 'view.tabs.preferences') icon='fa fa-cog'
+              = if cm.testMode
+                = leaf-tab parent=control idx='utilities' title=(t 'view.tabs.utilities') icon='fa fa-cog'
+              = leaf-tab parent=control idx='vitals' title=(t 'view.tabs.vitals')  icon='fa fa-bitcoin'
+              = leaf-tab parent=control idx='maintenance' title=(t 'view.tabs.maintenance') icon='fa fa-cog'
+
+            = leaf-navs-content  bordered=true class='panel-padding' selected-idx=tab as |content|
+              = leaf-navs-panel parent=content idx='preferences'
+                = partial 'main/account/preferences'
+
+              = leaf-navs-panel parent=content idx='utilities'
+                = partial 'main/account/utilities'
+
+              = leaf-navs-panel parent=content idx='vitals'
+                = account/cosigners-status account=account
+
+              = leaf-navs-panel parent=content idx='maintenance'
+                = partial 'main/account/maintenance'

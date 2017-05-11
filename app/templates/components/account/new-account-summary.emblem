@@ -1,0 +1,50 @@
+= if isMulti
+  .well
+    .row
+      .col-md-6
+        .row
+          .col-xs-6
+            = if wantsServer
+              img src='images/icons/acc_multi_server.svg' class='icon-side'
+            = else
+              img src='images/icons/acc_multi.svg' class='icon-side'
+          .col-xs-6
+            .text-default.text-semibold.uppercase Signatures
+            .text-slg.text-light-gray
+              span: strong = minSignatures
+              span.text-xlg.text-slim
+               |/
+               = totalSignatures
+
+      .col-md-6
+        .text-default.text-semibold.uppercase Co-Signers
+        table.table.table-compact.table-striped
+          tbody
+            tr
+              td: b.text-default = masterName
+              td
+                = if masterMandatory
+                  .label M
+            = each cosigners as |sig|
+              tr
+                td: b.text-default = sig.name
+                td
+                  = if sig.mandatory
+                    .label M
+
+
+
+= else
+  .well
+    .row
+      .col-xs-6
+        = if wantsServer
+          img src='images/icons/acc_sing_server.svg' class='icon-side'
+        = else
+          img src='images/icons/acc_sing.svg' class='icon-side'
+
+      .col-xs-6
+        h5.text-default.text-semibold.uppercase
+          = t (account-types selectedScheme what='description')
+
+        p = t (account-types selectedScheme what='explain')

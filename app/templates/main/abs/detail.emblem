@@ -1,0 +1,45 @@
+.row
+  .col-sm-2
+    p = leaf-button-group
+      = link-to 'main.abs' class='btn btn-primary'
+        i.fa.fa-arrow-left
+      = link-to 'main.abs.edit' model class='btn'
+        i.fa.fa-edit
+  .col-sm-10
+    .panel.widget-ab style='min-height: 180px;'
+      = if lazyfetchInfo.isRunning
+        .w-status.spinner.bounce-middle
+      .panel-body
+        .ab-entry
+          span.ab-entry-avatar class="{{if model.isCm 'cm' }}"
+            = model.identifier
+          .ab-entry-name: h4 = model.name
+          span.ab-entry-val = model.val
+
+        = liquid-if accountInfo class='ll-down-up'
+          table.table.table-compact
+
+            tbody
+              tr
+                td: b
+                  = t 'ab.table.pubid'
+                td: b.pull-right = accountInfo.pubId
+
+              tr
+                td: b
+                  = t 'ab.table.alias'
+                td: b.pull-right = accountInfo.alias
+
+              = if accountInfo.pubMeta.name
+                tr
+                  td: b
+                    = t 'ab.table.name'
+                  td: .pull-right = accountInfo.pubMeta.name
+              = if accountInfo.pubMeta.profile
+                tr
+                  td: b
+                    = t 'ab.table.profile'
+                  td: .pull-right = accountInfo.pubMeta.profile
+
+  br
+  hr

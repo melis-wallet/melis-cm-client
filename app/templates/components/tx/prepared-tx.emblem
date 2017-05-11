@@ -1,0 +1,103 @@
+.panel class="{{if tx.isRespent 'inactive' }}{{if tx.isCanceled 'inactive' }}"
+  .panel-heading.light
+      = if (or approveTx.isRunning cancelTx.isRunning)
+        .w-status.spinner.bounce-middle
+      = if error
+        .w-status.error
+          = error
+
+      = leaf-tooltip tooltip=(moment-format tx.updated)
+        i.text-default = live-moment-from-now tx.updated
+
+      span.icon: i.fa.fa-users
+  .panel-body
+
+    .row
+      .col-xs-2
+
+      .col-xs-9.col-xs-offset-1
+        table.table.table-condensed
+          tbody
+            = if tx.isRotation
+              tr
+                td colspan='2'
+                 span.code-label = t 'stream.ptx.rotation' creator=(co-signer tx.cmo.accountPubId you=(t 'tx.you-s')) time=(moment-from-now tx.cmo.cd)
+            = else
+              tr
+                td.no-border-t colspan='2'
+                  = t 'tx.prepared.created' creator=(co-signer tx.cmo.accountPubId you=(t 'tx.you-s')) time=(moment-from-now tx.cmo.cd)
+                  = if tx.isRespent
+                    p.text-warning =  t 'stream.ptx.respent'
+                  = if tx.isCanceled
+                    p.text-warning =  t 'stream.ptx.canceled'
+
+              tr
+                td = t 'tx.prepared.to'
+                td
+                  = if (eq tx.cmo.recipients.length 1)
+                      b.break-words = format-text tx.cmo.recipients.firstObject.address
+                      p.small = tx.cmo.recipients.firstObject.meta.info
+
+                  = else
+                    span.label = t 'stream.ptx.multiple.multiple'
+            = if tx.cmo.meta.currencyData.native
+              tr
+                td.lowercase: = tx.cmo.meta.currencyData.currency
+                td.text-right.text-xlg.text-semibold.text-default
+
+              tr
+                td
+                td.text-right.text-light-gray
+                  = format-btc tx.cmo.amount withUnit=true
+
+            = else
+              tr
+                td.lowercase: = cm.btcUnit
+                td.text-right.text-xlg.text-semibold.text-default
+                  = format-btc tx.cmo.amount compact=true
+              tr
+                td
+                td.text-right.text-light-gray
+                  = to-currency tx.cmo.amount withUnit=true
+
+            tr
+              td = t 'stream.ptx.fees'
+              td.text-right: b = format-btc tx.cmo.fees  withUnit=true
+
+    = if tx.account.isMultisig
+      .row.padding-sm-vr
+        .col-xs-5.text-right style='border-right: 1px solid #ccc;'
+          .text-default.text-semibold.uppercase = t 'stream.ptx.sigs-req'
+          = liquid-bind missingSigs use='toRight'
+            .text-slg.text-light-gray
+              span: strong = missingSigs
+              span.text-xlg.text-slim
+                |/
+                = tx.account.cmo.minSignatures
+          = if tx.account.isMandatory
+            .label = t 'stream.ptx.is-mandatory'
+        .col-xs-7
+          .text-default.text-semibold.uppercase = t 'stream.ptx.cosigners-no' count=tx.account.totalSignatures
+          br
+          = ptx/signers-list signers=tx.cmo.signatures account=tx.account
+      .row
+        .col-xs-5.text-right
+          .text-default.text-semibold.uppercase = t 'tx.prepared.discussion'
+        .col-xs-7
+          = tx/prepared-tx-discussion tx=tx max-height=200
+
+
+
+    .row.padding-sm-vr.no-padding-b
+      .col-xs-2
+        = if (and tx.isActive tx.accountIsOwner)
+          = leaf-button icon='fa fa-trash' on-click='cancelTx' block=true tooltip=(t 'tx.prepared.a.cancel') disabled=cancelTx.isRunning
+      .col-xs-5
+      .col-xs-5
+        = if tx.accountCanSign
+          = leaf-button icon='fa fa-check' type='warning' on-click='approveTx' block=true tooltip=(t 'tx.prepared.a.approve') disabled=approveTx.isRunning
+    = if tx.signing
+      .row.padding-sm-vr.no-padding-b
+        .col-xs-12
+          p = leaf-progress value=tx.signingProgress striped=true style='height: 4px;'
+

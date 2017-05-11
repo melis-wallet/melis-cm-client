@@ -1,0 +1,74 @@
+= wallet/display-license displayOnly=true
+.row
+  .col-md-12
+    h3 = t 'wallet.prefs.title'
+    p = t 'wallet.prefs.caption'
+    hr
+
+.row
+  .col-md-6
+    = leaf-note type='info'
+      h4 = t 'wallet.prefs.app.title'
+      p = t 'wallet.prefs.app.caption'
+      table.table.table-striped.table-compact
+        tbody
+          tr
+            td = t 'wallet.prefs.app.version'
+            td: b = app-version
+          tr
+            td = t 'wallet.prefs.app.network'
+            td: span.label.label-danger.uppercase = cm.config.network
+          tr
+            td = t 'wallet.prefs.app.license'
+            td = leaf-button label=(t 'wallet.prefs.app.review')  on-click='reviewLicense' size='sm' outline=true
+
+  .col-md-6
+    = leaf-note type='default'
+      h4 = t 'wallet.prefs.locale.title'
+      p = t 'wallet.prefs.locale.caption'
+      = misc/select-locale on-change='changeLocale' selected=cm.locale
+        b = loc.text
+
+
+.row
+  .col-md-6
+    = prefs/change-currency
+
+  .col-md-6
+    =  leaf-note type='default'
+      h4 = t 'wallet.prefs.btcunit.title'
+      p = t 'wallet.prefs.btcunit.caption'
+      = power-select options=btcUnits selected=btcUnit searchField='text' onchange=(action 'changeBtcUnit') as |cur|
+        b = cur.text
+        '
+        = if cur.divider
+          |(
+          = cur.divider
+          |)
+
+
+.row
+  .col-md-6
+    = prefs/notifications-prefs
+  .col-md-6
+    = leaf-note type='default'
+      h4 = t 'wallet.prefs.explorer.title'
+      p = t 'wallet.prefs.explorer.caption'
+      = tx/select-explorer
+
+    = fingerprint-enroll
+
+
+
+.row
+  .col-md-6
+    =  leaf-note type='default'
+      h4 = t 'wallet.prefs.telemetry.title'
+      p = t 'wallet.prefs.telemetry.caption'
+      table.table
+        tbody
+          tr
+            td
+              b = t 'wallet.prefs.t-error.t'
+              p: i = t 'wallet.prefs.t-error.c'
+            td  = leaf-switcher checked=cm.telemetryEnabled size='sm' theme='modern'

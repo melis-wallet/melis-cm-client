@@ -1,0 +1,17 @@
+= if cm.lampField.clockSkew
+  .alert.alert-warning.alert-dark
+    = t 'stream.warning.skew'
+
+= each streamEntries as |entry|
+  = if (eq entry.subclass 'evt')
+    = component (concat 'stream/entry-' entry.subclass '-' entry.content.type) entry=entry id=entry.id on-goto='goto'
+  = else
+    = component (concat 'stream/entry-' entry.subclass) entry=entry id=entry.id on-goto='goto'
+
+// BUG https://github.com/emberjs/ember.js/issues/12716
+
+= if inited
+  = unless (gt streamEntries.length 1)
+    = stream/entry-ph
+= else
+  .loader

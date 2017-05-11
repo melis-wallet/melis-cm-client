@@ -1,0 +1,107 @@
+= leaf-wizards-control selected-idx=step completed-steps=completed step-back=true as |ctrl|
+  = if credentials.validCredentials
+    = leaf-wizard-step caption=(t 'wallet.import.w.t-check.caption')  number=1 description=(t 'wallet.import.w.t-check.desc')  parent=ctrl idx=1
+    = leaf-wizard-step caption=(t 'wallet.import.w.t-mnemonics.caption')  number=2 description=(t 'wallet.import.w.t-mnemonics.desc')   parent=ctrl idx=2
+    = leaf-wizard-step caption=(t 'wallet.import.w.t-pin.caption')  number=3 description=(t 'wallet.import.w.t-pin.desc')  parent=ctrl idx=3
+  = else
+    = leaf-wizard-step caption=(t 'wallet.import.w.t-mnemonics.caption')  number=1 description=(t 'wallet.import.w.t-mnemonics.desc')   parent=ctrl idx=2
+    = leaf-wizard-step caption=(t 'wallet.import.w.t-pin.caption')  number=1 description=(t 'wallet.import.w.t-pin.desc')  parent=ctrl idx=3
+
+
+= if wizardComplete
+  .panel-body
+
+    = if importFailedCreds
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+
+          = leaf-note type='danger'
+            h4  = t 'wallet.import.w.wrong.title'
+            p  = t 'wallet.import.w.wrong.caption'
+            = if importPassphrase
+              p.text-warning: b = t 'wallet.import.w.wrong.warn'
+          = leaf-button type='primary' on-click='resetImport' icon='fa fa-arrow-left' block=true
+
+    = else if importFailed
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='danger'
+            h4  = t 'wallet.import.w.failed.title'
+            p  = t 'wallet.import.w.failed.caption'
+            = leaf-alert dark=true dismiss=false
+              = importFailed
+          = leaf-button type='primary' on-click='resetImport' icon='fa fa-arrow-left' block=true
+
+    = else if cm.currentWallet
+      = if cm.currentAccount
+        .row
+          .col-sm-4.hidden-xs.text-center
+            i.fa.fa-smile-o.icon-side-lg.animated.fadeIn.delay-1s
+          .col-sm-8
+            = leaf-note type='success'
+              h4 = t 'wallet.import.w.done.title'
+              p = t 'wallet.import.w.done.caption'
+            = link-to 'main.account.summary' cm.currentAccount.num class='btn btn-primary btn-block'
+              i.fa.fa-user
+              '
+              = t 'wallet.import.w.summary'
+
+      = else
+        .row
+          .col-sm-4.hidden-xs.text-center
+            i.fa.fa-smile-o.icon-side-lg.animated.fadeIn.delay-1s
+          .col-sm-8
+            = leaf-note type='success'
+              h4 = t 'wallet.import.w.noacc.title'
+              p = t 'wallet.import.w.noacc.caption'
+            = link-to 'wallet.create-account' class='btn btn-primary btn-block'
+              = t 'wallet.import.w.createacct'
+
+    = else
+      .row
+        .col-sm-8.col-sm-offset-4
+          .loader
+
+= else
+  = leaf-navs-content class="wizard-content" selected-idx=step delay-render=false as |content|
+    = leaf-navs-panel parent=content idx=1
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='warning'
+            h4 = t 'wallet.import.w.warn.title'
+            p  = t 'wallet.import.w.warn.caption'
+      .row
+        .col-xs-4
+          = link-to 'index' class='btn btn-block'
+            i.fa.fa-arrow-left
+        .col-xs-8
+          = leaf-button type='danger' on-click='confirmImport' value=1 icon='fa fa-arrow-right' block=true
+
+
+    = leaf-navs-panel parent=content idx=2
+      .row
+        .col-sm-4.hidden-xs.text-center
+          img.icon-side-lg.animated.fadeIn.delay-1s src='images/icons/import-mnemonic.svg'
+        .col-sm-8
+          = leaf-note type='warning'
+            h4 = t 'wallet.import.w.input.title'
+            p = t 'wallet.import.w.input.caption'
+          = wallet/mnemonic-input on-valid-mnemonic='doneImportMnemo'
+
+
+    = leaf-navs-panel parent=content idx=3
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-lock.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='warning'
+            h4 = t 'wallet.import.w.pin.title'
+            p = t 'wallet.import.w.pin.caption'
+          = wallet/set-pin-input on-set-pin='doneSetPIN'
+

@@ -1,0 +1,6 @@
+= liquid-if ready use='toLeft'
+  = wallet/signed-ok
+= else if (and cm.currentWallet noAccounts)
+  = wallet/signed-ok noAccounts=true
+= else
+  = wallet/sign-in-widget on-success='successSignIn'

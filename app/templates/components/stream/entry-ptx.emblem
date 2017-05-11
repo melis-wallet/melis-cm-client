@@ -1,0 +1,107 @@
+
+.col-md-12
+  .panel class="{{if isRespent 'inactive' }}"
+    .accent.colored-bg class=tx.account.color
+    .panel-heading.light
+      = if apiOps.isRunning
+        .w-status.spinner.bounce-middle
+      = if error
+        .w-status.error
+          = error
+
+      = leaf-tooltip tooltip=(moment-format entry.updated)
+        i.text-default = live-moment-from-now entry.updated
+
+      span.icon: i class=entry.eventIcon
+    .panel-body
+      = with entry.content as |c|
+        .row
+          .col-sm-3.col-xs-2
+          .col-sm-8.col-xs-9.col-xs-offset-1
+            table.table.table-condensed
+              tbody
+                = if c.isRotation
+                  tr
+                    td colspan='2'
+                     span.code-label = t 'stream.ptx.rotation' creator=(co-signer c.cmo.accountPubId you=(t 'tx.you-s')) time=(moment-from-now c.cmo.cd)
+                = else
+                  tr
+                    td colspan='2'
+                      p
+                        = t 'stream.ptx.created' creator=(co-signer c.cmo.accountPubId you=(t 'tx.you-s')) time=(moment-from-now c.cmo.cd)
+                        '
+                        = link-to 'main.account.ptx.detail' c.account.num c.cmo.id
+                          =  t 'stream.ptx.details'
+                      = if isRespent
+                        p.text-warning =  t 'stream.ptx.respent'
+                      = else if tx.cmo.originalPtx
+                        .alert.alert-info
+                          =  t 'stream.ptx.feebump'
+
+                  tr
+                    td = t 'stream.ptx.recipients'
+                    td.break-words.text-right
+                      = if (eq c.cmo.recipients.length 1)
+                          b = c.cmo.recipients.firstObject.address
+                          p.small = c.cmo.recipients.firstObject.meta.info
+
+                      = else
+                        span.label = t 'stream.ptx.multiple'
+                tr
+                  td.lowercase: = cm.btcUnit
+                  td.text-right.text-lg.text-semibold.text-default
+                    = format-btc tx.cmo.amount compact=true
+                tr
+                  td
+                  td.text-right.text-light-gray
+                    = to-currency tx.cmo.amount withUnit=true
+                  //td = t 'stream.ptx.amount'
+                  //td
+                    b = format-btc c.cmo.amount
+                    '
+                    | (
+                    = to-currency c.cmo.amount
+                    '
+                    = cm.globalCurrency
+                    |)
+                tr class="{{ if tx.cmo.originalPtx 'warning' }}"
+                  td = t 'stream.ptx.fees'
+                  td.text-right.text-light-gray: b = format-btc tx.cmo.fees
+
+        = if c.account.isMultisig
+          .row.padding-sm-vr
+            .col-xs-5.text-right style='border-right: 1px solid #ccc;'
+              .text-default.text-semibold.uppercase = t 'stream.ptx.sigs-req'
+              = liquid-bind missingSigs use='toRight'
+                .text-slg.text-light-gray
+                  span: strong = missingSigs
+                  span.text-xlg.text-slim
+                    |/
+                    = c.account.cmo.minSignatures
+              = if c.account.isMandatory
+                .label = t 'stream.ptx.is-mandatory'
+            .col-xs-7
+              .text-default.text-semibold.uppercase = t 'stream.ptx.cosigners-no' count=c.account.totalSignatures
+              br
+              = ptx/signers-list signers=c.cmo.signatures account=c.account
+
+              hr
+              = ptx/discussion-mini tx=c prompt=(t 'stream.ptx.chat-prompt')
+
+
+        .row.padding-sm-vr.no-padding-b
+          .col-xs-2
+            = if (and c.isActive c.accountIsOwner)
+              = leaf-button icon='fa fa-trash' on-click='cancelTx' block=true tooltip=(t 'stream.ptx.a.cancel') disabled=apiOps.isRunning
+          .col-xs-5
+          .col-xs-5
+            = if c.accountCanSign
+              = leaf-button icon='fa fa-check' type='warning' on-click='approveTx' block=true tooltip=(t 'stream.ptx.a.approve') disabled=apiOps.isRunning
+            = else if isRespent
+              = leaf-button icon='fa fa-recycle' type='default' on-click='reissueTx' block=true tooltip=(t 'stream.ptx.a.reissue') disabled=apiOps.isRunning
+
+        = if tx.signing
+          .row.padding-sm-vr.no-padding-b
+            .col-xs-12
+              p = leaf-progress value=tx.signingProgress striped=true style='height: 4px;'
+

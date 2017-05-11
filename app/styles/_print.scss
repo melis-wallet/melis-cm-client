@@ -1,0 +1,52 @@
+
+@media print {
+
+  @include make-grid(md);
+
+
+  /*
+  .visible-xs {
+      @include responsive-invisibility();
+  }
+
+  .hidden-xs {
+      @include responsive-visibility();
+  }
+
+  .hidden-xs.hidden-print {
+      @include responsive-invisibility();
+  }
+
+  .hidden-sm {
+      @include responsive-invisibility();
+  }
+
+  .visible-sm {
+      @include responsive-visibility();
+  }*/
+
+
+  .export {
+    width: 210mm;
+    height: 270mm;
+    .export-cont.fancy {
+      -webkit-print-color-adjust: exact;
+      background-image: url('/images/info/code-bg.jpg') !important;
+      background-color: #faa937 !important;
+    }
+
+    .export-qrc {
+      background-color: white !important;
+    }
+
+    .warning {
+       -webkit-print-color-adjust: exact;
+      background-color: #faa937 !important;
+    }
+
+    .mnemo {
+      -webkit-print-color-adjust: exact;
+      background-color: #f9f1c7 !important;
+    }
+  }
+}

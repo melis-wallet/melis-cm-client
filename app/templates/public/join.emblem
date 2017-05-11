@@ -1,0 +1,77 @@
+
+.panel.public
+  .public-header
+    h3
+      .public-logo: img src='images/melis-badger.svg' style="width:100%;height:100%;"
+      div
+        small
+          strong = t 'app.title'
+          = t 'app.wallet'
+        br
+        = t 'public.join.app'
+
+    address
+      = t 'public.join.caption'
+
+
+    .public-date
+      = moment-format date
+
+  .panel-body
+    .row
+      .col-md-4
+        strong
+          model.pubMeta.name
+        address
+          = breaklines model.pubMeta.address
+        p.label
+          model.pubId
+        p
+          = if model.pubMeta.profile
+            =  model.pubMeta.profile
+          = else
+            i = t 'public.profile.no-profile'
+
+
+      .col-md-8
+        = leaf-note
+          h4 = t 'public.join.explain.title'
+          p = t 'public.join.explain.caption'
+
+        = if model.code
+          = liquid-if cm.ready class='ll-down-up'
+            = if error
+              = leaf-alert type='danger' dark=true
+                = error
+            = else if success
+              = leaf-alert type='success' dark=true
+                = success
+              = link-to 'main.account.view' 0 class='btn btn-block'
+                i.fa.fa-home
+            = else
+              = leaf-button type='warning' label='Join this account' block=true on-click='confirmJoin'
+
+          = else
+            = if credentials.validCredentials
+              small
+                = t 'public.login.prompt'
+                '
+                strong = t 'app.title'
+                = t 'app.wallet'
+              = wallet/sign-in-place class='animated flash'
+
+            = else if enrolling
+
+              // no credentials, enrolling
+              = leaf-note type='warning'
+                h4 = t 'public.join.enroll.pin.title'
+                p = t 'public.join.enroll.pin.caption'
+              = wallet/set-pin-input on-set-pin='doneSetPINJoin'
+
+            = else
+              .note.note-info
+                h4 = t 'public.join.enroll.no-creds.title'
+                p = t 'public.join.enroll.no-creds.caption'
+
+
+              = leaf-button type='primary' block=true label=(t 'public.join.enroll.button') on-click='startEnroll'

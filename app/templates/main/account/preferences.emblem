@@ -1,0 +1,50 @@
+.row
+  .col-md-12
+    h3 = t 'view.prefs.title'
+    hr
+
+.row
+  .col-md-12
+    = leaf-note type='success'
+      h4 = t 'view.prefs.ident.title'
+      p = t 'view.prefs.ident.caption'
+      .label = account.cmo.pubId
+
+.row
+  .col-md-12
+    = leaf-note type='default'
+      h4 Account
+      p
+      table.table.table-compact
+        tbody
+          tr
+            td: b
+              = t 'view.prefs.account.num'
+            td = account.num
+          tr
+            td: b
+              = t 'view.prefs.account.name'
+            td = leaf-editable-validated model=account property='name' maxlength=32 on-change='changeAccountName' inputError=accountChangeError if-empty=(t 'generic.not-set')
+
+          tr
+            td: b
+              = t 'view.prefs.account.created'
+            td = leaf-tooltip tooltip=(moment-format account.cmo.cd)
+              i.text-default = live-moment-from-now account.cmo.cd
+
+
+.row
+
+  .col-md-12
+    = prefs/public-profile
+
+.row
+  .col-md-6
+
+    = leaf-note type='default'
+      h4 = t 'view.prefs.alias.title'
+      p = t 'view.prefs.alias.caption'
+      = prefs/change-account-alias
+
+
+

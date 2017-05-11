@@ -1,0 +1,28 @@
+
+table.table.table-compact
+  tbody
+    = each signatures as |sig|
+      tr
+        td
+          = if sig.signed
+            .label.label-success
+              i.fa.fa-check
+            '
+            = live-moment-from-now sig.signed
+          = else
+            .label
+              i.fa.fa-pencil
+            '
+            = t 'tx.signers.not-signed'
+        td
+          = if (eq account.cmo.pubId sig.pubId)
+            b.text-info You
+          = else
+            b.text-light-gray: = sig.name
+          '
+          small
+            = if sig.isMaster
+              .label.label-info: i.fa.fa-star-o
+            '
+            = if sig.mandatory
+              .label.label-warning: i.fa.fa-certificate

@@ -1,0 +1,126 @@
+= leaf-wizards-control selected-idx=step completed-steps=completed step-back=stepBack as |ctrl|
+  = if credentials.validCredentials
+    = leaf-wizard-step caption=(t 'wallet.import.w.t-check.caption')  number=1 description=(t 'wallet.import.w.t-check.desc')  parent=ctrl idx=1
+    = leaf-wizard-step caption=(t 'pair.import.tabs.source.caption') number=2 description=(t 'pair.import.tabs.source.descr')  parent=ctrl idx=2
+    = leaf-wizard-step caption=(t 'pair.import.tabs.qrcode.caption') number=3 description=(t 'pair.import.tabs.qrcode.descr')  parent=ctrl idx=3
+    = leaf-wizard-step caption=(t 'pair.import.tabs.pin.caption') number=4 description=(t 'pair.import.tabs.pin.descr')  parent=ctrl idx=4
+  = else
+    = leaf-wizard-step caption=(t 'pair.import.tabs.source.caption') number=1 description=(t 'pair.import.tabs.source.descr')  parent=ctrl idx=2
+    = leaf-wizard-step caption=(t 'pair.import.tabs.qrcode.caption') number=2 description=(t 'pair.import.tabs.qrcode.descr')  parent=ctrl idx=3
+    = leaf-wizard-step caption=(t 'pair.import.tabs.pin.caption') number=3 description=(t 'pair.import.tabs.pin.descr')  parent=ctrl idx=4
+
+
+= if wizardComplete
+  .panel-body
+    .row
+      .col-sm-4.hidden-xs.text-center
+        i.fa.fa-smile-o.icon-side-lg.animated.fadeIn.delay-1s
+      .col-sm-8
+        = leaf-note type='success'
+          h4 = t 'pair.import.success.title'
+          p = t 'pair.import.success.caption'
+        = link-to 'main.account.summary' cm.currentAccount.num class='btn btn-primary btn-block'
+          i.fa.fa-user
+          = t 'enroll.btn.summary'
+
+= else if apiOps.isRunning
+  .loader
+= else
+
+  = leaf-navs-content class="wizard-content" selected-idx=step delay-render=false as |content|
+    = leaf-navs-panel parent=content idx=1
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='warning'
+            h4 = t 'wallet.import.w.warn.title'
+            p  = t 'wallet.import.w.warn.caption'
+      .row
+        .col-xs-4
+          = link-to 'index' class='btn btn-block'
+            i.fa.fa-arrow-left
+        .col-xs-8
+          = leaf-button type='danger' on-click='confirmImport' value=1 icon='fa fa-arrow-right' block=true
+
+
+    = leaf-navs-panel parent=content idx=2
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-magic.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          p = leaf-note
+            h4 = t 'pair.source.title'
+            p = t 'pair.source.caption'
+      .row
+        .col-sm-4.text-center
+          p: img src='images/info/pairing-step-1.jpg'
+        .col-sm-4.text-center
+          p: img src='images/info/pairing-step-2.jpg'
+        .col-sm-4.text-center
+          p: img src='images/info/pairing-step-3.jpg'
+
+      .row
+        .col-md-12
+          p = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneSource'
+
+
+
+    = leaf-navs-panel parent=content idx=3
+      .row
+        .col-sm-4.hidden-xs.text-center
+          //i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
+          img.icon-side-lg.animated.fadeIn.delay-1s src='images/icons/scan-pair.svg'
+        .col-sm-8
+
+          = leaf-note type='warning'
+            h4 = t 'pair.import.title'
+            p = t 'pair.import.caption'
+
+          = if scanError
+            = leaf-alert type='warning' dark=true dismiss=false
+              = t 'pair.import.scan-error'
+
+          = leaf-button type='primary' icon='fa fa-camera' block=true on-click='openScanner'
+
+      = if cm.testMode
+        hr
+        .row
+          .col-sm-4.hidden-xs
+            .h5.uppercase Test Mode
+          .col-sm-8
+
+            = leaf-note type='default'
+              = em-form model=this submitButton=false action='importFromData'
+                = em-text rows=4 property='importData' placeholder=(t 'pair.import.data.ph')
+            = leaf-button type='default' icon='fa fa-check' block=true on-click='importFromData'
+
+    = leaf-navs-panel parent=content idx=4
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-lock.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='info'
+            h4 = t 'pair.import.pin.title'
+            p = t 'pair.import.pin.caption'
+          = if (eq importError 'WrongPin')
+            = leaf-alert type='warning' dismiss=false
+              p = t 'pair.import.pin.wrong'
+          = else if (eq importError 'CmInvalidDeviceException')
+            = leaf-alert type='danger' dismiss=false
+              p = t 'pair.import.device.invalid'
+              = leaf-button type='danger' label='restart' block=true on-click='restart'
+          = else if importError
+            = leaf-alert type='danger' dismiss=false
+              p = t 'pair.import.error'
+              = leaf-button type='danger' label='restart' block=true on-click='restart'
+          = if showPinForm
+            .row
+              .col-md-9
+                = em-form model=this submitButton=false action='doneInputPin'
+                  = em-input property='pin' type='password' placeholder=(t 'pair.import.pin.ph')
+              .col-md-3
+                = liquid-if isValid class='ll-down-up'
+                  = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneInputPin'
+
+

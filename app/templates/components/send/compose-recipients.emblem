@@ -1,0 +1,140 @@
+= liquid-if hasRecipients use='toUp'
+  .panel-body.no-padding-b
+    .row.border-t.padding-sm-vr
+      .col-xs-2
+        = leaf-button icon='fa fa-trash' on-click='cancelPayment'
+      .col-xs-4
+        = leaf-button icon='fa fa-user-plus' on-click='submitRecipient' disabled=(not currentRecipient.isValid) block=true
+
+      .col-xs-6
+        = leaf-button type='primary' on-click='submitRecipientComplete' block=true tagName='d'
+          = liquid-if currentRecipient.isValid class='ll-left-right'
+            i.fa.fa-user-plus
+            '
+            i.fa.fa-check
+          = else
+            i.fa.fa-check
+
+
+= liquid-if abOpened class='ll-left-right'
+
+  = contact-picker [
+    searchable=true
+    scope='address'
+    return-btn='fa fa-arrow-left'
+    on-return='closeAb'
+    on-recipient-selected='addRecipientFromAb' ]
+
+= else
+  = em-form model=currentRecipient submitButton=false action='submitRecipient'
+    .panel-body
+      .row
+        .col-xs-8
+          = if currentRecipient.isAddress
+            = em-input property='value' label=(t 'paysend.form.recipient.label') placeholder=(t 'paysend.form.recipient.ph')  class='form-group required'
+          = else if currentRecipient.isAccount
+            .form-group.required
+              label.control-label = t 'paysend.form.account.label'
+              = send/account-selector exclude=cm.currentAccount selected=currentRecipient.value on-account-change=(action (mut currentRecipient.value))
+          = else if currentRecipient.isCm
+            .form-group.required
+              label.control-label = t 'paysend.form.pubid.label'
+              = send/pubid-alias-selector selected=currentRecipient.value on-valid-value=(action (mut currentRecipient.value))
+          = else
+            p unknown
+
+        .col-xs-4
+          .pull-right.xr-top-sp
+            = leaf-tooltip class='value' tooltip=(t 'paysend.form.type') tooltip-placement='left'
+              = send/destination-type dst-type=currentRecipient.type size='sm' class='xr-bt-sp' on-type-change=(action (mut currentRecipient.type))
+            '
+
+            = leaf-tooltip class='value' tooltip=(t 'paysend.form.scan') tooltip-placement='left'
+              = leaf-button size='sm' icon='fa fa-camera' outline=true on-click='openScanner' btype='button' type='primary' class='xr-bt-sp'
+            '
+            = leaf-tooltip class='value' tooltip=(t 'paysend.form.ab') tooltip-placement='left'
+              = leaf-button size='sm' icon='fa fa-list' outline=true on-click='openAb' btype='button' class='xr-bt-sp'
+            //= leaf-clipboard receiver=true  content=currentRecipient.address size='sm' tooltip=(t 'paysend.form.clipboard') tooltip-placement='left'
+
+
+      .row
+        .col-sm-4.col-xs-8
+          = if currentRecipient.entireBalance
+            label.control-label = t 'paysend.form.amount.label'
+            p.text-warning style='line-height: 35px;'
+              b = t 'paysend.form.entire-balance'
+          = else
+            = em-input type='number' property='amount' label=(t 'paysend.form.amount.label')  placeholder=(t 'paysend.form.amount.ph') class='form-group required'
+        .col-sm-1.col-xs-4.xr-top-sp-f
+          = leaf-button size='sm' icon='fa fa-fire' outline=true on-click='toggleEntireBalance' active=currentRecipient.entireBalance disabled=blockEntireBalance
+
+        .col-sm-3.col-xs-5 class="{{if currentRecipient.entireBalance 'hidden'}}"
+          = em-select label=(t 'paysend.form.currency.label') content=currencies property='currency'
+        .col-sm-4.col-xs-7 class="{{if currentRecipient.entireBalance 'hidden'}}"
+          = if currentRecipient.currencyIsBtc
+            = em-input property='amountInCurrFmt' label=currencySvc.currencySymbol disabled=true
+          = else
+            = em-input property='amountInBtcFmt' label=cm.btcUnit disabled=true
+
+
+      /.row
+        .col-xs-3.col-xs-offset-9
+          .pull-right
+            = leaf-tooltip class='value' tooltip=(t 'paysend.form.ab') tooltip-placement='left'
+              = leaf-button size='sm' icon='fa fa-list' outline=true on-click='openAb' btype='button'
+            '
+            = leaf-clipboard receiver=true content=currentRecipient.address size='sm' tooltip=(t 'paysend.form.clipboard') tooltip-placement='left'
+
+      .row
+        .col-xs-12
+          = misc/more-info prompt=(t 'paysend.form.more') class='no-padding-t'
+            = label-picker selection=currentRecipient.labels label=(t 'paysend.form.labels.label') labelsSet='txLabels'
+            = em-input property='info'  label=(t 'paysend.form.info.label') placeholder=(t 'paysend.form.info.ph')
+            .well.no-margin-b
+              .row.hidden-sm.hidden-xs
+                .col-xs-6
+
+                  .row
+                    .form-group
+                      .col-xs-8
+                        label.control-label = t 'paysend.form.rbf'
+                      .col-xs-4.text-right
+                        p  = leaf-switcher checked=optRBF size='sm' theme='modern'
+                  .row
+                    .form-group
+                      .col-xs-8
+                        label.control-label = t 'paysend.form.unc'
+                      .col-xs-4.text-right
+                        p = leaf-switcher checked=allowUnconfirmed size='sm' theme='modern'
+
+                .col-xs-6
+                  label.control-label = t 'paysend.form.fees'
+                  = send/fees-selector feesMult=feesMult onchange=(action (mut feesMult))
+              .hidden-md.hidden-lg
+                .row
+                  .form-group
+                    .col-xs-8
+                      label.control-label = t 'paysend.form.rbf'
+                    .col-xs-4.text-right
+                      p  = leaf-switcher checked=optRBF size='sm' theme='modern'
+                .row
+                  .form-group
+                    .col-xs-8
+                      label.control-label = t 'paysend.form.unc'
+                    .col-xs-4.text-right
+                      p = leaf-switcher checked=allowUnconfirmed size='sm' theme='modern'
+                .row
+                  .form-group
+                    .col-xs-4
+                      label.control-label = t 'paysend.form.fees'
+                    .col-xs-8.text-right
+                      = send/fees-selector feesMult=feesMult onchange=(action (mut feesMult))
+
+    = liquid-if (and (not hasRecipients) currentRecipient.isValid) class='ll-down-up'
+      .panel-footer
+        .row
+          .col-xs-4
+            = leaf-button type='default' on-click='submitRecipient' icon="fa fa-user-plus" block=true disabled=currentRecipient.entireBalance
+          /.col-xs-12
+          .col-xs-8
+            = leaf-button type='primary' on-click='submitRecipientComplete' icon="fa fa-check" block=true disabled=busy

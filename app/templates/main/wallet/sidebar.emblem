@@ -1,0 +1,25 @@
+
+// top image with buttons
+.profile-block.hidden-xs
+  .panel.profile-photo
+    img src='images/safe-mini.jpg'
+  br
+  /= leaf-button type='success' icon='fa fa-check' label="Active" active=false
+  /'
+  /= leaf-button type='default' icon='fa fa-code' active=false
+
+
+// About box
+= leaf-panel simple-header=true class='panel-transparent' title=(t 'view.side.wallet.title')
+  .panel-body
+    .note.note-default
+      p = t 'wallet.sidebar.about.caption'
+    /= if credentials.backupConfirmed
+      p = leaf-label type='success'
+        i.fa.fa-check
+        '
+        = t 'wallet.backup.ok'
+
+    /= else
+      p = leaf-label type='warning'
+        = t 'wallet.backup.missing'

@@ -1,0 +1,33 @@
+
+= leaf-note type='info'
+  = if updateMeta.isRunning
+    .w-status.spinner.bounce-middle
+  h4 = t 'view.prefs.profile.title'
+  p = t 'view.prefs.profile.caption'
+
+  table.table.table-compact
+    tbody
+      tr
+        td: b
+          = t 'prefs.profile.identity'
+        td: b.pull-right.break-words = cm.currentAccount.cmo.pubId
+
+      tr
+        td: b
+          = t 'prefs.profile.alias'
+        td: b.pull-right = cm.currentAccount.cmo.alias
+
+      tr
+        td: b
+          = t 'prefs.profile.name'
+        td: .pull-right = leaf-editable-validated model=account property='cmo.pubMeta.name' maxlength=32 on-change='changedName' if-empty=(t 'generic.not-set')
+      tr
+        td: b
+          = t 'prefs.profile.address'
+        td.break-words: .pull-right = leaf-editable-validated allow-enter=true text-area=true model=account property='cmo.pubMeta.address'  on-change='changedAddress' if-empty=(t 'generic.not-set') as |val|
+          = breaklines val
+      tr
+        td: b
+          = t 'prefs.profile.profile'
+        td.break-words: .pull-right = leaf-editable-validated allow-enter=true text-area=true model=account property='cmo.pubMeta.profile' on-change='changedProfile' if-empty=(t 'generic.not-set') as |val|
+          = breaklines val

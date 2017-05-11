@@ -1,0 +1,18 @@
+
+= each accounts as |account|
+  li role='menu-item' class='animated fadeIn' class={ if (and accountRoute (eq account cm.currentAccount)) 'selected' }
+    /= link-to targetRoute account.num disabled=(eq account cm.currentAccount)
+    = link-to targetRoute account.num
+      span.menu-icon.accent class=account.color
+        = account.identifier
+      span.mm-text
+        = format-text account.name len=20
+        = stream/stream-counter account=account property='urgent' vclass='label-warning'
+        '
+        = stream/stream-counter account=account property='newer' vclass='label-success animated tada'
+      .mm-text
+        = if (not account.isComplete)
+          .text-xs.text-light-gray
+            = leaf-progress value=account.completeness.complete striped=true style='margin-top: 8px; margin-bottom: 4px; height: 4px;'
+            span.no-margin-t
+              = t 'account.selector.joined' count=account.completeness.count total=account.totalSignatures

@@ -1,0 +1,38 @@
+= if cm.ready
+  .row.grid-gutter-margin-b
+    .col-md-4.text-center
+      img.icon-side src='images/icons/scan-pair.svg'
+    .col-md-8
+
+      = liquid-if pairing class='ll-down-up'
+        .row
+          .col-md-12
+            = wallet/pair-export on-done='donePairing'
+            = leaf-button icon='fa fa-trash' block=true type='default' on-click='donePairing'
+      = else
+        = leaf-note
+          h4 = t 'wallet.devices.pair.title'
+          p = t 'wallet.devices.pair.caption'
+          p.text-warning: b = t 'wallet.devices.pair.warn'
+        = leaf-button icon='fa fa-plus' block=true  on-click='startPairing'
+
+  .row
+    .col-md-4
+      = wallet/primary-device
+    .col-md-8
+      = if cm.currentWallet.info.isPrimaryDevice
+        .row
+          .col-md-12
+            .well
+              h4 = t 'wallet.devices.title'
+              p = t 'wallet.devices.caption'
+              = if cm.ready
+                = wallet/devices-list reloadTrigger=pairing
+
+      = else
+        .row
+          .col-md-12
+            = leaf-note
+              h4 = t 'wallet.devices.delete.title'
+              p = t 'wallet.devices.delete.caption'
+              p = leaf-button label=(t  'wallet.devices.list.deleteall') type='warning' block=true on-click='deleteAllDevices' outline=true

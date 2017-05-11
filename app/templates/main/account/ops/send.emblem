@@ -1,0 +1,77 @@
+= if cm.ready
+
+  .row
+    .col-md-8.col-md-offset-4
+      .account-identifier
+        = liquid-bind cm.currentAccount use='toLeft' as |a|
+          span.account-id.animated.fadeInRight class=a.color
+            = a.identifier
+          span.text-semibold: = a.name
+
+
+  .row
+    .col-md-4
+      = if (not cm.currentAccount.amSummary)
+        .panel.panel-transparent
+          .note.note-warning
+            h4 = t 'paysend.no-coins.title'
+            p = t 'paysend.no-coins.caption'
+
+      = else if cm.currentAccount.balance.amUnconfirmed
+        .panel.panel-transparent
+          .note
+            h4 = t 'paysend.funds.title'
+            table.table
+              thead
+                tr
+                  td.text-right.text-light-gray.uppercase = t 'paysend.funds.unconfirmed'
+                  td.text-right.text-light-gray.text-semibold.uppercase = t 'paysend.funds.available'
+              tbody
+                tr
+                  td.text-right
+                    span.text-light-gray.lowercase = cm.btcUnit
+                    '
+                    span.label = format-btc cm.currentAccount.balance.amUnconfirmed compact=true
+                  td.text-right
+                    span.text-light-gray.lowercase = cm.btcUnit
+                    '
+                    span.label.label-warning = format-btc cm.currentAccount.balance.amAvailable compact=true
+
+            p = t 'paysend.funds.caption'
+
+      = else
+        .panel.panel-transparent
+          .note
+            table.table
+              thead
+                tr
+                  td.text-right.text-light-gray.text-semibold.uppercase = t 'paysend.funds.available'
+              tbody
+                tr
+                  td.text-right
+                    span.text-light-gray.lowercase = cm.btcUnit
+                    '
+                    span.label.label-warning = format-btc cm.currentAccount.balance.amAvailable compact=true
+
+
+    .col-md-8
+      .panel
+        = if busy
+          .w-status.spinner.bounce-middle
+        = send/payment-send [
+          recipients=recipients
+          currentRecipient=currentRecipient
+          preparedTx=preparedTx
+          on-submit='addRecipient'
+          on-complete='preparePayment'
+          on-submit-complete='addRecipientPrepare'
+          on-propose='proposePayment'
+          on-confirm='confirmPayment'
+          on-cancel='cancelPayment'
+          on-scan='openScanner'
+          busy=busy
+          signingProgress=signingProgress
+          signing=signing
+          showSummary=showSummary
+          elementAlerts=elementAlerts ]
+

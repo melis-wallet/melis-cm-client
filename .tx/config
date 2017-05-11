@@ -1,0 +1,15 @@
+[main]
+host = https://www.transifex.com
+
+[melis-wallet.messages]
+type = PROPERTIES
+source_lang = en
+source_file = i18n/messages.properties
+file_filter = i18n/messages_<lang>.properties
+
+[melis-wallet.melis]
+type = YAML
+source_lang = en
+source_file = i18n/melis-en.yml
+file_filter = i18n/melis-<lang>.yml
+

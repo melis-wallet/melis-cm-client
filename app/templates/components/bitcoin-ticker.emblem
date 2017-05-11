@@ -1,0 +1,28 @@
+= liquid-if currencySvc.value use='toDown'
+
+  .stat-panel class="{{ if compact 'compact' }}"
+    .stat-cell.bg-danger.valign-middle.no-padding-b
+      i.fa.fa-bitcoin.bg-icon
+      .pull-right
+        = if compact
+          span.text-md
+            = liquid-bind currencySvc.value use='toDown' as |value|
+              span.text-sm.text-slim
+                = currencySvc.currencySymbol
+              strong = format-money value
+          br
+
+        = else
+          span.text-xlg
+            = liquid-bind currencySvc.value use='toDown' as |value|
+              span.text-lg.text-slim
+                = currencySvc.currencySymbol
+              strong = format-money value
+
+    .stat-row
+      .stat-cell.bg-danger.valign-middle.no-padding-t
+        = liquid-if currencySvc.serie class='ll-down-up'
+          = unless compact
+            .text-xs style='margin-bottom: 5px;'
+              = t 'ticker.history'
+          = misc/spark-line values=currencySvc.serie

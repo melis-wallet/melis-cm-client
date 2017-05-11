@@ -1,0 +1,30 @@
+.panel-heading
+  .widget-basic-bg-icon
+    i.fa.fa-bitcoin.animated.fadeInDown
+  img.widget-basic-avatar src='/images/avatar-1.jpg'
+  .widget-basic-header
+    = liquid-bind accountName use='toLeft' class='title'
+    | Lorem Ipsum dolor sit
+
+= leaf-alert-area dark=true max-alerts=1
+= liquid-if cm.walletOpenFailed use='toDown' reverse='toUp'
+  = leaf-alert dark='true' dismiss=false
+    h4 Sign In Failed
+    p Sign in has failed with the test user: create a new test user
+    = leaf-button type='warning'  class='pull-right' on-click='createTestUser' icon='fa fa-magic'
+    .clearfix
+
+.widget-basic-counters
+  .col-xs-4
+    = liquid-bind amReserved use='toUp' class='primary-val'
+    | RESERVED
+  .col-xs-4
+    = liquid-bind amAvailable use='toUp'  class='primary-val'
+    | AVAILABLE
+  .col-xs-4
+    = liquid-bind amUnconfirmed  use='toUp' class='primary-val'
+    | UNCONFIRMED
+.widget-basic-text
+  | Values are expressed in
+  '
+  b millis

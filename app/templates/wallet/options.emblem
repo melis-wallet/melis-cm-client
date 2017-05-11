@@ -1,0 +1,26 @@
+.signin-form
+  /= leaf-note
+    h4 = t 'wallet.enroll.title'
+    p = t 'wallet.enroll.text'
+
+  .options style='min-height: 220px'
+    = link-to 'wallet.enroll' class='btn btn-primary btn-block' tabindex='0'
+      = t 'wallet.options.enroll'
+
+    br
+
+    = link-to 'wallet.pair' class='btn btn-default btn-block' tabindex='0'
+      = t 'wallet.options.pair'
+
+    = link-to 'wallet.recover' class='btn btn-default btn-block' tabindex='0'
+      = t 'wallet.options.recover'
+
+    = link-to 'wallet.import' class='btn btn-default btn-block' tabindex='0'
+      = t 'wallet.options.import'
+
+  br
+  .signin-with
+    = if credentials.validCredentials
+      = link-to 'wallet.sign-in' class='btn btn-default btn-block' tabindex='0'
+        i.fa.fa-arrow-left
+

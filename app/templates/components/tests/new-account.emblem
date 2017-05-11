@@ -1,0 +1,15 @@
+= leaf-alert-area alerts=elementAlerts dark=true embedded=true
+
+= leaf-note title="Create new account" type='info' class='no-margin-vr'
+  | This allows you to create new accounts for tests.
+
+= em-form model=this submitButton=false action='submitSendFunds'
+  .panel-body
+    .row
+      .col-xs-12
+        = em-input property='name' label='Name' placeholder="Enter a name for the account..."
+        = leaf-select-2 content=accountTypes value=accountType optionValuePath="id" placeholder="Choose the account type..." searchEnabled=false
+    .row
+      .col-xs-12.padding-sm-vr
+
+        = leaf-button type='primary' icon='fa fa-check' block=true on-click='accountCreate' disabled=notReady

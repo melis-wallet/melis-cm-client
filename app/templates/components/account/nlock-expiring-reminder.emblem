@@ -1,0 +1,22 @@
+= if account.needsRecovery
+  = liquid-if managing class='ll-down-up'
+    .row
+      .col-md-12
+        .panel
+          .panel-heading.light
+            = if apiOps.isRunning
+              .w-status.spinner.bounce-middle
+            .panel-heading-controls
+              = leaf-button type='sm' outline=true icon='fa fa-times' on-click='toggleManaging'
+          .panel-body
+            = account/nlock-expiring unspents=unspents account=account
+
+  = else if firstExpiring
+
+    = leaf-note type="warning"
+      h4 = t 'view.nlock.reminder.title'
+      p = t 'view.nlock.reminder.caption'
+
+      = leaf-button icon='fa fa-arrow-down' block=true outline=true on-click='toggleManaging'
+
+

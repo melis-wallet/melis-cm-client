@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+
+[melis-wallet.prova]
+source_file = transifex/prova.yml
+source_lang = en
+type = YAML
+#file_filter = po/<lang><lang>.po
+#trans.fi = translations/fi/LC_MESSAGES/django.po
+

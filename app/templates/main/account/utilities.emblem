@@ -1,0 +1,36 @@
+.row
+  .col-md-12
+    h2 = t 'account.utils.title'
+    p = t 'account.utils.caption'
+    hr
+
+
+.row
+  .col-md-6
+    /= leaf-note
+      h4 = t 'account.utils.profile.title'
+      p = t 'account.utils.profile.caption'
+
+      p: span.code-label
+        a href="{{remote-link 'public.profile' encodedUniqueId}}" target="_blank"
+          = remote-link 'public.profile' encodedUniqueId
+
+    = leaf-note
+      h4 = t 'account.utils.donate.title'
+      p = t 'account.utils.donate.caption'
+
+      p: a href="{{remote-link 'public.payto' encodedUniqueId}}" target="_blank"
+        img src='images/donate-180x70.png'
+
+      hr
+      p = t 'account.utils.donate.explain'
+      p = textarea type=text value=donateCode readonly=true autoresize=true max-rows=10 class='form-control'
+
+  .col-md-6
+    = leaf-note
+      h4 = t 'account.utils.payto.title'
+      p = t 'account.utils.payto.caption'
+
+      p: span.code-label
+        a href="{{remote-link 'public.payto' encodedUniqueId}}" target="_blank"
+          = remote-link 'public.payto' encodedUniqueId

@@ -1,0 +1,7 @@
+= power-select options=feesOptions selected=feesOption searchEnabled=false onchange=( action 'setFees') as |o|
+  = t o.label
+  '
+  span.text-light-gray
+    |(
+    =o.value
+    |x)

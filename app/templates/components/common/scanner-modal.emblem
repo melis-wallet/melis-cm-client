@@ -1,0 +1,11 @@
+
+= leaf-modal id=modalId bottom=true class='no-over' as |mod|
+  = leaf-modal-header title='QR Code' modal=mod class='top-accent-success'
+  = leaf-modal-body
+    = if mediaError
+      .alert.alert-dark = t 'qr.scan.errors.media-error'
+    = else if mod.did-open
+      = misc/qr-scanner on-valid-code='successAcquire' on-media-error='mediaError' autostart=true showControls=false
+  /= leaf-modal-footer modal=mod
+    = leaf-modal-button icon='fa fa-code' type='default' label=(t 'qr.scan.dismiss') modal=mod dismiss=true
+    = leaf-modal-button icon='fa fa-check' type='primary' label=(t 'qr.scan.accept')  modal=mod value='ok'

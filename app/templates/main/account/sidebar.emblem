@@ -1,0 +1,114 @@
+
+// top image with buttons
+.profile-block.hidden-xs
+  .panel.profile-photo
+    img src='images/phone-mini.jpg'
+  br
+  /= leaf-button type='success' icon='fa fa-check' label="Active" active=false
+  /'
+  /= leaf-button type='default' icon='fa fa-code' active=false
+
+
+// About box
+= leaf-panel simple-header=true class='panel-transparent' title=(t 'view.side.account.title')
+  .panel-body
+    = if account.isMultisig
+      .text-slg.text-light-gray
+        span: strong = account.cmo.minSignatures
+        span.text-xlg.text-slim
+          |/
+          = account.totalSignatures
+        = if account.info.serverSignature
+          img src='images/icons/server.svg'  class='account-icon'
+    = else if account.info.serverSignature
+        img src='images/icons/acc_sing_server.svg'  class='account-icon large'
+    = else
+      img src='images/icons/acc_sing.svg'  class='account-icon large'
+
+    /p = t 'view.side.account.caption'
+    p: .label: = t ( account-types account.cmo.type )
+    = if account.info.serverSignature
+      p = leaf-label content=(t 'account.multi.status.server-sig')
+    = if account.info.serverMandatory
+      p = leaf-label content=(t 'account.multi.status.server-mand')
+
+/= leaf-panel simple-header=true class='panel-transparent' title=(t 'view.side.backup.status')
+  .panel-body
+    = if credentials.backupConfirmed
+      p = leaf-label type='success'
+        i.fa.fa-check
+        '
+        = t 'wallet.backup.ok'
+    = else
+      p = leaf-label type='danger'
+        = t 'wallet.backup.missing'
+
+// multisig state
+= if account.isMultisig
+  = leaf-panel simple-header=true class='panel-transparent' title=(t 'view.side.multi.title')
+    .panel-body
+      = if account.isComplete
+        p: .label.label-success = t 'view.side.multi.alljoin'
+      = else
+        = leaf-progress value=account.completeness.complete striped=true style='margin-top: 8px; margin-bottom: 4px; height: 4px;'
+        span.no-margin-t
+          = account.completeness.count
+          | /
+          = account.totalSignatures
+          '
+          = t 'view.side.multi.joined'
+        p
+        p: .label.label-warning = t 'view.side.multi.joinwait'
+
+      p
+        = t 'view.side.multi.fees' fees=accountFees
+
+
+
+
+// Balances
+= if account.isComplete
+  = leaf-panel simple-header=true class='panel-transparent' title=(t 'view.side.movements.title')
+    .panel-body
+      table.table.table-compact
+        tbody
+          tr.active
+            td: b = t 'view.side.movements.day'
+            td: = format-btc account.balance.spentInDay blank='---'
+          tr
+            td: b = t 'view.side.movements.week'
+            td: = format-btc account.balance.spentInWeek blank='---'
+          tr
+            td: b = t 'view.side.movements.month'
+            td: = format-btc account.balance.spentInMonth blank='---'
+
+
+  = leaf-panel simple-header=true class='panel-transparent' title=(t 'view.side.balance.title')
+    .panel-body
+      = leaf-note type='default'
+        = t 'view.side.balance.caption'
+
+      table.table.table-compact
+        tbody
+          tr.active
+            td: b = t 'view.side.balance.available'
+            td.text-right: = format-btc account.balance.amAvailable blank='---'  fullPrecisionAligned=true
+          tr
+            td: b = t 'view.side.balance.reserved'
+            td.text-right: = format-btc account.balance.amReserved blank='---'  fullPrecisionAligned=true
+          tr
+            td: b = t 'view.side.balance.unconfirmed'
+            td.text-right: = format-btc account.balance.amUnconfirmed blank='---'  fullPrecisionAligned=true
+          tr
+            td: b = t 'view.side.balance.unmature'
+            td.text-right: = format-btc account.balance.amUnmature blank='---'  fullPrecisionAligned=true
+
+  / tags are gone? lele fixme
+  /= leaf-panel simple-header=true class='panel-transparent' title='Tags'
+    .panel-body
+       = leaf-label type='primary' class='m-sm' content='Personal'
+       = leaf-label type='primary' class='m-sm' content='Simple'
+       = leaf-label type='primary' class='m-sm' content='Test'
+       = leaf-label type='primary' class='m-sm' content='Testnet'
+       = leaf-label type='primary' class='m-sm' content='Checkings'
+

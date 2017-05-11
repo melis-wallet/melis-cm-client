@@ -1,0 +1,25 @@
+= link-to 'main.account.summary' account.num
+  span.menu-icon.accent class="{{account.color}}"
+    = account.identifier
+  span.mm-text
+      = format-text account.name len=20
+      = stream/stream-counter account=account property='urgent' vclass='label-warning'
+      '
+      = stream/stream-counter account=account property='newer' vclass='label-success animated tada'
+.mm-buttons
+  = if account.isComplete
+    .btn-group
+        = link-to 'main.account.view' account.num class='btn btn-primary btn-outline dark'
+          i.fa.fa-cog
+        = link-to 'main.account.history' account.num class='btn btn-primary btn-outline dark'
+          i.fa.fa-list
+    .label = format-btc account.amSummary compact=true
+  = else
+    .btn-group
+      = link-to 'main.account.view' account.num class='btn btn-primary btn-outline dark'
+        i.fa.fa-cog
+    .pull-right
+      .text-xs.text-light-gray
+        = leaf-progress value=account.completeness.complete striped=true style='margin-top: 8px; margin-bottom: 4px; height: 4px;'
+        span.no-margin-t
+          = t 'account.selector.joined-s' count=account.completeness.count total=account.totalSignatures

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "534881682672",
+    "firebase_url": "https://melis-46036.firebaseio.com",
+    "project_id": "melis-46036",
+    "storage_bucket": "melis-46036.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534881682672:android:42041ca1bddd0f9e",
+        "android_client_info": {
+          "package_name": "io.melis.clientwallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "534881682672-493ihs4ba2hes294ptcl3ihao90okbr8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSIB4GPCnTOipfjKlqvfbAQYQ5ColG0qw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

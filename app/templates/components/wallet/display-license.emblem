@@ -1,0 +1,21 @@
+= ember-wormhole to='modal-wormhole'
+  = leaf-modal id=modal-id backdrop-dismiss=false as |mod|
+    = leaf-modal-header title=(t 'license.modal.title') modal=mod
+    = leaf-modal-body class='modal-lim'
+      p: b = t 'license.scroll-hint'
+      hr
+      br
+      = partial licenseFile
+      = misc/scroller-guard on-enter='enableAccept' on-exit='disableAccept'
+    = leaf-modal-footer modal=mod
+      = if displayOnly
+        .row
+          .col-xs-4.col-xs-offset-8
+            = leaf-modal-button icon='fa fa-check' type='primary' modal=mod value='ok' block=true
+      = else
+        .row
+          .col-xs-8
+            = leaf-modal-button type='default' label=(t 'license.act.reject') modal=mod value='cancel' block=true tabindex='0'
+          .col-xs-4
+            = leaf-modal-button icon='fa fa-check' type='primary' label=(t 'license.act.accept') modal=mod value='ok' block=true disabled=notAcceptable
+= yield this

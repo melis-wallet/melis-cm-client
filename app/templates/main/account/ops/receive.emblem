@@ -1,0 +1,32 @@
+= if cm.ready
+  .row
+    .col-md-8.col-md-offset-4
+      .account-identifier
+        = liquid-bind cm.currentAccount use='toLeft' as |a|
+          span.account-id.animated.fadeInRight class=a.color
+            = a.identifier
+          span.text-semibold: = a.name
+
+
+  .row
+    .col-md-4.hidden-xs.hidden-sm
+      = liquid-if  showCurrent class='ll-down-up'
+        .panel
+          .panel-body
+            = misc/qr-code content=currentCode id='current-qrcode' height=192 width=192 placeholder='placeholder'
+
+    .col-md-8
+      = payment-current-address on-code-change='changedCurrentCode' on-select-active='setActive'
+
+
+  .row
+    .col-md-4.hidden-xs.hidden-sm
+      = log activeCode
+      = if showActive
+        .panel
+          .panel-body
+            = code
+            = misc/qr-code content=activeCode id='active-qrcode' height=192 width=192 placeholder='placeholder'
+
+    .col-md-8
+      = payment-active-address hinted=active on-code-change='changedActiveCode' on-select-active='setActive'

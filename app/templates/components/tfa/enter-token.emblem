@@ -1,0 +1,17 @@
+.row
+  .col-sm-12
+    = if showSendButton
+      = leaf-note type='info'
+        h4 = t 'tfa.token.title'
+        p = t 'tfa.token.caption'
+        = leaf-button label=(t 'tfa.token.button' ) on-click='sendToken' disabled=sendToken.isRunning
+        b.label.pull-right = info-text
+
+= liquid-if showForm class='ll-down-up'
+  .row
+    .col-sm-8
+      = em-form model=this submitButton=false action='enterToken' validationIcons=false
+        = em-input property='token' type='text' placeholder=(t 'tfa.token.form.token.ph' )
+    .col-sm-4
+      = if isValid
+        = leaf-button icon='fa fa-check' type='primary' block=true on-click='enterToken' class=(if running 'btn-loading') disabled=running

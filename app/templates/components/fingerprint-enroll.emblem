@@ -1,0 +1,14 @@
+= if fpa.isSupported
+  = leaf-note type='default'
+    img src='images/icons/fingerprintN.svg' style='width: 30px; height: 30px;'
+    h4 = t 'wallet.prefs.fingerprint.title'
+    p = t 'wallet.prefs.fingerprint.caption'
+
+    label  = t 'wallet.prefs.fingerprint.label'
+    .pull-right = leaf-switcher checked=fpa.successfullyEnrolled size='sm' on-toggle='toggleFpa' theme='modern'
+
+= else if fpa.isHardwareDetected
+  = leaf-note type='default'
+    img src='images/icons/fingerprintN.svg' style='width: 30px; height: 30px;'
+    h4 = t 'wallet.prefs.fp-avail.title'
+    p = t 'wallet.prefs.fp-avail.caption'

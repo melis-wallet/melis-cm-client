@@ -1,0 +1,4 @@
+a
+  i.nav-icon class=current.icon
+  span.label
+    = label

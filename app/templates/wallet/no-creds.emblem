@@ -1,0 +1,6 @@
+.signin-form
+  = leaf-note type='danger'
+    h4 = t 'wallet.no-creds.title'
+    p = t 'wallet.no-creds.caption'
+  = link-to 'application' class='btn btn-danger btn-block'
+    i.fa.fa-home

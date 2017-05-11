@@ -1,0 +1,47 @@
+= liquid-if shown class='ll-down-up'
+  = leaf-panel simple-header=false class='panel-transparent' title='Recent Transactions'
+    = leaf-alert-area alerts=elementAlerts dark=true embedded=true
+    = leaf-note type='default' class='no-margin-b'
+      h4 = t 'tx.txs.title'
+      p = t 'tx.txs.caption'
+    .panel-body
+      .sly.frame
+        .slidee.ul.nav.nav-pills.nav-stacked
+          = each preparedTxs as |tx|
+            li  class={ if (eq tx.id currentTx.id) 'active' }
+              a href='#' click="'selectTx' tx"
+                b = format-btc tx.cmo.amount withUnit=true
+                |,
+                '
+                = moment-from-now tx.cmo.cd
+                span.label: i.fa class=tx.signIcon
+
+                /tr click="'selectTx' tx" class={ if (eq tx selectedTx) 'info' }
+                  td
+                    p
+                      = moment-from-now tx.cmo.cd
+                      br
+                      .text-light-gray.small = format-text (co-signer tx.cmo.account you="You") len=10
+                  td: b = format-btc tx.cmo.amount
+                  /td = leaf-label content=tx.cmo.status
+                  td = leaf-label class=tx.signIconClass
+                    i.fa class=tx.signIcon
+
+        .scrollbar
+          .handle
+
+
+      = if detail
+        = liquid-if selectedTx class='ll-down-up'
+          = tx/prepared-tx tx=selectedTx view='compact'
+          /.row
+            .col-sm-6
+              = leaf-button icon='fa fa-trash' on-click='deleteSelectedTx' type='default' block=true
+            .col-sm-6
+              = leaf-button icon='fa fa-check' on-click='resumeSelectedTx' type='primary' block=true
+  br
+= else
+  = leaf-panel simple-header=false class='panel-transparent' title='Recent Transactions'
+    = leaf-note type='default' class='no-margin-b'
+      h4 = t 'tx.notxs.title'
+      p = t 'tx.notxs.caption'

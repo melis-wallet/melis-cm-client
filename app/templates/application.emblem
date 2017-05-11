@@ -1,0 +1,6 @@
+= leaf-toasts location="top"
+= leaf-toasts location="bottom"
+= outlet
+= common/overlay-network-status id='status-overlay'
+= leaf-modal-alert id='global-alert'
+#modal-wormhole

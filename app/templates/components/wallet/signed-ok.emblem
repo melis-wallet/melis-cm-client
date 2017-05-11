@@ -1,0 +1,20 @@
+.signin-form
+
+  = if noAccounts
+    = leaf-note type='warning'
+      h4 = t 'wallet.signed.noacct.title'
+      p = t 'wallet.signed.noacct.caption'
+      p
+        = link-to 'wallet.create-account' class='btn btn-primary'
+          = t 'wallet.signed.create'
+
+  = else
+    = leaf-note
+      h4 = t 'wallet.signed.success.title'
+      p = t 'wallet.signed.success.caption'
+    br
+
+    = link-to 'main.account.summary' 0  class='btn btn-primary btn-block'
+      i.fa.fa-dashboard
+      '
+      = t 'wallet.signed.success.link'

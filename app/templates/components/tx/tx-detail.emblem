@@ -1,0 +1,99 @@
+
+.row
+  .col-md-6
+    = moment-format tx.time
+  .col-md-6.text-right
+    = if tx.cmo.optInRbf
+      .label.label-warning = t 'tx.detail.rbf'
+      '
+    = common/block-height tx=tx.cmo always-show=true
+.row
+  .col-md-4
+  .col-md-8.text-right
+    = if tx.cmo.meta.currencyData.native
+      .text-xlg.text-default
+        strong = format-money  tx.cmo.meta.currencyData.amount compact=false abs=true
+        span.text-lg.text-slim.lowercase = tx.cmo.meta.currencyData.currency
+      .text-lg.text-default
+        strong = format-btc tx.cmo.amount compact=false abs=true
+        span.text-bg.text-slim.lowercase = cm.btcUnit
+    = else
+      .text-xlg.text-default
+        strong = format-btc tx.cmo.amount compact=false abs=true fullPrecision=true
+        span.text-lg.text-slim.lowercase = cm.btcUnit
+      .text-lg.text-default
+        strong = to-currency tx.cmo.amount compact=false abs=true
+        span.text-bg.text-slim.lowercase = cm.globalCurrency
+
+
+.row
+  .col-md-3
+
+  .col-md-9
+    = if tx.negative
+      i.fa.fa-arrow-circle-o-left.icon-tx
+    = else
+      i.fa.fa-arrow-circle-o-right.icon-tx
+
+    table.table.table-compact
+      tbody
+
+
+        = if tx.negative
+          tr
+            td: b = t 'tx.detail.to'
+            td.text-right: span.break-words = tx.cmo.address
+          tr
+            td: b = t 'tx.detail.fees'
+            td.text-right = format-btc tx.cmo.fees blank='---' withUnit=true
+
+
+        tr
+          td: b.break-words = t 'tx.detail.info'
+          td.text-right = leaf-editable-text value=tx.cmo.meta.info if-empty='---' on-change='changeTxInfo' ident=tx max-length=160
+        tr
+          td: b = t 'tx.detail.labels'
+          td.text-right = misc/tags-list selection=tx.cmo.labels labelsSet='txLabels' on-done-edit='changeTxLabels'
+
+        tr
+          td: b = t 'tx.detail.hash'
+          td.text-right
+            = tx/link-to-explorer hash=tx.cmo.tx class='small break-words'
+              tx.cmo.tx
+
+        tr
+          = if tx.negative
+            td: b = t 'tx.detail.address'
+            td.text-right: span.small.break-words = tx.cmo.address
+          = else if tx.cmo.address
+            td: b = t 'tx.detail.received-ad'
+            td.break-words.text-right.text-small
+              = link-to 'main.account.address.detail' tx.account.num tx.cmo.address
+                = tx.cmo.address
+
+
+
+= if ptx
+  = if tx.account.isMultisig
+    .row
+      .col-xs-12.text-right
+        / enable this when ptxs retrieves arbitrary ptxs from URI instead of just those into the local idmap
+        /= link-to 'main.account.ptx.detail' ptx.cmo.id
+          =  t 'tx.detail.moreinfo'
+    .row.padding-sm-vr
+      .col-xs-5.text-right style='border-right: 1px solid #ccc;'
+        .text-default.text-semibold.uppercase = t 'tx.detail.ptx.sigs'
+        .text-slg.text-light-gray
+          span: strong = ptx.cmo.signatures.length
+          span.text-xlg.text-slim
+            |/
+            = tx.account.totalSignatures
+        = if c.account.isMandatory
+          .label = t 'stream.ptx.is-mandatory'
+      .col-xs-7
+        .text-default.text-semibold.uppercase = t 'tx.detail.ptx.cosigners-no' count=tx.account.totalSignatures
+        br
+        = ptx/signers-list signers=ptx.cmo.signatures account=tx.account table-class='table-striped table-no-border'
+
+
+

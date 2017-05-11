@@ -1,0 +1,17 @@
+.content-wrapper id='content-wrapper'
+  = if cm.walletOpenFailed
+      = t 'generic.loginfailed'
+  = else if cm.ready
+    .stream-cnt.row
+      = stream/dashboard-box class='col-sm-4'
+      .col-sm-8
+        = bitcoin-ticker
+    .row
+      .col-sm-4
+        = each accounts as |acct|
+          = account-dash-summary account=acct
+      .col-sm-8
+        = stream/wallet-view
+
+  = else
+    | Not Ready

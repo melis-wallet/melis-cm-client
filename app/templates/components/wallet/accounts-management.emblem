@@ -1,0 +1,27 @@
+if apiOps.isRunning
+  .w-status.spinner.bounce-middle
+
+table.table.table-striped
+  tbody
+    = each accounts as |a|
+      tr
+        td
+          .account-icon class="{{ if a.invisible 'inactive' }}"
+            span.icon.colored-bg class=a.color
+              = a.identifier
+        td
+          b = a.name
+          = if a.invisible
+            '
+            .label
+              i.fa.fa-eye-slash
+          = if a.secure
+            '
+            span.label.label-info = t 'account.secure'
+        td
+          = leaf-button-group class='flex' outline=true
+            = leaf-button icon='fa fa-eye-slash' on-click='toggleInvisible' value=a active=a.invisible tooltip=(t 'account.a.hide-show')
+            = if a.secure
+              = leaf-button icon='fa fa-lock' on-click='unsetSecure' value=a active=true disable=apiOps.isRunning tooltip=(t 'account.a.unsecure')
+            = else
+              = leaf-button icon='fa fa-lock' type='warning' on-click='setSecure' value=a disable=apiOps.isRunning tooltip=(t 'account.a.secure')

@@ -1,0 +1,31 @@
+
+.col-md-12
+  .panel.panel-info
+    .panel-heading.light
+      span.icon: i.fa.fa-lock
+      i.text-default = live-moment-from-now entry.updated
+    .panel-body
+      = if canceled
+        .row
+          .col-xs-3
+          .col-xs-9
+            .note.note-warning
+              h4  = t 'stream.evt.tfad-cancel.title' label=label id=event.cmo.deviceId  time=(live-moment-from-now  entry.updated)
+              p = t 'stream.evt.tfad-cancel.caption'
+      = else
+        .row
+          .col-xs-3
+          .col-xs-9
+            .note.note-danger
+              h4  = t 'stream.evt.tfad.title' label=label id=event.cmo.deviceId  time=(live-moment-from-now  entry.updated)
+              p = t 'stream.evt.tfad.caption'
+              = if entry.isCanceled
+                p.text-light-gray.text-semibold = t 'stream.evt.tfad.canceled'
+              = else
+                p.text-light-gray.text-semibold = t 'stream.evt.tfad.expire' time=(live-moment-from-now event.cmo.expireDate)
+
+        = unless entry.isCanceled
+          .row
+            .col-xs-3
+            .col-xs-9
+              p = leaf-button type='danger' icon='fa fa-trash' on-click='cancelRecovery' block=true

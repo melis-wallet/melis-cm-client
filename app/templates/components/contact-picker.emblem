@@ -1,0 +1,43 @@
+.widget-ab
+  = if searchable
+    .well style='padding-top: 10px; padding-bottom: 0'
+      = if return-btn
+        = leaf-button on-click='returnBtn' icon=return-btn outline=true size='sm'
+
+      .pull-right
+        .form-group.has-feedback
+          = input type='text' value=searchSeed class='form-control input-sm'
+          i.fa.fa-search.form-control-feedback
+      .clearfix
+
+  = if empty class='ll-down-up'
+    = leaf-note type='default'
+      h4 = t 'ab.state.no-contacts'
+      p  = t 'ab.state.populate'
+      p
+        = link-to 'main.abs' class='btn'
+          = t 'ab.links.manage'
+
+  = else if noMatches
+    = leaf-note type='default'
+      h4 = t 'ab.state.no-matches'
+
+  .panel-body.sly.frame style='max-height: 220px;'
+    .slidee
+      = each filteredEntries as |e|
+        .ab-entry
+          /img.ab-entry-avatar src=e.avatarUrl
+          span.ab-entry-avatar class="{{ if e.isCm 'cm' }}"
+            e.identifier
+          .body
+            .ab-entry-controls
+              = leaf-button icon='fa fa-check' on-click='selectEntry' value=e size='sm' outline=true
+            = e.name
+            br
+            = e.val
+            if e.labels
+              span.ab-entry-labels
+                = each e.labels as |l|
+                  span.label.label-info = l
+    .scrollbar
+      .handle

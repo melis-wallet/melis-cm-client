@@ -1,0 +1,76 @@
+.panel-body.no-padding-b
+  .row
+    .col-sm-1
+      .spaced = leaf-label
+        i.fa.fa-users
+
+    .col-sm-11
+      table.table
+        tbody
+          = each recipients as |rec|
+            tr
+              = if rec.isAddress
+                td: span.label.label-info: i.fa.fa-btc
+
+                td.break-words
+                  p = rec.value
+                  small
+                    = each rec.labels as |l|
+                      span.label = l
+                      '
+                    span.text-light-gray = format-text rec.meta.info len=15
+              = else if rec.isAccount
+                td: span.label: i.fa.fa-share-square
+
+                td
+                  p
+                    span.label.colored-bg class=rec.value.color style='min-width: 24px; margin-right: 5px;' = rec.value.identifier
+                    b = rec.value.name
+                  small
+                    = each rec.labels as |l|
+                      span.label = l
+                      '
+                    span.text-light-gray = format-text rec.meta.info len=15
+
+              = else if rec.isCm
+                td: span.label.label-danger: i.fa.fa-vcard
+                td
+                  p
+                    = if rec.value.alias
+                      span.label.brk.m-sm.label-info = rec.value.alias
+                      span.label.brk.m-sm = rec.value.pubId
+                    = else
+                      span.label.m-sm.label-info = rec.value.pubId
+                  small
+                    = each rec.labels as |l|
+                      span.label.m-sm = l
+                    span.text-light-gray = format-text rec.meta.info len=15
+              td
+                = if paymentReady
+                  = if isEntireBalance
+                    = t 'paysend.form.entire-balance'
+                  = else
+                    = format-btc rec.fullAmount
+                = else
+                  = if rec.entireBalance
+                    = t 'paysend.form.entire-balance'
+                  = else
+                    = format-btc rec.fullAmount
+              td
+                = if paymentReady
+                  span.text-light-gray = to-currency rec.fullAmount withUnit=true
+                = else
+                  = leaf-button value=rec on-click='deleteRecipient' outline=true icon='fa fa-trash' size='xs'
+          = if preparedTx
+            tr.warning
+              td colspan=2 = t 'paysend.tx.info.fees'
+              td: span.animated.flash = format-btc fees
+              td: span.text-light-gray = to-currency fees withUnit=true
+          tr
+            td colspan=2: b = t 'paysend.tx.info.total' unit=cm.btcUnit
+            td: b
+              = if paymentReady
+                = format-btc preparedTx.cmo.amount
+              = else
+                = format-btc total
+            td = to-currency total withUnit=true

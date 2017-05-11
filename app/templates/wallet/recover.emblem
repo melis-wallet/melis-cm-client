@@ -1,0 +1,1 @@
+= wallet/recover-wizard class='signin-form no-padding' on-backbutton='abortWizard'

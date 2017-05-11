@@ -1,0 +1,72 @@
+= if (or apiOps.isRunning refresh.isRunning)
+  .w-status.spinner.bounce-middle
+
+= leaf-note
+  h4 = t 'view.nlock.unspents.title'
+  p = t 'view.nlock.unspents.caption'
+  = if error
+    .alert.alert-danger.alert-dark
+      = t 'view.nlock.transaction.error'
+
+
+= if doneTx
+  = leaf-alert type='success'  alert-dismissed='clearDone'
+    = t 'view.nlock.tx.success'
+  = if account.isMultisig
+    = leaf-alert type='warning' alert-dismissed='clearDone'
+      = t 'view.nlock.tx.multi'
+
+= if preparedTx
+  = leaf-note type='warning'
+    h4 = t 'view.nlock.transaction.title'
+    p = t 'view.nlock.transaction.caption'
+    table.table.table-striped
+      tbody
+        tr.danger
+          td = t 'view.nlock.transaction.fees'
+          td.text-right = format-btc preparedTx.cmo.fees withUnit=true
+
+  .row
+    .col-md-4
+      = leaf-button icon='fa fa-trash' type='default' on-click='cancelRotation' block=true
+    .col-md-8
+      = leaf-button icon='fa fa-check' type='warning' on-click='confirmRotation' block=true
+
+= else if validUnspents
+
+  table.table.table-striped
+    thead
+      tr
+        th
+        th
+          = t 'view.nlock.unspents.expires'
+        th
+          = t 'view.nlock.unspents.amount'
+    tbody
+      = each validUnspents as |u|
+        tr class="{{if u.checked 'active'}}"
+          td
+            = common/block-expire value=u.blockExpire
+          td
+            = estimate-block-time u.blockExpire relative=true
+          td
+            = format-btc u.amount withUnit=true
+          td
+            = input type='checkbox' checked=u.checked disabled=(not u.blockMature)
+
+  .row
+    .col-md-4
+      p = leaf-button icon='fa fa-refresh' on-click='refresh' block=true outline=true
+    .col-md-8
+      = if checkedUnspents
+        p = leaf-button label=(t 'view.nlock.rotate.some' count=activeUnspents.length) on-click='rotateAll' value=activeUnspents outline=true block=true type='warning'
+      = else
+        p = leaf-button label=(t 'view.nlock.rotate.all') on-click='rotateAll' value=activeUnspents outline=true block=true type='warning'
+
+= else
+
+  .alert.alert.info
+    p = t 'view.nlock.unspents.none'
+    .pull-right
+      = leaf-button icon='fa fa-refresh' on-click='refresh' block=true outline=true
+    .clearfix

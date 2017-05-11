@@ -1,0 +1,3 @@
+br
+br
+= account/addresses-list addresses=addresses hasNext=hasNext on-select-addr='selectAddr' on-next-page='nextPage'

@@ -1,0 +1,18 @@
+= if success
+  = leaf-alert type='success' dark=true
+    | Pin changed with success
+
+= if error
+  = leaf-alert type='danger' dark=true
+    | Pin was not changed
+
+= if changing
+  .row
+    .col-sm-12
+      = wallet/set-pin-input on-set-pin='setNewPIN'
+      br
+  .row
+    .col-sm-12
+      = leaf-button icon='fa fa-trash' type='default' block='true' on-click='toggleChange'
+= else
+  = leaf-button label=(t 'prefs.pin.button') type='warning' block='true' on-click='toggleChange'

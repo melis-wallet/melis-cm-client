@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "917844659095",
+    "firebase_url": "https://melis-testnet.firebaseio.com",
+    "project_id": "melis-testnet",
+    "storage_bucket": "melis-testnet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917844659095:android:4d2f58bca1025c36",
+        "android_client_info": {
+          "package_name": "io.melis.testwallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "917844659095-jcjam1m2pvm2ulho6q6n3evugg9md67c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4PsWgFttL17_aKsIabhrY0yDCz5cmroI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

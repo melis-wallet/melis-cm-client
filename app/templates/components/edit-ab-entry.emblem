@@ -1,0 +1,62 @@
+= em-form model=value submitButton=false action='submitEntry'
+
+  .form-group
+    label.control-label = t 'ab.form.type.label'
+
+    = power-select options=contactTypes selected=currentType searchEnabled=false onchange=(action 'changeType') as |type|
+      b = type.label
+
+
+
+  = em-input property='name' label=(t 'ab.form.name.label') placeholder=(t 'ab.form.name.ph') class='form-group required'
+
+  = if value.isCm
+    .form-group class="{{if aliasError 'has-error has-feedback'}}{{if aliasInfo 'has-success has-feedback'}} required"
+      label.control-label = t 'ab.form.alias.label'
+      .input-group
+        = input type='text' value=value.alias class='form-control' placeholder=(t 'ab.form.alias.ph')
+        span.input-group-btn style='min-width: 100px'
+          = leaf-button type='default' icon='fa fa-search' block=true on-click='lookupAlias' class=(if checkAlias.isRunning 'btn-loading')
+      = if aliasError
+        span.help-block
+          = aliasError
+
+    = liquid-if accountInfo class='ll-down-up'
+      .panel.panel-info.panel-dark
+        table.table.table-compact
+
+          tbody
+            tr
+              td: b
+                = t 'ab.table.pubid'
+              td: b.pull-right = accountInfo.pubId
+
+            tr
+              td: b
+                = t 'ab.table.alias'
+              td: b.pull-right = accountInfo.alias
+
+            = if accountInfo.pubMeta.name
+              tr
+                td: b
+                  = t 'ab.table.name'
+                td: .pull-right = accountInfo.pubMeta.name
+            = if accountInfo.pubMeta.profile
+              tr
+                td: b
+                  = t 'ab.table.profile'
+                td: .pull-right = accountInfo.pubMeta.profile
+
+
+  = else
+    .row
+      .col-xs-10
+        = em-input property='address' label=(t 'ab.form.address.label') placeholder=(t 'ab.form.address.ph')
+      .col-xs-2
+        = leaf-button type='default' icon='fa fa-camera' outline=true  type='sm' on-click='scanAddress' class="xr-top-sp-f"
+
+  = label-picker selection=value.labels label=(t 'ab.form.labels.label') labelsSet='abLabels'
+
+  = liquid-if value.isValid class='ll-down-up'
+    = leaf-button type='primary' icon='fa fa-magic' block=true on-click='submitEntry'
+

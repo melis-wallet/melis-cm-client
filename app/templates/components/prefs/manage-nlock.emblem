@@ -1,0 +1,55 @@
+//= leaf-note type='success'
+  .row
+    .col-sm-6
+      h5 = t 'view.nlock.recovery.active' days=lockTime
+    .col-sm-6
+
+
+= if account.hasServer
+  = if lockTime
+    = leaf-note type='success'
+      h5 = t 'view.nlock.recovery.time' days=lockTime
+      .pull-right
+        = power-select options=lockTimeOpts selected=selectedLockOpt searchEnabled=false searchPlaceholder=(t 'view.nlock.time.ph') onchange=(action 'changeLockTime') as |v|
+          = t v.label
+      .clearfix
+  = else
+    = leaf-note type='warning'
+      h5 = t 'view.nlock.recovery.disabled'
+      .pull-right
+        = power-select options=lockTimeOpts selected=selectedLockOpt searchEnabled=false searchPlaceholder=(t 'view.nlock.time.ph') onchange=(action 'changeLockTime') as |v|
+          = t v.label
+      .clearfix
+
+
+= if account.needsRecovery
+  = if recoveryInfo
+    = leaf-note type='info'
+      h4 = t 'view.nlock.recovery.title'
+      p = t 'view.nlock.recovery.caption'
+      p: b = t 'view.nlock.recovery.retr'
+      table.table.table-striped
+        tbody
+          tr
+            td
+              .label
+                = live-moment-from-now recoveryInfo.ts
+            td.text-right
+              = misc/download-property data=recoveryInfo filename=(concat account.uniqueId filenameBase) btnClass='btn-sm btn-outline'
+              '
+              = leaf-button icon='fa fa-refresh' on-click='getRecovery' type='sm' outline=true
+
+
+  = else
+    = leaf-note
+      h4 = t 'view.nlock.recovery.title'
+      p = t 'view.nlock.recovery.caption'
+      p: b = t 'view.nlock.recovery.nofile'
+
+
+      = leaf-button icon='fa fa-refresh' on-click='getRecovery' outline=true block=true
+
+
+  = if account.hasServer
+    = account/nlock-expiring unspents=unspents account=account
+

@@ -1,0 +1,2 @@
+h4 = t 'account.wizard.t-with-server.title'
+p = t 'account.wizard.t-with-server.caption'

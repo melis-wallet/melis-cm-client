@@ -1,0 +1,71 @@
+= mm/main-menu id='main-menu' as |menu|
+  //= main-welcome id='menu-content-main' name='Lele' greeting='Hello,'
+  //= leaf-main-navigation expandedMenu=menu.expanded class='animated fadeIn'
+
+  ul.navigation role='navigation'
+    = mm/main-navigation-entry
+      = link-to 'main.account.dashboard' cm.currentAccount.num
+        i.menu-icon.fa.fa-dashboard
+        span.mm-text.mmc-dropdown-delay.animated.fadeIn
+          = t 'mm.entries.dashboard'
+          = stream/stream-counter property='urgent' vclass='label-danger'
+          '
+          = stream/stream-counter property='newer' vclass='label-warning animated tada'
+
+
+    = mm/current-account account=cm.currentAccount
+
+
+    = mm/main-navigation-entry class='mm-button-alt'
+      = link-to 'main.account.view' cm.currentAccount.num
+        i.menu-icon.fa.fa-cog
+        span.mm-text.mmc-dropdown-delay.animated.fadeIn = t 'mm.entries.account'
+
+    = mm/main-navigation-entry class='mm-button-alt'
+      = link-to 'main.account.history' cm.currentAccount.num
+        i.menu-icon.fa.fa-list
+        span.mm-text.mmc-dropdown-delay.animated.fadeIn = t 'mm.entries.history'
+
+
+    = if cm.currentAccount.isComplete
+      = mm/main-navigation-entry
+        = link-to 'main.account.ops.send' cm.currentAccount.num
+          i.menu-icon.fa.fa-credit-card
+          span.mm-text.mmc-dropdown-delay.animated.fadeIn = t 'mm.entries.send'
+
+      = mm/main-navigation-entry
+        = link-to 'main.account.ops.receive' cm.currentAccount.num
+          i.menu-icon.fa.fa-inbox
+          span.mm-text.mmc-dropdown-delay.animated.fadeIn = t 'mm.entries.receive'
+
+    = mm/main-navigation-entry class='mm-button-alt'
+      = link-to 'main.abs'
+        i.menu-icon.fa.fa-users
+        span.mm-text.mmc-dropdown-delay.animated.fadeIn = t 'mm.entries.ab'
+
+    = mm/main-navigation-entry class='mm-button-alt'
+      = link-to 'main.wallet'
+        i.menu-icon.fa.fa-wrench
+        span.mm-text.mmc-dropdown-delay.animated.fadeIn = t 'mm.entries.prefs'
+
+  = unless cm.simpleMode
+    = mm/account-selector hidecurrent=true
+
+
+  .menu-content.animated.fadeIn
+    = misc/excited-state as |state excited|
+      = if excited
+        = leaf-button icon='fa fa-sign-out text-warning' class='btn btn-primary btn-outline dark' on-click=(action 'logout' target=menu)
+      = else
+        = leaf-button icon='fa fa-sign-out' class='btn btn-primary btn-outline dark' on-click=(action 'excite' target=state)
+    '
+    = link-to 'main.wallet' (query-params tab='maintenance' new-account=true) class='btn btn-primary btn-outline dark'
+      i.fa.fa-plus
+
+
+    .btn-group.pull-right click='selectMmClose'
+      = link-to 'main.wallet' class='btn btn-primary btn-outline dark'
+        i.fa.fa-wrench
+      = link-to 'main.abs' class='btn btn-primary btn-outline dark'
+        i.fa.fa-users
+

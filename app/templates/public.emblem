@@ -1,0 +1,6 @@
+.main-wrapper id='main-wrapper'
+  #content-wrapper.content-wrapper
+    .page-public
+      = outlet
+  div id='main-menu-bg'
+= common/aa-modal

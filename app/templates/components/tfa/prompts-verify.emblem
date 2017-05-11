@@ -1,0 +1,7 @@
+// device is d
+= if (eq d.name 'regtest')
+  p.text-right
+    | Enter the value
+    '
+    .label = d.value
+  hr

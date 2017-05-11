@@ -1,0 +1,13 @@
+= em-form model=this submitButton=false action='submitNewPassPhrase'
+  = em-input property='phrase' type='password' label=(t 'wallet.passphrase.pass.label') placeholder=(t 'wallet.passphrase.pass.ph') cid='phrase_input'
+  = em-input property='phraseCheck' type='password' label=(t 'wallet.passphrase.check.label') placeholder=(t 'wallet.passphrase.check.ph') cid='phrase_check'
+br
+= if hasBlock
+  .row
+    .col-sm-6
+      yield this
+    .col-sm-6
+      = if isValid
+        = leaf-button type='primary' block=true icon='fa fa-check' on-click='submitNewPassPhrase' id='submit-phrase'
+= else if isValid
+  = leaf-button type='primary' block=true icon='fa fa-check' on-click='submitNewPassPhrase' id='submit-phrase'

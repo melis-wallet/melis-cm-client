@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="io.melis.testwallet" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Melis Testnet</name>
+    <description>
+      An Advanced Bitcoin Wallet
+    </description>
+    <author email="lele@melis.io" href="http://melis.io">
+      Lele Forzani
+    </author>
+
+    <content src="index.html" />
+    <plugin name="cordova-plugin-whitelist" spec="1" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <icon src="res/melis-badger.png" />
+        <allow-intent href="market:*" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+        <preference name="StatusBarOverlaysWebView" value="false" />
+        <preference name="StatusBarStyle" value="lightcontent" />
+        <preference name="StatusBarBackgroundColor" value="#cccccc" />
+    </platform>
+    <engine name="android" spec="~5.2.2" />
+    <preference name="loadUrlTimeoutValue" value="90000" />
+    <preference name="AppendUserAgent" value="Melis" />
+    <preference name="xwalkVersion" value="20+" />
+    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
+    <preference name="xwalkMode" value="embedded" />
+    <preference name="xwalkMultipleApk" value="true" />
+    <preference name="android-minSdkVersion" value="16" />
+    <preference name="DisallowOverScroll" value="false" />
+    <preference name="FadeSplashScreen" value="true" />
+    <preference name="AutoHideSplashScreen" value="false" />
+    <plugin name="cordova-plugin-crosswalk-webview" spec="~2.0.0" />
+    <plugin name="phonegap-plugin-barcodescanner" spec="~6.0.1" />
+</widget>

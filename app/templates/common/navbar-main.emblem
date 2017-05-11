@@ -1,0 +1,32 @@
+= common/main-navbar id='main-navbar' logo-img='images/melis-full.svg'
+  // left navs
+  ul.nav.navbar-nav
+    //= leaf-navbar-link icon='fa fa-home' text='Home'
+    //= leaf-navbar-link icon='fa fa-code' text='Lorem Ipsum'
+
+    // notifications
+    /= unless media.isMobile
+      /= leaf-dropdown-icon count=notifService.notifications.length type='warning' title='Notifications' icon='fa fa-inbox' as |control|
+        = leaf-dropdown-container width='300px' class='widget-list' class='translucent'
+          = notifications-list notifCount=notifService.notifications.length height=200 shown=control.shown notifications=notifService.notifSorted
+
+
+  // right navs
+  .right.clearfix
+    ul.nav.navbar-nav.pull-right.right-navbar-nav
+
+      li.nav-icon-btn
+        a href='#' click='startGenericScanner'
+          i.nav-icon.fa.fa-camera
+
+      //= leaf-navbar-link icon='fa fa-camera' text='Scan a QR Code' destination='main.account.ops.send' query=(query-params open-scan=true)
+
+
+      // network status
+      //= common/navbar-network-status
+
+      // user
+      /= user-dropdown name='John Smith' image='/images/avatar-2.jpg'
+      = if cm.ready
+        = wallet/account-state class='animated slideInRight' on-logout=''
+        //= wallet-accounts-dropdown class='animated slideInRight' on-logout=''

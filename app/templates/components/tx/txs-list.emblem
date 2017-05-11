@@ -1,0 +1,61 @@
+
+.history-container-header
+  .account-identifier.no-padding-b
+    span.account-id class=account.color
+      account.identifier
+    span.text-semibold: = account.name
+    |:
+    '
+    = t 'tx.list.title'
+  /= t 'tx.list.title'
+  .pull-right
+    | &nbsp;
+    / search form\
+
+.history-controls
+  .btn-group
+    = leaf-button icon='fa fa-inbox' on-click='toggleFilter' value='in' active=(eq filter 'in') tooltip='Only Incoming'
+    '
+    = leaf-button icon='fa fa-credit-card' on-click='toggleFilter' value='out' active=(eq filter 'out') tooltip='Only Outgoing' tooltip-placement='bottom'
+    '
+    = leaf-button icon='fa fa-star' on-click='toggleFilter' value='star' active=(eq filter 'star') tooltip='Starred'
+ul.history-list
+  = each txsFiltered as |tx|
+    li.history-item class={ if (eq tx selected) 'active' } class={ if tx.cmo.meta.starred 'starred'}
+      = if tx.negative
+        .h-lbl style='opacity: 0.5;'
+          = common/block-height tx=tx.cmo
+      = else
+        .h-lbl
+          = common/block-height tx=tx.cmo
+      .h-star: a.has-action click="'toggleStar' tx"
+      .h-amount: a.expandable click="'selectTx' tx"
+        span.data
+          = format-btc tx.cmo.amount compact=true withUnit=true fullPrecision=true
+      .h-subject: a.expandable click="'selectTx' tx"
+        .span
+          = each tx.cmo.labels as |label|
+            .label.label-danger.label-tag = label
+          |&nbsp;&nbsp;
+          = if tx.cmo.meta.info
+            b = tx.cmo.meta.info
+          = else
+            span.break-words = tx.cmo.address
+      .h-date.expandable click="'selectTx' tx"
+        = leaf-tooltip tooltip=(moment-format tx.time) tooltip-position='left'
+          = live-moment-from-now tx.time
+
+      /span.data = format-btc tx.cmo.fees
+    = if (eq tx.id selected.id)
+      li.history-detail-c
+        = yield tx this
+  = else
+    .note
+      h4 = t 'tx.list.no-results'
+
+  = if pageOps.isRunning
+    .text-center
+      .spinner.bounce-middle
+  = else if account.txiFetchNext
+    hr
+    = leaf-button icon='fa fa-arrow-down' block=true outline=true on-click='getMore'

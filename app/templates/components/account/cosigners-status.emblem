@@ -1,0 +1,45 @@
+.row
+  .col-md-12
+    h3 = t 'account.multi.status.cosigners'
+    hr
+
+.row
+  .col-md-12
+    = leaf-note type='info'
+      h4 = t 'account.multi.status.title'
+      p = t 'account.multi.status.caption'
+
+
+    table.table
+      tbody
+        = each cosigners as |co|
+          tr
+            td
+              p
+                b = co.name
+                = if co.alias
+                  br
+                  span.text-xs = co.alias
+              = if co.isMaster
+                span.label.label-warning = t 'account.multi.status.master'
+              '
+              = if co.mandatory
+                span.label = t 'account.multi.status.mandatory'
+            td
+              .pull-right
+                = if co.activationDate
+                  .label.label-success
+                    = t 'account.multi.status.joined'
+                    '
+                    = live-moment-from-now co.activationDate
+                = else if co.code
+                  .pull-right
+                    .spaced
+                      = leaf-clipboard content=co.code size='sm' tooltip=(t 'account.multi.status.clip')
+                    .label = co.code
+                  p: small
+                    a href="{{remote-link 'public.join' co.code }}"
+                      = remote-link 'public.join' co.code
+
+                = else
+                  .label = t 'account.multi.status.not-joined'

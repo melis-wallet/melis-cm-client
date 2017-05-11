@@ -1,0 +1,13 @@
+= link-to 'main.account.summary' account.num
+  = stream/stream-counter account=account property='urgent' as |v|
+    = if v
+      .account-state.animated.slideInDown.delay-1s
+        span.icon.warning = v
+  = stream/stream-counter account=account property='newer' as |v|
+    = if v
+      .account-state.animated.slideInDown.delay-1s
+        span.icon.success = v
+  .account-icon
+    span.icon.colored-bg class=account.color
+      = account.identifier
+

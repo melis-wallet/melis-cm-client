@@ -1,0 +1,93 @@
+= leaf-wizards-control selected-idx=step completed-steps=completed step-back=stepBack as |ctrl|
+  = leaf-wizard-step caption=(t 'backup.ckw.intro.caption') number=1 description=(t 'backup.ckw.intro.descr')  parent=ctrl idx=1
+  = leaf-wizard-step caption=(t 'backup.ckw.pin.caption') number=2 description=(t 'backup.ckw.pin.descr')  parent=ctrl idx=2
+  = leaf-wizard-step caption=(t 'backup.ckw.mnemo.caption') number=3 description=(t 'backup.ckw.mnemo.descr')  parent=ctrl idx=3
+  = leaf-wizard-step caption=(t 'backup.ckw.qrc.caption') number=4 description=(t 'backup.ckw.qrc.descr')  parent=ctrl idx=4
+
+= if wizardComplete
+  .panel-body
+
+    .row
+      .col-sm-4.hidden-xs.text-center
+        img.icon-side-lg.animated.fadeIn.delay-1s src='images/icons/import-mnemonic.svg'
+      .col-sm-8
+        = leaf-note type='success'
+          h4 = t 'backup.ck.success.title'
+          p = t 'backup.ck.success.caption'
+
+        p = leaf-button icon='fa fa-check' block=true type='primary' on-click='done'
+= else
+  = leaf-navs-content class="wizard-content" selected-idx=step delay-render=false as |content|
+    = leaf-navs-panel parent=content idx=1
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-lock.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='info'
+            h4 = t 'backup.ck.intro.title'
+            p = t 'backup.ck.intro.caption'
+          p = leaf-button icon='fa fa-check' type='primary' block=true on-click='seenIntro'
+    = leaf-navs-panel parent=content idx=2
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-lock.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='info'
+            h4 = t 'backup.ck.pin.title'
+            p = t 'backup.ck.pin.caption'
+
+            = wallet/pin-input on-valid-pin='doneInputPin' inputId='pin_input_v'
+    = leaf-navs-panel parent=content idx=3
+      .row
+        .col-sm-4.hidden-xs.text-center
+          img.icon-side-lg.animated.fadeIn.delay-1s src='images/icons/import-mnemonic.svg'
+        .col-sm-8
+
+          p = leaf-note type='info'
+            h4 = t 'backup.ck.mnemo.title'
+            p = t 'backup.ck.mnemo.caption'
+          p = wallet/mnemonic-input on-valid-mnemonic='doneCollectMnemo' hasData=hasMnemonicData
+          = if importError
+            .alert.alert-dark
+              = importError
+          = else if failed
+            .alert.alert-dark.alert-danger
+              = failed
+            .alert.alert-dark.alert-warning
+              = t 'backup.ck.err.failed-encrypted'
+          = else if hasMnemonicData
+            / skip
+          = else
+            br
+            p = leaf-note type='default'
+              h4 = t 'backup.ck.or-qr.title'
+              p = t 'backup.ck.or-qr.caption'
+
+            p = leaf-button icon='fa fa-camera' block=true on-click='acquireQR'
+
+    = leaf-navs-panel parent=content idx=4
+      .row
+        .col-sm-4.hidden-xs.text-center
+          img.icon-side-lg.animated.fadeIn.delay-1s src='images/icons/import-mnemonic.svg'
+        .col-sm-8
+          = if failed
+            .alert.alert-dark.alert-danger
+              = failed
+            .alert.alert-dark.alert-warning
+              = t 'backup.ck.err.failed-encrypted'
+          = else
+            p = leaf-note type='info'
+              h4 = t 'backup.ck.cmnemo.title'
+              p = t 'backup.ck.cmnemo.caption'
+          p = em-form model=this submitButton=false action='submitPassphrase'
+            = em-input property='passphrase' type='password' label=(t 'wallet.mnemo.pass.label')  placeholder=(t 'wallet.mnemo.pass.ph')
+
+          = if failed
+            .row
+              .col-sm-8
+                p = leaf-button btype='button' type='default' block=true icon='fa fa-arrow-left' on-click='retryScan'
+              .col-sm-4
+                p = leaf-button btype='button' type='primary' block=true icon='fa fa-check' on-click='submitPassphrase'
+
+          = else if isValid
+            p = leaf-button btype='button' type='primary' block=true icon='fa fa-check' on-click='submitPassphrase'

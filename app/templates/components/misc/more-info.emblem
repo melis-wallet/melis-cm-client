@@ -1,0 +1,18 @@
+
+= liquid-if displayed use='crossFade'
+  a href='#' click='displayOff'
+    i.fa.fa-chevron-up
+= else
+  a href='#' click='displayOn'
+    i.fa.fa-chevron-down
+  '
+  = if prompt
+    a href='#' click='displayOn'
+      = prompt
+  = if icon
+    a href='#' click='displayOn'
+      i class=icon
+
+= liquid-if displayed class='ll-down-up'
+  .border-top
+    = yield this

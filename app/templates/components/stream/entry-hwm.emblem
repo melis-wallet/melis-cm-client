@@ -1,0 +1,9 @@
+
+.col-md-12
+  = liquid-if newCount class='ll-down-up'
+    .panel
+      .panel-body.text-center
+        p = t 'stream.hwm.new-events' count=newCount
+        a.btn.btn-primary click='showNew' href=''
+          = t 'stream.hwm.show'
+

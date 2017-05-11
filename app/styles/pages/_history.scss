@@ -1,0 +1,495 @@
+$history-padding: 16px;
+$history-nav-width: 120px;
+
+#content-wrapper.history {
+  padding: 0;
+}
+
+.history {
+  .icon-tx {
+    font-size: 120px;
+    opacity: 0.05;
+    position: absolute;
+    top: -100px;
+  }
+
+  background: #fff !important;
+
+  .history-detail-c {
+    display: block;
+  }
+
+  .history-detail {
+
+    border: 0px solid;
+    border-bottom-width: 1px;
+  }
+
+  .history-nav {
+    border: 0px solid;
+    border-bottom-width: 1px;
+
+    .navigation {
+      overflow: hidden;
+      position: relative;
+      padding-top: $main-navbar-height;
+      height: $main-navbar-height;
+
+      &.open {
+        height: auto;
+
+        li.active:after {
+          -ms-transform: rotate(90deg); /* IE 9 */
+          -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+          transform: rotate(90deg);
+        }
+      }
+    }
+
+    .sections {
+      margin: 10px 0;
+      padding: 0;
+
+      li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        @include transition(all .2s);
+
+        &.active {
+          position: absolute;
+          top: 0;
+          width: 100%;
+          border-bottom: 1px solid;
+
+          a {
+            line-height: $main-navbar-height;
+            font-size: 15px;
+          }
+
+          &:after {
+            content: "\f105";
+            font-family: FontAwesome;
+            position: absolute;
+            display: block;
+            right: $history-padding;
+            top: 8px;
+            font-size: 20px;
+            @include transition(all .2s);
+          }
+        }
+
+        &.active .label,
+        &.active .badge {
+          margin-top: 13px;
+          margin-right: $history-padding + 20;
+        }
+      }
+
+      .label,
+      .badge {
+        margin-top: 8px;
+        margin-right: $history-padding;
+      }
+
+      a {
+        display: block;
+        padding: 0 0 0 $history-padding;
+        line-height: 36px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .compose-btn {
+    margin-top: $main-navbar-height;
+    border-bottom: 1px solid;
+    padding: $history-padding;
+  }
+
+  .history-select-folder {
+    display: none;
+  }
+
+  .history-select-folder.active {
+    display: block;
+  }
+
+  .m-nav-icon {
+    width: 16px;
+    margin-right: 10px;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .history-nav-header {
+    margin-top: 25px;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding-left: $history-padding;
+    font-weight: 600;
+  }
+
+  .history-nav-lbl {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-right: 10px;
+  }
+
+  .history-nav .add-more a {
+    font-size: 12px;
+  }
+
+  .history-nav li.divider {
+    padding: 0;
+    height: 1px;
+    margin: 9px 0 3px 0;
+  }
+
+
+
+  // Controls
+  //
+
+  .history-controls {
+    border-bottom: 1px solid #efefef;
+    padding: 12px $history-padding;
+  }
+
+  .history-controls .btn-group + .btn-group {
+    margin-left: 12px;
+  }
+
+  .history-controls .btn {
+    font-size: 14px;
+    line-height: 14px;
+  }
+
+  .history-controls .btn .fa-caret-down {
+    position: relative;
+    top: -1px;
+  }
+
+  .history-controls .pages {
+    line-height: 30px;
+    margin-right: 13px;
+    color: #bbb;
+  }
+
+  @media(min-width: $screen-md) {
+    .history-controls .wide-btns .btn {
+      width: 60px;
+      text-align: center;
+      display: inline-block;
+    }
+  }
+
+
+  // Main container
+  //
+
+  .history-container-header {
+    display: none;
+    border-bottom: 1px solid #efefef;
+    line-height: 35px;
+    padding: 14px $history-padding;
+    font-size: 20px;
+    font-weight: 300;
+  }
+
+  .history-container-header.show {
+    display: block;
+  }
+
+}
+
+
+
+
+// ************************************************************************* //
+//**   Desktops                                                            **//
+
+@media(min-width: $screen-md) {
+  .history {
+    #content-wrapper {
+      position: static;
+    }
+
+  .icon-tx {
+    font-size: 120px;
+    opacity: 0.05;
+    position: absolute;
+    left: -110px;
+    top: 0;
+  }
+
+
+    // history navigation
+    //
+
+    .history-nav {
+      width: $history-nav-width;
+      border-bottom: 0;
+      position: absolute;
+      height: auto;
+      min-height: 100%;
+      border-right-width: 1px;
+
+      &.fixed {
+        position: fixed;
+
+        &:before {
+          display: none !important;
+        }
+      }
+
+      // Add fixed background
+      &:before {
+        content: "";
+        display: block;
+        top: 0;
+        bottom: 0;
+        position: fixed;
+        width: $history-nav-width;
+        border-right: 1px solid;
+        z-index: -1;
+      }
+
+      .navigation {
+        height: auto !important;
+        padding-top: 0;
+
+        .label {
+          font-size: 10px;
+          line-height: 16px;
+          padding: 0 4px;
+          margin-top: 11px !important;
+          margin-right: $history-padding !important;
+        }
+
+        li:after {
+          display: none !important;
+        }
+      }
+
+      .sections {
+        li.active {
+          position: static;
+          top: auto;
+          border: none;
+        }
+
+        a,
+        li.active a {
+          font-size: 13px;
+          line-height: 36px;
+        }
+      }
+    }
+
+    .history-select-folder {
+      display: none !important;
+    }
+
+
+    // history container
+    //
+
+    .history-container {
+      margin-left: $history-nav-width;
+      min-height: 400px;
+    }
+
+    .history-container-header {
+      display: block;
+      margin-top: $main-navbar-height;
+    }
+  }
+}
+
+
+// history list
+//
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+.history {
+  .history-list {
+    margin: $history-padding;
+    padding: 0;
+  }
+
+  .history-item {
+    margin: 0;
+    list-style: none;
+    position: relative;
+    padding: 12px 14px 12px 46px;
+
+
+    &.active {
+      background: #ddd;
+    }
+
+  }
+
+  .history-item:nth-child(2n-1) {
+    background: #f6f6f6;
+
+    &.active {
+      background: #ddd;
+    }
+  }
+
+  .h-lbl,
+  .h-star {
+    position: absolute;
+  }
+
+  .h-lbl {
+    left: 15px;
+    top: 14px;
+  }
+
+  .h-star {
+    left: 15px;
+    top: 35px;
+
+    padding: 0 2px;
+
+    a {
+      font-size: 15px;
+      color: #bbb;
+
+      &:before {
+        content: "\f006";
+        font-family: FontAwesome;
+      }
+
+      &:hover {
+        color: #ffab00;
+      }
+    }
+  }
+
+  .h-amount,
+  .h-subject {
+    margin-right: 80px;
+  }
+
+  // Amount
+  .h-amount a {
+    color: #444;
+  }
+
+  // Subject
+  .h-subject {
+    margin-top: 5px;
+
+    a {
+      color: #777;
+    }
+  }
+
+  // Date
+  .h-date {
+    position: absolute;
+    right: 15px;
+    top: 12px;
+    width: 80px;
+    text-align: right;
+    color: #aaa;
+  }
+
+  // history states
+  //
+
+  // Starred history
+  .history-item.starred .h-star a:before {
+    content: "\f005";
+    color: #ffab00;
+  }
+
+}
+
+
+// ************************************************************************* //
+//**   Desktops                                                            **//
+
+@media(min-width: $screen-md) {
+  .history {
+    .history-item {
+      padding-left: 220px;
+      padding-right: 100px;
+    }
+
+    // Star
+    .h-star {
+      padding: 3px 0;
+      left: 40px;
+      top:11px;
+    }
+
+    // Amount
+    .h-amount {
+      position: absolute;
+      overflow: hidden;
+      width: 140px;
+      left: 70px;
+    }
+
+    // Subject
+    .h-subject {
+      margin-top: 0;
+      overflow: hidden;
+    }
+
+    // Date
+    .h-date {
+      width: 150px;
+    }
+  }
+}
+
+
+// history Details
+//
+
+// ************************************************************************* //
+//**   Small screens (mobile first)                                        **//
+
+.history {
+  .h-details-star {
+    color: #ffab00;
+    margin-right: 12px;
+    position: relative;
+    display: block;
+    float: left;
+    top: 1px;
+
+    &,
+    & > * {
+      font-size: 15px;
+    }
+
+    & > * {
+      line-height: 20px;
+    }
+  }
+
+  .label {
+    position: relative;
+    vertical-align: middle;
+    top: -1px;
+  }
+
+
+
+}
+
+
+// New history
+//
+

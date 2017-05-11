@@ -1,0 +1,105 @@
+
+.panel.public
+  .public-header
+    h3
+      .public-logo: img src='images/melis-badger.svg' style="width:100%;height:100%;"
+      div
+        small
+          strong = t 'app.title'
+          = t 'app.wallet'
+        br
+        = t 'public.payto.app'
+
+    address
+      = t 'public.payto.caption'
+
+
+    .public-date
+      = moment-format date
+
+  .public-info
+    .public-recipient
+      h4.text-semibold.text-light-gray
+        = if model.pubMeta.name
+          = model.pubMeta.name
+        = else
+          = model.pubId
+      = if model.alias
+        span.m-sm.label.label-warning.brk
+          = model.alias
+      span.m-sm.label.brk
+        = model.pubId
+      br
+      = if model.pubMeta.address
+        = breaklines model.pubMeta.address
+      /= misc/more-info
+      = if model.pubMeta.profile
+        br
+        .row
+          .col-md-10.col-md-offset-1
+            p = leaf-note
+              = breaklines model.pubMeta.profile
+              br
+
+    .public-total click='setEditAmount'
+      = leaf-editable-number local-template=true editing=editAmount as |value displayedValue editing isvalid displayedError|
+        = if editing
+          .pull-left = cm.btcUnit
+          .pull-right.padding-xs-vr
+            = input type='text' value=btcAmount placeholder=(t 'public.payto.amount.ph') width=40 focus-out='changeAmount' enter='changeAmount' autofocus=true class='input-lg form-control animated fadeIn quick' tabindex='0'
+
+        = else
+          = leaf-tooltip class='value' tooltip=(t 'public.payto.amount.ph')
+            = format-btc amount
+          = t 'public.payto.total' unit=cm.btcUnit
+
+
+
+
+
+  /.public-table
+
+  .panel-body
+    .row
+      .col-md-6
+        = leaf-panel simple-header=true title=(t 'public.payto.note.title')
+          .panel-body
+            = leaf-editable-value value=info if-empty=(t 'public.payto.note.not-set') textArea=true on-change='changeInfo'
+        = if recipient.amount
+          = liquid-if (not cm.ready)
+            = if credentials.validCredentials
+              = leaf-note
+                h4 = t 'public.payto.sign.title'
+                p = t 'public.payto.sign.caption'
+
+              small
+                = t 'public.login.prompt'
+                '
+                strong = t 'app.title'
+                = t 'app.wallet'
+              = wallet/sign-in-place class='animated flash'
+          = else
+            = payment-quick-send recipient=recipient
+
+      .col-md-6.border-l
+        = if error
+          = leaf-alert type='warning' dark=true
+            = error
+        = if address
+          .row
+            .col-xs-12
+              .pull-right.padding-sm-vr = misc/qr-code-expandable size=192 content=paymentUrl id='qrcode'
+          .row
+            .col-xs-12
+              .pull-right.padding-sm-vr
+
+                .label = recipient.address
+            .row
+              .col-xs-12
+
+                = leaf-note type='info'
+                  h4 = t 'public.payto.scan.title'
+                  p = t 'public.payto.scan.caption'
+
+        = else
+          = leaf-button outline=true type='primary' label=(t 'public.payto.showcode') on-click='showCode' block=true

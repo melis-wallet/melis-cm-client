@@ -1,0 +1,43 @@
+= leaf-wizards-control selected-idx=step completed-steps=completed step-back=stepBack as |ctrl|
+  = leaf-wizard-step caption=(t 'pair.tabs.pin.caption') number=1 description=(t 'pair.tabs.pin.descr')  parent=ctrl idx=1
+  = leaf-wizard-step caption=(t 'pair.tabs.name.caption')number=2 description=(t 'pair.tabs.name.descr')  parent=ctrl idx=2
+  = leaf-wizard-step caption=(t 'pair.tabs.gen.caption') number=3 description=(t 'pair.tabs.gen.descr')  parent=ctrl idx=3
+
+
+= if wizardComplete
+    = leaf-note type='success'
+      h4 = t 'pair.w.done.title'
+      p = t 'pair.w.done.caption'
+= else
+
+  = leaf-navs-content class="wizard-content" selected-idx=step as |content|
+    = leaf-navs-panel parent=content idx=1
+      = leaf-note type='info'
+        h4 = t 'pair.w.pin.title'
+        p = t 'pair.w.pin.caption'
+      = wallet/pin-input on-valid-pin='doneEnterPIN' on-wrong-pin='failedPIN' inline=true
+
+    = leaf-navs-panel parent=content idx=2
+      = leaf-note type='default'
+        h4 = t 'pair.w.name.title'
+        p = t 'pair.w.name.caption'
+
+      .row
+        .col-md-9
+          = em-form model=this submitButton=false action='doneNameSelect'
+            = em-input property='deviceName' placeholder=(t 'pair.w.name.ph')
+        .col-md-3
+          = liquid-if isValid class='ll-left-right'
+            = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneNameSelect'
+
+
+    = leaf-navs-panel parent=content idx=3
+      = leaf-note type='info'
+        h4 = t 'pair.w.code.title'
+        p = t 'pair.w.code.caption'
+      = if secret
+        = if cm.testMode
+          = leaf-clipboard content=secret
+        = misc/qr-code-expandable content=secret height=codeSize width=codeSize img-class='qrcode-img' class='animated fadeIn delay-05s'
+      = else
+        .loader

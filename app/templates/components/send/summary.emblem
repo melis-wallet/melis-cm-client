@@ -1,0 +1,15 @@
+
+div class={paymentReady:table-warning:table-info}
+  table.table.table-condensed
+    thead
+      tr
+        th Amount
+        th Fees
+        th Total
+    tbody
+      tr
+        td = format-btc amount
+        td.text-warning.text-bold = format-btc fees blank='...'
+        td: b = format-btc total
+
+

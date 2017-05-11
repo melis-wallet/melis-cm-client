@@ -1,0 +1,52 @@
+.panel.export
+  .panel-body
+    = if exportedGeneratorQR
+      .row
+        .col-md-1
+          p.hidden-print = link-to 'main.account.summary' cm.currentAccount.num class='btn btn-outline'
+            i.fa.fa-chevron-left
+        .col-md-5
+        .col-md-6
+
+
+      .row
+        .col-md-10.col-md-offset-1.text-center
+          img.logo-icon src='images/melis-full.svg'
+
+      .row
+        .col-md-10.col-md-offset-1.text-center
+          h2.uppercase.text-warning.text-semibold = t 'info.backup.title'
+
+      .row.padding-sm-vr
+        .col-md-8.col-md-offset-2.text-center
+          p: i  = t 'info.backup.caption'
+
+      .row
+        .col-md.12.text-center.bg-warning.warning
+          h2.uppercase = t 'info.backup.warn'
+
+
+      .row.padding-sm-vr
+        .col-md-8.col-md-offset-2.text-center
+          p: b = t 'info.backup.instructions'
+
+      .row
+        .col-md-8.col-md-offset-2.text-center
+          p = t 'info.backup.additional'
+
+      .row
+        .col-md.12
+          .export-cont class="{{if includeFancy 'fancy'}}"
+            = misc/qr-code content=exportedGeneratorQR height=280 width=280 class='export-qrc'
+
+      .row.padding-sm-vr
+        .col-md-8.col-md-offset-2.text-center
+          h4 = t 'info.backup.mnemo.title'
+          p = t 'info.backup.mnemo.caption'
+          = leaf-alert dismiss=false class='mnemo'
+            = exportedMnemonic
+
+    = else
+      .alert.alert-danger
+        h4 There was an error
+        p This should not happen. Please restart the application.

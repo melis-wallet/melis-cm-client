@@ -1,0 +1,23 @@
+.signin-form
+  .row
+    .col-md-4.hidden-xs.text-center
+      i.fa.fa-magic.icon-side-lg.animated.fadeIn.delay-1s
+    .col-md-8
+
+      = link-to 'wallet.pair' class='btn btn-default btn-block'
+        = t 'welcome.pair.title'
+      p = t 'welcome.pair.caption'
+
+      = link-to 'wallet.recover' class='btn btn-default btn-block'
+        = t 'welcome.recover.title'
+      p = t 'welcome.recover.caption'
+
+
+      = link-to 'wallet.import' class='btn btn-default btn-block'
+        = t 'welcome.import.title'
+      p = t 'welcome.import.caption'
+
+      = if credentials.validCredentials
+        br
+        = leaf-alert dark=true dismiss=false
+          = t 'welcome.has-credentials'

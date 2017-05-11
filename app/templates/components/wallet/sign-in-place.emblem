@@ -1,0 +1,38 @@
+
+form id='signin-form_id' submit='tryLogin'
+
+
+  = if deviceLocked
+    div style='min-height: 110px;'
+      = leaf-note type='danger'
+        h4 = t 'wallet.signin.locked.title'
+        p = t 'wallet.signin.locked.caption'
+  = else
+
+    = liquid-if showLowAttempts class='ll-down-up'
+      = leaf-note type='warning'
+        h4 = t 'wallet.signin.last.title'
+        p = t 'wallet.signin.last.caption'
+
+        = leaf-button type='danger' on-click='lastTry' block=true icon='fa fa-check'
+
+
+    = else
+      .row
+        .col-xs-8
+          .form-group.w-icon class={signInError:has-error signInError:has-feedback}
+            .input-group
+              span.input-group-addon.bg-none
+                i.fa.fa-unlock
+              = input class='form-control  disabled' type='password' name="signin_pin" id="secret_id" placeholder=(t 'wallet.signin.pin') value=signinPin tabindex='0' autofocus=true
+            = if signInError
+              span.form-control-feedback
+                i.fa.fa-times
+              span.help-block.animated.fadeInUp.quick
+                = signInError
+        .col-xs-4
+
+          .form-actions
+            = liquid-if isValid class='ll-down-up'
+              = leaf-button type='primary' on-click='tryLogin' block=true icon=signinIcon disabled=signingIn
+

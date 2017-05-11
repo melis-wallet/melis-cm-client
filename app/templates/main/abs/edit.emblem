@@ -1,0 +1,11 @@
+.row
+  .col-sm-2
+    = leaf-button-group
+      = link-to 'main.abs' class='btn btn-primary'
+        i.fa.fa-arrow-left
+      = link-to 'main.abs.detail' model class='btn'
+        i.fa.fa-edit
+br
+= edit-ab-entry value=model edit=true on-save='updateAbEntry'
+br
+hr

@@ -1,0 +1,126 @@
+
+.col-md-12
+  .panel
+    .panel-heading.light
+      = if apiOps.isRunning
+        .w-status.spinner.bounce-middle
+      = leaf-tooltip tooltip=(moment-format entry.updated)
+        i.text-default = live-moment-from-now entry.updated
+      .panel-heading-controls
+        = leaf-button type='sm' outline=true icon=(if showControls 'fa fa-chevron-up' 'fa fa-chevron-down') on-click='toggleControls'
+    .panel-body
+      .row.padding-sm-vr.no-padding-t
+        .col-md-3
+          /span.label.m-sm-r: i.fa.fa-bitcoin
+          = unless used
+            = misc/qr-code-expandable  content=code img-class='qrcode-img' class='animated fadeIn'
+          = if address.cmo.labels
+            hr
+            = each address.cmo.labels as |label|
+              .label.label-info.label-tag.m-sm-r = label
+
+        .col-md-8.col-md-offset-1
+          = liquid-if showControls use='fade'
+            //= if showControls
+            // edit
+
+
+            table.table
+              tbody
+                = if address.time
+                  tr
+                    td: i.fa.fa-calendar
+                    td.text-right
+                      = live-moment-from-now address.time
+                tr.bg-light-gray
+                  td.lowercase = cm.btcUnit
+                  td: .pull-right
+                    = leaf-editable-number [
+                      positive=true
+                      allowBlank=true
+                      size='lg'
+                      value=(scale-btc address.cmo.meta.amount)
+                      on-change='changeAmount'
+                      if-empty=(t 'newaddr.empty.amount')
+                      inputClass='text-right text-bold']
+                      = if address.cmo.meta.amount
+                        span.text-xlg.text-default.text-semibold = format-btc address.cmo.meta.amount
+                      = else
+                        = t 'newaddr.empty.amount'
+                = if address.cmo.meta.amount
+                  tr
+                    td.lowercase = cm.globalCurrency
+                    td.text-right = to-currency address.cmo.meta.amount
+
+
+                tr style='height: 48px;'
+                  td: i.fa.fa-file-text
+                  td.text-right
+                    = leaf-editable-text class='info-input' value=address.cmo.meta.info if-empty=(t 'newaddr.empty.info') on-change='changeInfo' max-length=160
+                      b.break-words = address.cmo.meta.info
+
+                tr style='height: 58px;'
+                  td: i.fa.fa-tags
+                  td.text-right
+                    = misc/tags-list selection=address.cmo.labels labelsSet='txLabels' on-done-edit='changeLabels' control='right'
+
+                tr
+                  td = leaf-switcher checked=wantLink theme='modern'
+                  td.text-right
+
+                    = if wantLink
+                      = t 'newaddr.active.type.melis'
+                    = else
+                      = t 'newaddr.active.type.bitcoin'
+
+
+
+          = else
+            / replace with something better than a table
+            table.table.table-condensed
+              tbody
+                tr
+                  td colspan='2'
+                    = t 'stream.addr.generated' when=(live-moment-from-now address.time)
+
+                = if address.cmo.meta.amount
+                  tr.bg-light-gray
+                    td.lowercase = cm.btcUnit
+                    td.text-right.text-lg.text-semibold.text-default = format-btc address.cmo.meta.amount compact=true
+
+                = if address.cmo.meta.info
+                  tr
+                    td: i.fa.fa-file-text
+                    td.text-right: b.break-words = address.cmo.meta.info
+                tr
+                  td.text-right colspan='2': span.code-label = clipCode
+                = if used
+                  tr
+                    td colspan='2'
+                      = t 'stream.addr.used-in' count=address.usedIn.length
+                      '
+                      a click="'selectUsedTx' tx.address.usedIn.lastObject.id"
+                        = t 'stream.addr.see-it'
+
+                    /td Used in
+                    /td.text-right: ul
+                      = each address.usedIn as |tx|
+                        a click="'selectUsedTx' tx.id"
+                          tx.id
+                        '
+
+      = liquid-if showControls class='ll-down-up'
+        .row.padding-sm-vr.border-b
+          .col-sm-10.col-xs-9
+            = liquid-bind clipCode use='fade' as |c|
+              span.code-label = clipCode
+            .hidden = addressUrl
+            .hidden = code
+          .col-sm-2.col-xs-3.text-right
+            p = leaf-clipboard size='xs' block=false outline=true content=clipCode tooltip=(t 'newaddr.a.clip')
+
+        .row.padding-sm-vr.no-padding-b
+          .col-xs-4
+            = leaf-button icon='fa fa-trash' on-click='releaseAddr' block=true tooltip=(t 'stream.addr.a.cancel') disabled=apiOps.isRunning
+          /.col-xs-6.col-xs-offset-2
+            = leaf-button icon='fa fa-check' on-click='hideControls' block=true type='primary' tooltip=(t 'stream.addr.a.ok')

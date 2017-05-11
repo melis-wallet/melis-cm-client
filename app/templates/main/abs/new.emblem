@@ -1,0 +1,10 @@
+.row
+  .col-sm-2
+    = leaf-button-group
+      = link-to 'main.abs' class='btn btn-primary'
+        i.fa.fa-arrow-left
+
+br
+= edit-ab-entry on-save='addAbEntry' new-address=newaddr
+br
+hr

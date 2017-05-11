@@ -1,0 +1,14 @@
+.content-wrapper.history id='content-wrapper'
+  = if cm.walletOpenFailed
+      | Login failed
+  = else
+    /.history-nav
+    .history-container-header
+      .account-identifier.no-padding-b
+        span.account-id class=cm.currentAccount.color
+          cm.currentAccount.identifier
+        span.text-semibold: = cm.currentAccount.name
+        |:
+        '
+        = t 'address.list.title'
+    = outlet

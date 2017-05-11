@@ -1,0 +1,14 @@
+= if displayed
+  /i.over-icn.fa.fa-wifi.fa-lg.animated.fadeIn.delay-1s
+  /i.over-icn.fa.fa-mobile.fa-lg
+  /i.over-icn.fa.fa-signal.fa-lg.animated.fadeIn.delay-05s
+
+  = if showConnect
+    = leaf-button on-click='doConnect' icon='fa fa-refresh' outline=true class='dark animated fadeIn' type='warning'
+  = if showRestart
+    '
+    = leaf-button on-click='doRestart' icon='fa fa-sign-out' outline=true class='dark animated fadeIn delay-1s' type='danger'
+
+  .animated.fadeIn.delay-1s
+    h4.text-white = t 'generic.disconnected'
+  .spinner.bounce-middle

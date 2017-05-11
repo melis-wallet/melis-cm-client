@@ -1,0 +1,12 @@
+.row.border-b
+  .col-sm-7
+    p = leaf-button-group
+      = link-to 'main.abs.new' class='btn btn-primary'
+        i.fa.fa-plus
+      = leaf-button icon='fa fa-camera' on-click='scanAddress'
+  .col-sm-5
+    .pull-right
+      .form-group.has-feedback
+        = input type='text' value=searchSeed class='form-control'
+        i.fa.fa-search.form-control-feedback
+    .clearfix

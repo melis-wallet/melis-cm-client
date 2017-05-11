@@ -1,0 +1,3 @@
+= if data
+  a.btn class=btnClass download=filename href=dataUri
+    i class=icon

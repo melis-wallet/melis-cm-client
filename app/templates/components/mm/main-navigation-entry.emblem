@@ -1,0 +1,19 @@
+= if hasBlock
+  yield self
+= else
+  = if link-to
+    = link-to link-to preventDefault=false
+      if icon
+        i.menu-icon class=icon
+      span.mm-text.mmc-dropdown-delay.animated.fadeIn
+        = label
+        = each notices as |notice|
+          = leaf-label content=notice.content type=notice.type
+  else
+    a click='select'
+      if icon
+        i.menu-icon class=icon
+      span.mm-text.mmc-dropdown-delay.animated.fadeIn
+        = label
+        = each notices as |notice|
+          = leaf-label content=notice.content type=notice.type

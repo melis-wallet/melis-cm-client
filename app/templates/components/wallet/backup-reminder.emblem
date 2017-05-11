@@ -1,0 +1,27 @@
+= if showBackupWizard
+  = leaf-panel simple-header=false class='panel-warning panel-dark'
+    = leaf-panel-header title=(t 'backup.wizard.title') class='no-border-b'
+       = leaf-button type='warning' outline=true icon='fa fa-trash' size='sm' on-click='doneCredBackup'
+    = wallet/backup-wizard on-wizard-complete='doneCredBackup'
+
+= else if showBackupChecker
+  = leaf-panel simple-header=false class='panel-warning panel-dark'
+    = leaf-panel-header title=(t 'backup.check.title') class='no-border-b'
+       = leaf-button type='warning' outline=true icon='fa fa-trash' size='sm' on-click='doneBackupCheck'
+    = wallet/backup-checker on-done='doneBackupCheck' on-valid-backup='validBackupCheck'
+
+= else if showCredWarning
+  = leaf-note type='warning'
+    h4 = t 'backup.needed.title'
+    p = t 'backup.needed.caption'
+    p = leaf-button type='warning' label=(t 'backup.needed.action') on-click='doCredBackup'
+
+= else if showBackupNagger
+  = leaf-note type='warning'
+    h4 = t 'backup.nagger.title'
+    p = t 'backup.nagger.caption'
+    .row
+      .col-sm-6
+        p = leaf-button block=true type='warning' label=(t 'backup.needed.action') on-click='doCredBackup'
+      .col-sm-6
+        p = leaf-button block=true  type='primary' label=(t 'backup.check.action') on-click='doBackupCheck'

@@ -1,0 +1,13 @@
+
+.row
+  .col-md-6
+    h4 = t 'account.mgmt.title'
+    p = t 'account.mgmt.caption'
+  .col-md-6
+    .note
+      h4 = t 'account.mgmt.secure.title'
+      p = t 'account.mgmt.secure.caption'
+
+.row
+  .col-md-12
+    = wallet/accounts-management

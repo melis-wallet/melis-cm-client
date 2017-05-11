@@ -1,0 +1,25 @@
+table.table.table-compact
+  thead: tr
+    td = t 'wallet.devices.list.name'
+    td = t 'wallet.devices.list.last'
+    td
+  tbody
+    = each devices as |d|
+      tr class="{{ if (eq d.deviceId cm.credentials.deviceId) 'active' }}"
+        td
+          b = leaf-editable-text value=d.name on-change='changeDeviceName' ident=d.deviceId inputError=nameChangError allowBlank=false min-length=4 max-length=32
+          = if (eq d.deviceId cm.currentWallet.info.nextDeviceId)
+            '
+            span.label.label-warning = t 'wallet.devices.list.new-prim'
+        td = live-moment-from-now d.lu
+        td
+          = if (eq d.deviceId cm.credentials.deviceId)
+            .label.label-info = t 'wallet.devices.list.this'
+          = else
+            = leaf-button-group class='flex' outline=true
+              = leaf-button outline=true type='warning' icon='fa fa-trash' on-click='deleteDevice' value=d.deviceId tooltip=(t 'wallet.devices.list.delete')
+              = leaf-button outline=true type='danger' icon='fa fa-magic' on-click='promoteToPrimary' value=d.deviceId tooltip=(t 'wallet.devices.list.promote')
+
+
+
+p = leaf-button label=(t  'wallet.devices.list.deleteall') type='warning' block=true on-click='deleteAllDevices' outline=true

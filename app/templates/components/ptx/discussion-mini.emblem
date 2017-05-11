@@ -1,0 +1,38 @@
+= each lastMessages as |m|
+  = if (eq m.type 'M')
+    = if lastMessage.fromAlias
+      b.text-light-gray = m.fromAlias
+    = else
+      b.text-light-gray = co-signer m.fromPubId you=(t 'tx.you') account=tx.account
+    |:
+    '
+    span.text-light-gray = m.payload.plaintext
+  = else if (eq m.type 'S')
+    i.text-warning
+      b = co-signer m.fromPubId account=tx.account
+      '
+      = t 'tx.discussion.has-approved'
+  br
+
+= if animate
+  = liquid-bind lastMessage use='toLeft' as |m|
+    = if (eq m.type 'M')
+      = if lastMessage.fromAlias
+        b.text-light-gray = m.fromAlias
+      = else
+        b.text-light-gray = co-signer m.fromPubId you=(t 'tx.you') account=tx.account
+      |:
+      '
+      span.text-light-gray = m.payload.plaintext
+    = else if (eq m.type 'S')
+      i.text-warning
+        b = co-signer m.fromPubId account=tx.account
+        '
+        = t 'tx.discussion.has-approved'
+
+= if input
+  = em-form model=this submitButton=false action='enterMessage'
+    = if prompt
+      = em-input property='newMessage' type='text' placeholder=prompt
+    = else
+      = em-input property='newMessage' type='text' placeholder=(t 'tx.discussion.enter')

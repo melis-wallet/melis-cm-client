@@ -1,0 +1,35 @@
+.affix-panel.urgent-panel class="{{ if affix 'affix'}}" style='transition: width 0.3s ease-in-out;'
+  .panel.no-border
+    = if displayTicker
+      = bitcoin-ticker compact=true
+    = liquid-if displayed class='ll-down-up'
+
+      .panel-body.bg-primary.text-center.has-action click='resetScroll'
+        .id-box
+        i.summary-icon.cm-icon.cmi-inbox2.animated.bounce
+        = liquid-bind streamEntries.length use='toDown' as |entries|
+          span.text-slg.text-light-gray.text-semibold = entries
+
+      = liquid-if newEntries class='ll-down-up'
+        .panel-body.no-padding-vr.text-center click='showNewer'
+          .id-box.urgent
+          i.newer-icon.cm-icon.cmi-mailbox-full
+          = liquid-bind newEntries.length use='toRight'as |ne|
+            span.text-lg.text-default.text-semibold
+              | +
+              '
+              = ne
+
+
+  ul.nav.nav-pills.nav-stacked
+    = each streamEntries as |entry|
+      li.entry-detail.has-action: a  click="'scrollTo' entry"
+        .icon
+          i class=entry.eventIcon
+        .entry
+          span.title.break-words
+            = stream-summary entry what='title'
+          .caption.break-words
+            = stream-summary entry what='caption'
+          .time
+            = live-moment-from-now entry.updated

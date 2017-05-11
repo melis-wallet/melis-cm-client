@@ -1,0 +1,45 @@
+.row
+  .col-md-12
+    h2 = t 'wallet.maint.title'
+    p = t 'wallet.maint.caption'
+    hr
+
+.row
+  .col-md-6
+
+    = leaf-note type='default'
+      h4 = t 'wallet.maint.backup.title'
+      p = t 'wallet.maint.backup.caption'
+      = leaf-button type='default' on-click='doCredBackup' block=true icon='fa fa-check' label=(t 'wallet.maint.backup.btn')
+
+    = leaf-note type='info'
+      h4 = t 'wallet.maint.new.title'
+      p = t 'wallet.maint.new.caption'
+      = leaf-button type='info' on-click='newAcctWizard' block=true icon='fa fa-check' label=(t 'wallet.maint.new.btn')
+
+    = leaf-note type='default'
+      h4 = t 'wallet.maint.join.title'
+      p = t 'wallet.maint.join.caption'
+      = liquid-if acctJoinIn class='ll-down-up'
+        = account/join-in on-done='doneAcctJoinIn' on-cancel='doneAcctJoinIn'
+      = else
+        = leaf-button type='default' on-click='doAcctJoinIn' block=true icon='fa fa-check' label=(t 'wallet.maint.join.btn')
+
+  .col-md-6
+
+    = leaf-note type='warning'
+      h4 = t 'wallet.maint.pin.title'
+      p = t 'wallet.maint.pin.caption'
+      = prefs/change-pin
+
+    = leaf-note type='warning'
+      h4 = t 'wallet.maint.danger.title'
+      p = t 'wallet.maint.danger.caption'
+      = leaf-button type='warning' on-click='toggleDanger' block=true icon='fa fa-check'
+
+
+    = liquid-if dangerEnabled class='ll-down-up'
+      = leaf-note type='danger'
+        h4 = t 'wallet.maint.delete.title'
+        p = t 'wallet.maint.delete.caption'
+        = leaf-button type='danger' on-click='deleteCredentials' block=true icon='fa fa-check' label=(t 'wallet.maint.delete.btn')

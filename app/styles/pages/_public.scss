@@ -1,0 +1,227 @@
+//
+// Pages / Public
+//
+// --------------------------------------------------
+
+
+// Mobile first
+//
+
+.page-public {
+
+  // Base
+
+  .public {
+    padding: 0 20px;
+
+    hr {
+      border: none;
+      border-bottom: 3px solid #f1f1f1;
+      margin: 0 -20px;
+    }
+  }
+
+  // Header
+
+  .public-header {
+    background: #f7f7f7;
+    border-bottom: 8px solid #f1f1f1;
+    margin: 0 -20px;
+    padding: 20px;
+    position: relative;
+    @include clearfix();
+
+    h3 {
+      font-size: 19px;
+      font-weight: 600;
+      height: 55px;
+      line-height: 23px;
+      margin: 0 0 0 40px;
+      padding: 0;
+      word-wrap: none;
+    }
+
+    small {
+      color: #a0a0a0;
+      font-size: 12px;
+    }
+
+    .public-logo {
+      display: block;
+      height: 40px;
+      width: 40px;
+      margin: 5px 0 0 -50px;
+      position: absolute;
+    }
+
+    address {
+      border-left: 5px solid #e8e8e8;
+      color: #959595;
+      display: block;
+      font-size: 12px;
+      line-height: 15px;
+      padding-left: 10px;
+      margin-top: 5px;
+    }
+  }
+
+  .public-date {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: -5px;
+  }
+
+  // Information
+
+  .public-info,
+  .public-table {
+    padding-top: 30px;
+    @include clearfix();
+  }
+
+  .public-recipient {
+    font-size: 14px;
+    line-height: 19px;
+    min-height: 60px;
+    padding-left: 70px;
+
+
+    &:before {
+      background: #f7f7f7;
+      border-radius: 999px;
+      color: #888888;
+      content: "TO";
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      height: 52px;
+      line-height: 52px;
+      margin: 4px 0 0 -70px;
+      position: absolute;
+      text-align: center;
+      width: 52px;
+    }
+  }
+
+  .public-total {
+    background: #f7f7f7;
+    color: #888888;
+    font-weight: 600;
+    height: 60px;
+    line-height: 60px;
+    padding: 0 25px;
+    white-space: nowrap;
+    margin-top: 20px;
+
+    span {
+      display: block;
+      float: right;
+      color: $text-color;
+      font-size: 24px;
+    }
+  }
+
+  // Table
+
+  .public-description {
+    color: #aaa;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
+    padding-top: 4px;
+  }
+
+  .public.table {
+
+    table {
+      width: 100%;
+
+      thead {
+        background: #f7f7f7;
+        color: #888;
+        font-size: 12px;
+      }
+
+      tbody tr {
+        font-size: 14px;
+
+        & + tr {
+          border-top: 1px solid #f1f1f1;
+        }
+      }
+
+      th,
+      td {
+        border-left: 1px solid #fff;
+        font-weight: 600;
+        padding: 7px 0 7px 15px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      td {
+        padding-bottom: 20px;
+        padding-top: 20px;
+      }
+    }
+
+  }
+}
+
+
+// Desktops
+//
+
+@media (min-width: $screen-tablet) {
+  .page-public {
+
+    // Base
+
+    .public {
+      padding: 0 40px;
+
+      hr {
+        border: none;
+        border-bottom: 3px solid #f1f1f1;
+        margin: 0 -40px;
+      }
+    }
+
+    // Header
+
+    .public-header {
+      padding: 40px;
+      margin: 0 -40px;
+
+      h3 {
+        float: left;
+      }
+
+      address {
+        margin: 6px 0 0 30px;
+        float: left;
+      }
+    }
+
+    .public-date {
+      float: right;
+      margin-top: 6px;
+    }
+
+    // Information
+
+    .public-recipient,
+    .public-total {
+      width: 50%;
+    }
+
+    .public-recipient {
+      float: left;
+    }
+
+    .public-total {
+      float: right;
+      margin-top: 0;
+    }
+  }
+}

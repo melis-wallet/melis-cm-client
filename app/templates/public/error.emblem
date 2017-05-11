@@ -1,0 +1,22 @@
+
+.panel.public
+  .public-header
+    h3
+      .public-logo: img src='images/melis-badger.svg' style="width:100%;height:100%;"
+      div
+        small
+          strong = t 'app.title'
+          = t 'app.wallet'
+        br
+        = t 'public.payto.app'
+
+    address
+      = t 'public.payto.caption'
+
+
+    .public-date
+       = moment-format date
+
+  .public-info
+    h4 = t 'public.error.no-tx.title'
+    p  = t 'public.error.no-tx.caption'

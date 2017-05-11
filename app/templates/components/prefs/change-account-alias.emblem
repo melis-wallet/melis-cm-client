@@ -1,0 +1,41 @@
+
+= if (or getUpdatedInfo.isRunning changeAlias.isRunning)
+  .w-status.spinner.bounce-middle
+p
+  = if cm.currentAccount.cmo.alias
+    = t 'prefs.alias.is'
+    '
+    = leaf-label type=info content=cm.currentAccount.cmo.alias
+  = else
+     b = t 'prefs.alias.not-set'
+
+= if aliasInfo
+  = if aliasInfo.aliasAlreadyDefined
+    = t 'prefs.alias.already-def'
+
+  = else if aliasInfo.aliasDefinable
+    p
+      br
+      = leaf-button label=(t 'prefs.alias.change') on-click='changeAlias' block=true active=changingAlias
+
+  = else
+    = unless aliasInfo.walletMinimumBalanceMet
+      = if aliasInfo.minBalanceNeeded
+        = leaf-alert type='info' dismiss=false
+          p = t 'prefs.alias.ableto' amount=(format-btc aliasInfo.minBalanceNeeded withUnit=true)
+      = else
+        = leaf-note type=info
+          p = t 'prefs.alias.unableto'
+
+
+
+  = liquid-if changingAlias class='ll-down-up'
+    hr
+    = leaf-alert type='danger' dismiss=false
+      = t 'prefs.alias.once'
+    = em-form model=this submitButton=false
+      = em-input property='newAlias' type='text' placeholder=(t 'prefs.alias.ph')
+    = liquid-if canSubmit class='ll-down-up'
+      = leaf-button type='warning' label=(t 'prefs.alias.button') block=true on-click='confirmAliasChange'
+= else
+  = t 'prefs.alias.not-ready'

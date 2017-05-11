@@ -1,0 +1,5 @@
+= leaf-note type='info'
+  h4 = t 'prefs.tfa.title'
+  p = t 'prefs.tfa.caption'
+
+  = leaf-button type='primary' label='set default' action='setDefault' block=true

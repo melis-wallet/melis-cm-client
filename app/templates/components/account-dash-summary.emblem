@@ -1,0 +1,48 @@
+.panel
+  .accent.colored-bg class=account.color
+  .panel-body class="{{ if (eq account.num cm.currentAccount.num) 'current' 'idle' }}"
+    //.expandable click='toggleExpand'
+    .not-expandable
+      .row
+        .col-sm-12
+          = link-to 'main.account.summary' account.num
+            h4.text-semibold
+              span.break-words = account.name
+              |&nbsp;
+              '
+              = stream/stream-counter account=account property='urgent' vclass='label-warning'
+              '
+              = stream/stream-counter account=account property='newer' vclass='label-success animated tada'
+
+      .row
+        .col-md-10
+          = if account.isComplete
+            = liquid-bind account.amSummary use='toDown' as |amount|
+              span.text-xlg style='margin-right: 10px;'
+                span.text-lg.text-slim.lowercase = cm.btcUnit
+                strong = format-btc amount compact=true
+              '
+              span.text-lg
+                span.text-bg.text-slim.lowercase = cm.globalCurrency
+                strong = to-currency amount compact=true
+          = else
+            .text-xs.text-light-gray
+              span.text-semibold = t 'dash.multi.joinwait'
+              = leaf-progress value=account.completeness.complete striped=true style='margin-top: 8px; margin-bottom: 4px; height: 4px;'
+              span.no-margin-t
+                = t 'dash.multi.joined'  count=account.completeness.count total=account.totalSignatures
+        .col-md-2
+          //= unless detailExpanded
+            div style='margin-top: 12px;'
+              = with account.ptxs.relevant.length as |l|
+                .label.label-warning.animated.fadeIn = l
+    = if (and account.isComplete detailExpanded)
+      .widget-basic-counters
+        .col-xs-4
+        .col-xs-4
+          .primary-val 4
+          = t 'dash.account.notifications'
+        .col-xs-4
+          = link-to 'main.account.ptx' account.num
+            .primary-val.text-warning = account.ptxs.relevant.length
+            .text-default = t 'dash.account.pending'

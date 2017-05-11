@@ -1,0 +1,52 @@
+
+.signin-form
+  = if apiOps.isRunning
+    .w-status.spinner.bounce-middle
+  form id='signin-form_id' submit='tryLogin'
+    .signin-text
+      span = t 'wallet.signin.prompt'
+
+
+    = if deviceLocked
+      div style='min-height: 160px;'
+        = leaf-note type='danger'
+          h4 = t 'wallet.signin.locked.title'
+          p = t 'wallet.signin.locked.caption'
+    = else if barredClient
+      div style='min-height: 160px;'
+        = leaf-note type='danger'
+          h4 = t 'wallet.signin.barred.title'
+          p = t 'wallet.signin.barred.caption'
+
+    = else
+
+      = liquid-if showLowAttempts class='ll-down-up'
+        = leaf-note type='warning'
+          h4 = t 'wallet.signin.last.title'
+          p = t 'wallet.signin.last.caption'
+
+          = leaf-button type='danger' on-click='lastTry' block=true icon='fa fa-check'
+
+
+      = else
+        = if genericError
+          .alert.alert-warning.alert-dark
+            = t 'wallet.signin.error.generic'
+
+        .form-group.w-icon class=formValidity style='min-height: 70px;'
+          = input class='form-control input-lg bordered disabled' type='password' name="signin_pin" id="signin_pin" placeholder=(t 'wallet.signin.pin') value=signinPin tabindex='0' autofocus=true
+          span.fa.fa-unlock.signin-form-icon
+          = if signInError
+            span.form-control-feedback style='top: 8px;'
+              i.fa.fa-square
+            span.help-block.animated.fadeInUp.quick
+              = signInError
+
+
+        .form-actions style='min-height: 78px;'
+          = liquid-if validations.isValid class='fadeIn'
+            = leaf-button type='primary' on-click='tryLogin' block=true icon='fa fa-check' disabled=buttonDisabled class=(if apiOps.isRunning 'btn-loading')
+
+    .signin-with
+      = link-to 'wallet.options' class='btn'
+        i.fa.fa-bars

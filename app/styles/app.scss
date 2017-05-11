@@ -1,0 +1,693 @@
+//@import url(https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300);
+@import url("../open-sans/open-sans.css");
+@import url("../cm/cm-icons.css");
+
+@import 'leaf-core.scss';
+@import 'tools/leaf-tools.scss';
+
+@import 'plugins/plugins.scss';
+
+@import 'pages/signin.scss';
+@import 'pages/profile.scss';
+@import 'pages/stats.scss';
+@import 'pages/ab.scss';
+@import 'pages/summary.scss';
+@import 'pages/camera.scss';
+@import 'pages/preloading.scss';
+@import 'pages/public.scss';
+@import 'pages/history.scss';
+
+@import 'nav';
+
+@import 'colors.scss';
+@import 'spinners.scss';
+@import 'theme/melis/melis.scss';
+
+
+@import 'power-select';
+@import 'print';
+
+html, body {
+  //margin: 20px;
+}
+
+
+// for working as a chrome packaged app
+html {
+  overflow-y: scroll;
+}
+
+.navbar-brand > img {
+  height: 26px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.signin-info {
+  .version {
+
+    position: absolute;
+    bottom: 10px;
+    font-size: 10px;
+    color: #242324;
+  }
+}
+
+// reduce padding on small screens
+/*
+@media (max-width: 767px) {
+  .container-fluid, .row {
+    padding:0px;
+    margin-left: -25px;
+    margin-right: -25px;
+  }
+}
+*/
+
+#main-navbar {
+
+  .navbar-icon {
+    font-size: 16px;
+    color: #777;
+  }
+
+  li > a > i {
+    font-size: 16px;
+    color: #777;
+  }
+}
+
+
+.bg-light-gray {
+  background-color: #eee;
+}
+
+.widget-list  a {
+  line-height: normal !important;
+}
+
+.widget-basic-counters {
+  .primary-val {
+        font-size: 18px;
+        font-weight: 700;
+        color: #555;
+  }
+}
+
+.label i {
+  //font-size: 75%;
+}
+
+.code-label {
+  font-size: 11px;
+  background: #b0b0b0;
+  padding: 0 6px;
+  display: inline-block;
+  font-weight: 600;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+  color: #fff;
+  word-break: break-all;
+  line-height: 20px;
+}
+
+.navbar .dropdown-menu .label {
+  float: none;
+  top: -1px;
+}
+
+
+// fixes select-2
+.select2-result-label {
+  font-weight: bold;
+  .text-muted {
+    display: block;
+    font-size: 10px;
+  }
+}
+
+
+// fixes to be included in theme
+.has-feedback .form-control-feedback {
+  top: 0px;
+}
+
+.page-signin .form-group.w-icon .signin-form-icon {
+  max-height: 28px;
+}
+
+
+// patch signin form
+.signin-container {
+  .logo-splash {
+    height: 160px;
+    padding: 10px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .logo-text {
+    height: 64px;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.page-signin {
+
+    .signin-form {
+      min-height: 340px;
+    }
+
+    .signin-with-btn {
+      background:#4f6faa;
+      background:rgba(79, 111, 170, .8);
+    }
+}
+
+@media (min-width: $screen-tablet) {
+  .page-signin {
+    .signin-container {
+      min-height: 340px;
+    }
+
+    .signin-form {
+      display: block;
+      width: 100%;
+      //min-height: 340px;
+    }
+  }
+}
+
+
+// small spacer
+.m-sm {
+  margin: 2px;
+}
+
+.m-sm-r {
+  margin-right: 4px;
+}
+
+
+.m-sm-l {
+  margin-left: 4px;
+}
+
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.translucent {
+  opacity: 0.95;
+}
+
+.placeholder {
+  opacity: 0.05;
+}
+
+.blur {
+  filter: blur(5px);
+}
+
+.break-words {
+  word-break: break-all;
+}
+
+
+// accented borders
+.top-accent-info {
+  border-top: 4px solid $brand-info;
+}
+
+.top-accent-warning {
+  border-top: 4px solid $brand-warning;
+}
+
+.top-accent-success {
+  border-top: 4px solid $brand-success;
+}
+
+.top-accent-danger {
+  border-top: 4px solid $brand-danger;
+}
+
+
+// experimental changes to the main menu
+#main-menu {
+  .navigation {
+
+    .menu-icon {
+      height: 26px;
+      width: 26px;
+      line-height: 26px;
+      background-color: rgba(68, 68, 68, 0.5);
+      border-radius: 2px;
+    }
+
+    .menu-icon.accent {
+      background-color: $brand-warning;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    li.active > a .menu-icon.accent {
+      color: #fff;
+    }
+  }
+
+  /*
+  a.disabled {
+    opacity: 0.2;
+    filter: grayscale(100%);
+    cursor: default;
+  } */
+
+  .navigation > li.selected {
+    background: #363130;
+    a {
+      opacity: 0.2;
+      filter: grayscale(80%)
+    }
+  }
+}
+
+.mm-buttons {
+  background: #363130;
+  padding: 22px 14px 14px 14px;
+
+  transition: height 1s ease-in-out;
+
+  a.btn {
+    font-size: inherit !important;
+    line-height: 15px !important;
+    padding: 7px 12px !important;
+    min-width: 15px;
+  }
+}
+
+.mmc .mm-buttons {
+  display: none !important;
+  height: 0px;
+}
+
+.mme .mm-button-alt {
+  display: none !important;
+}
+
+
+// experimental changes to forms
+
+.form .required {
+  .control-label:after {
+      padding-left: 5px;
+      color: $primary-color;
+      content: "\f006";
+      font-family: FontAwesome;
+  }
+}
+
+.form-control {
+//  border: 1px solid #fff;
+  border: none;
+  border-bottom: 1px solid $input-border;
+
+  &.bordered {
+    border: 1px solid $input-border;
+  }
+}
+
+.input-group-addon {
+  border: none;
+  border-bottom: 1px solid $input-border;
+
+  &.bordered {
+    border: 1px solid $input-border;
+  }
+}
+
+.help-block { z-index: 2; }
+
+.account-identifier {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 40px;
+  padding-top: 15px;
+  padding-bottom: 20px;
+  position: relative;
+  border-bottom-width: 2px;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+@media (min-width: $screen-tablet) {
+  .account-identifier {
+    text-align: left;
+  }
+}
+
+.table-no-border > thead > tr > th,
+.table-no-border > tbody > tr > th,
+.table-no-border > tfoot > tr > th,
+.table-no-border > thead > tr > td,
+.table-no-border > tbody > tr > td,
+.table-no-border > tfoot > tr > td {
+  border-top: none;
+  padding: 2px;
+}
+
+// center the qrcode on big displays
+.qrcode-img {
+  margin: auto;
+}
+
+.expandable, .has-action {
+  cursor: pointer;
+}
+
+
+.w-status {
+  position: absolute;
+  right: 30px;
+  top: 12px;
+  opacity: 0.5;
+  z-index: 9999;
+
+  &.error {
+    color: $danger-color;
+  }
+}
+
+.clipboard.success {
+  background: #f7ffdf;
+}
+
+@media (max-width: $screen-sm-max) {
+  .qrcode-img {
+    margin: 0;
+    float: right;
+    padding: 10px;
+  }
+}
+
+
+.option-box {
+  background: white;
+  min-height: 20px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid $input-border;
+  opacity: 0.5;
+  transition: opacity 0.6s ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &.active {
+    opacity: 1;
+    border: 1px solid $primary-color;
+  }
+}
+
+img.icon-opt {
+  width: 95%;
+  max-width: 160px;
+
+}
+
+@media (max-width: $screen-xs-max) {
+
+  img.icon-opt {
+    width: 35px;
+  }
+}
+
+
+.cosigner {
+  border-top: 1px solid $input-border;
+  border-bottom: 2px solid $input-border;
+  padding: 15px 0 5px 0;
+  background: #f9f9f9;
+  margin-bottom: 10px;
+  margin-left: 0;
+  margin-right: 0;
+
+  img {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+.panel.inactive {
+  opacity: 0.4;
+}
+
+.inactive {
+  opacity: 0.4;
+  filter: grayscale(60%)
+}
+
+.panel-heading.light {
+  background: none;
+  border-bottom: none;
+
+  span.icon {
+   i {
+        font-size: 80px;
+
+    }
+
+    opacity: 0.05;
+    position: absolute;
+    top: 50px;
+    left: 20px;
+  }
+}
+
+.current-acct {
+  background: #363130;
+}
+
+
+html body.page-signin {
+  background: #fff !important;
+}
+
+
+.urgent-panel {
+  .summary-icon {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    opacity: 0.1;
+    font-size: 40px;
+
+  }
+
+  .newer-icon {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    opacity: 0.1;
+    font-size: 30px;
+
+  }
+
+  .entry-detail {
+    font-size: 9px;
+
+    a {
+      padding-left: 10px;
+    }
+
+    .icon {
+      float: left;
+      font-size: 25px;
+    }
+
+    .entry {
+      margin-left: 30px;
+      padding-left: 10px;
+
+      .title {
+        font-weight: bold;
+      }
+
+      .time {
+        font-weight: semibold;
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+.account-icon {
+  width: 50px;
+  height: 50px;
+  margin: 0 5px;
+  padding-bottom: 10px;
+
+  &.large {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+
+.modal-open .modal.no-over {
+  overflow-y: hidden;
+}
+
+.icon-side {
+  width: 95%;
+  max-width: 160px;
+}
+
+.icon-side-lg {
+  font-size: 130px;
+  color: #ddd;
+  min-width: 160px;
+
+}
+
+
+.export {
+
+  .export-cont {
+    &.fancy {
+      -webkit-print-color-adjust: exact;
+      background-image: url('/images/info/code-bg.jpg');
+    }
+    min-width: 360px;
+    padding: 20px;
+  }
+
+  .export-qrc {
+    margin: 0 auto;
+    background: white;
+    width: 320px;
+    height: 320px;
+    padding: 20px;
+  }
+
+}
+
+.accordion-toggle {
+  i {
+    min-width: 16px;
+  }
+}
+
+.switcher-sm {
+  &.sw-baseline {
+    top: 4px;
+  }
+}
+
+.modal-body.modal-lim {
+  max-height: calc(100vh - 230px);
+  overflow-y: scroll;
+
+  font-size: 11px;
+
+  h4, .h4 {
+    font-size: 13px;
+  }
+
+  h3, .h3 {
+    font-size: 17px;
+  }
+}
+
+
+/* this should not be needed, but gets lost somewhere TODO */
+.nav-tabs > li > a {
+  cursor: pointer;
+}
+
+#status-overlay {
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0.5, 0.5, 0.5, 0.8);
+  z-index: 9999;
+  text-align: center;
+  padding-top: 200px;
+}
+
+.btn { min-width: 40px; }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.over-icn {
+  color: #ccc;
+  min-width: 32px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  margin: 5px;
+  border-radius: 3px;
+}
+
+
+// hammertime requires this
+[data-ember-action], a, button, input, .link {
+  cursor: pointer;
+}
+
+
+.btn-group.flex {
+  display: flex;
+}
+
+.xr-top-sp {
+  margin-top: 28px;
+}
+
+.xr-top-sp-f {
+  margin-top: 28px;
+}
+
+.xr-bt-sp {
+  margin-bottom: 5px;
+}
+
+@media (max-width: $screen-phone) {
+  .xr-top-sp {
+    margin-top: 2px;
+  }
+}
+
+.pseudo-input {
+  border-bottom: 1px solid $input-border;
+  min-width: 100%;
+  min-height: 36px;
+  padding: 5px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.label.brk {
+  white-space: normal;
+  text-align: left;
+
+}
+
+a, a:hover, a:focus {
+    text-decoration: none;
+}
+
+
+.panel-body.current {
+  background-color: $primary-color;
+}

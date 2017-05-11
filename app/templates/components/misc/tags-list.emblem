@@ -1,0 +1,15 @@
+= if editing
+  = label-picker selection=selection labelsSet=labelsSet on-finish='doneEdit' class='no-margin-b' maxItems=maxItems
+= else
+
+  = if (and editable controlOnLeft)
+    = leaf-button size=controlSize outline=true icon=controlIcon on-click='edit' class='m-sm-r'
+
+  = if hasBlock
+    = yield this
+  else
+    = each selection as | l |
+      span class=tagsClass = l
+
+  = if (and editable controlOnRight)
+    = leaf-button size=controlSize outline=true icon=controlIcon on-click='edit' class='m-sm-l'

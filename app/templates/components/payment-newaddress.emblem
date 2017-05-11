@@ -1,0 +1,95 @@
+
+= if currentAddress
+  .panel-body
+    .row
+      .col-md-4
+      .col-md-8
+        table.table.table-condensed
+          tbody
+            tr
+              td colspan='2'
+                | Address generated
+                '
+                b = live-moment-from-now currentAddress.time
+
+            = if currentAddress.cmo.amount
+              tr
+                td = t 'stream.address.amount'
+                td = = format-btc currentAddress.cmo.amount
+
+            = if currentAddress.cmo.meta.info
+              tr
+                td colspan='2': b = currentAddress.cmo.meta.info
+            tr
+              td colspan='2'
+                .label = currentAddress.cmo.address
+                span.pull-right
+                  = leaf-clipboard size='xs' block=true outline=true content=currentAddress.cmo.address
+
+    .row
+      .col-xs-3
+         = leaf-button type='primary' icon='fa fa-magic' block=true on-click='editAddress' tabindex='0'
+      .col-xs-3
+        /= leaf-button type='default' icon='fa fa-trash' block=true on-click='deleteAddress' tabindex='0'
+        = link-to 'main.account.address' cm.currentAccount.num class='btn btn-block'
+          i.fa.fa-list
+      .col-xs-6
+        = leaf-button type='default' icon='fa fa-magic' block=true on-click='makeCurrentActive' tabindex='0'
+
+
+
+= if activeAddress
+  .panel-body
+    .row
+      .col-md-4
+      .col-md-8
+
+
+
+        table.table
+          tbody
+            = if activeAddress.time
+              tr
+                td: i.fa.fa-calendar
+                td.text-right
+                  = live-moment-from-now activeAddress.time
+            tr.bg-light-gray
+              td = cm.btcUnit
+              td: .pull-right
+                = leaf-editable-number [
+                  size='lg'
+                  value=(scale-btc activeAddress.cmo.meta.amount)
+                  on-change='changeAmount'
+                  if-empty=(t 'newaddr.empty.amount')
+                  inputClass='text-right text-bold']
+                  = if activeAddress.cmo.meta.amount
+                    span.text-xlg.text-default.text-semibold = format-btc activeAddress.cmo.meta.amount
+                  = else
+                    | [ request a specific amount ]
+            = if activeAddress.cmo.meta.amount
+              tr
+                td.lowercase = cm.globalCurrency
+                td: .pull-right = to-currency activeAddress.cmo.meta.amount
+
+
+            tr
+              td: i.fa.fa-code
+              td.text-right
+                = leaf-editable-text value=activeAddress.cmo.meta.info if-empty=(t 'newaddr.empty.info') on-change='changeInfo' max-length=160
+                  b.break-words = activeAddress.cmo.meta.info
+
+            = if activeAddress.labels
+              tr
+                td: i.fa.fa-tag
+                td.text-right
+                  = each activeAddress.labels as |l|
+                    = leaf-label type='info' content=l class='m-sm'
+
+            tr
+              td = leaf-switcher checked=wantLink theme='modern'
+              td.text-right
+
+                = if wantLink
+                  | Melis URL
+                = else
+                  | Bitcoin Address

@@ -1,0 +1,20 @@
+a.dropdown-toggle.user-menu data-toggle='dropdown'
+  = if image
+    img src=image
+    span
+      = name
+  = else
+    .account-icon
+      .icon.colored-bg class=currentAccount.color
+        = currentAccount.identifier
+
+= leaf-dropdown class='no-padding widget-list'
+  .no-padding.entries-list style='min-width: 250px'
+    each accounts as |account|
+      = wallet-account-entry content=account current=currentAccount action='selectAccount'
+  = link-to 'main.wallet' (query-params new-account=true)
+    .entries-link
+      i.fa.fa-plus.navbar-icon
+  = link-to 'wallet.sign-out'
+    .entries-link
+      i.fa.fa-sign-out.navbar-icon

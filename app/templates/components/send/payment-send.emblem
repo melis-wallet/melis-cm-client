@@ -1,0 +1,16 @@
+= leaf-alert-area alerts=elementAlerts dark=true embedded=true
+= liquid-if hasRecipients use='toUp'
+  = partial 'components/send/list-recipients'
+= else
+  = leaf-note title=(t 'paysend.head.title') type='info' class='no-margin-vr'
+    = t 'paysend.head.caption'
+
+= liquid-if (or showSummary paymentReady) use='toDown'
+  = partial 'components/send/confirm'
+
+  = if signing
+    .panel-body
+      = leaf-progress value=signingProgress striped=true style='height: 4px;'
+
+= else
+  = partial 'components/send/compose-recipients'

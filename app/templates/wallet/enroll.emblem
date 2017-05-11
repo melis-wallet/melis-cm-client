@@ -1,0 +1,6 @@
+= if licenseAccepted
+  = wallet/enroll-wizard class='signin-form no-padding' on-backbutton='abortWizard'
+= else
+  .signin-form
+  = wallet/display-license
+  = leaf-modal-trigger modal-id='license' when-inserted=true on-modal-success='handleLicenseReply' on-modal-failure='rejectLicense'

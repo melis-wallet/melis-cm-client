@@ -1,0 +1,129 @@
+= leaf-wizards-control selected-idx=step completed-steps=completed step-back=stepBack as |ctrl|
+  = unless skipBackup
+    = leaf-wizard-step caption=(t 'enroll.tabs.backup.caption') number='B' description=(t 'enroll.tabs.backup.descr')  parent=ctrl idx=1
+  = leaf-wizard-step caption=(t 'enroll.tabs.pin.caption') number=1 description=(t 'enroll.tabs.pin.descr')  parent=ctrl idx=2
+  = leaf-wizard-step caption=(t 'enroll.tabs.type.caption')number=2 description=(t 'enroll.tabs.type.descr')  parent=ctrl idx=3
+  = leaf-wizard-step caption=(t 'enroll.tabs.enroll.caption') number=3 description=(t 'enroll.tabs.enroll.descr')  parent=ctrl idx=4
+
+= if wizardComplete
+  .panel-body
+    .row
+      .col-sm-4.hidden-xs.text-center
+        i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
+      .col-sm-8
+        = leaf-note type='danger'
+          h4 = t 'enroll.complete.title'
+          p = t 'enroll.complete.caption'
+
+        br
+        = link-to 'main.account.summary' cm.currentAccount.num class='btn btn-primary btn-block'
+          i.fa.fa-user
+          '
+          = t 'enroll.btn.summary'
+
+
+= else
+  = leaf-navs-content class="wizard-content animated fadeIn" selected-idx=step delay-render=false as |content|
+
+    = leaf-navs-panel parent=content idx=1
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='danger'
+            h4 = t 'enroll.tabspanel.backup.title'
+            p = t 'enroll.tabspanel.backup.caption'
+
+            = link-to 'wallet.backup'
+              = t 'enroll.tabspanel.backup.btn'
+      .row
+        .col-xs-4
+          = link-to 'index' class='btn btn-block'
+            i.fa.fa-arrow-left
+        .col-xs-8
+          = leaf-button type='danger' on-click='confirmEnroll' icon='fa fa-arrow-right' block=true tabindex='0'
+
+
+    = leaf-navs-panel parent=content idx=2
+      .row
+        .col-sm-4.hidden-xs.text-center
+          i.fa.fa-lock.icon-side-lg.animated.fadeIn.delay-1s
+        .col-sm-8
+          = leaf-note type='warning'
+            h4 = t 'enroll.tabspanel.pin.title'
+            p = t 'enroll.tabspanel.pin.caption'
+            p: b = t 'enroll.tabspanel.pin.remember'
+          = wallet/set-pin-input on-set-pin='doneSetPIN'
+      = misc/more-info prompt=(t 'enroll.tabspanel.pin.advanced')
+        .form.form-horizontal
+          .form-group
+            .checkbox
+              = input type='checkbox' name='skip_account' checked=skipAccount
+              span.lbl = t 'enroll.tabspanel.pin.skip'
+
+
+    = leaf-navs-panel parent=content idx=3
+      = leaf-note type='default'
+        h4 = t 'enroll.tabspanel.type.title'
+        p = t 'enroll.tabspanel.type.caption'
+      = wallet/simple-account-selector on-change-selected='changeSimpleAccount'
+      = leaf-button type='primary' on-click='typeSelected' value=1 icon='fa fa-arrow-right' block=true
+
+    = leaf-navs-panel parent=content idx=4
+
+
+      = liquid-if (and enrollDone cm.currentWallet) class='ll-down-up'
+        = if cm.currentAccount
+          .row
+            .col-sm-4.hidden-xs.text-center
+              i.fa.fa-smile-o.icon-side-lg.animated.fadeIn.delay-1s
+            .col-sm-8
+              = leaf-note type='success'
+                h4 = t 'enroll.success.title'
+                p = t 'enroll.success.caption'
+                p.text-warning: b = t 'enroll.success.warning'
+
+                = link-to 'wallet.backup'
+                  = t 'enroll.success.backup'
+
+              = leaf-button type='primary' on-click='completeEnroll' label=( t 'enroll.success.skip') tabindex='0' block=true
+        = else
+          .row
+            .col-sm-4.hidden-xs.text-center
+              i.fa.fa-smile-o.icon-side-lg.animated.fadeIn.delay-1s
+            .col-sm-8
+              = leaf-note type='success'
+                h4 = t 'enroll.walletok.title'
+                p = t 'enroll.walletok.caption'
+              = link-to 'wallet.create-account' class='btn btn-primary btn-block'
+                = t 'enroll.walletok.createacct'
+
+      = else if serverLocked
+        .row
+          .col-sm-4.hidden-xs.text-center
+            i.fa.fa-fire.icon-side-lg.animated.fadeIn.delay-1s
+          .col-sm-8
+            = leaf-note type='warning'
+              h4 = t 'enroll.locked.title'
+              p = t 'enroll.locked.caption'
+              p = link-to 'index' class='btn btn-default btn-block'
+                = t 'enroll.locked.startover'
+
+      = else if genFailed
+        .row
+          .col-sm-4.hidden-xs.text-center
+            i.fa.fa-fire.icon-side-lg.animated.fadeIn.delay-1s
+          .col-sm-8
+            = leaf-note type='danger'
+              h4 = t 'enroll.failed.title'
+              p = t 'enroll.failed.caption'
+            = leaf-alert dark=true type='danger' dismiss=false
+              = genFailed
+            p = leaf-button block=true type='primary' label=(t 'enroll.failed.startover') on-click='startOver'
+
+      = else
+        .row
+          .col-sm-4
+            h5 = t genState
+          .col-sm-8
+            p = leaf-progress value=genProgress id='enroll-progress' style='margin-top: 10px;'

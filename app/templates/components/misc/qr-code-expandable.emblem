@@ -1,0 +1,10 @@
+= misc/qr-code content=content placeholder=placeholder width=width height=height colorDark=colorDark colorLight=colorLight img-class=img-class on-click='toggleExpand'
+= ember-wormhole to='modal-wormhole'
+  = leaf-modal id=codeId bottom=true as |mod|
+    = leaf-modal-header title='Scan code' modal=mod
+    = leaf-modal-body
+      = if mod.did-open
+        .delay-05s.animated.fadeIn
+          = misc/qr-code content=content placeholder=placeholder colorDark=colorDark colorLight=colorLight height=qrSize width=qrSize img-class='qrcode-img'
+    = leaf-modal-footer modal=mod
+      = leaf-modal-button icon='fa fa-check' type='primary' label='Ok' modal=mod value='ok' block=true

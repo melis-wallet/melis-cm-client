@@ -1,0 +1,4 @@
+// device is d
+= if (eq d.name 'telegram')
+  |hello world
+  = log d

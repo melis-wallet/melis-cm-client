@@ -1,0 +1,53 @@
+
+.camera {
+  position: relative;
+
+  .grid {
+    border: 1px solid rgba(1,1,1, 0.30);
+    width: 70%;
+    height: 70%;
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    background: rgba(1,1,1, 0.15);
+    visibility: hidden;
+  }
+
+
+
+  &.working {
+    > .grid {
+      visibility: visible;
+    }
+  }
+
+  &.valid {
+
+    > .grid {
+       border: 1px solid rgba(53,170,71, 0.30);
+      visibility: visible;
+
+    }
+  }
+
+  #camera-video {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    min-height: 200px;
+
+  }
+
+  .overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    opacity: 0.6;
+  }
+}
+
+#qr-canvas {
+  margin: 0 auto;
+  display: block;
+  display: none;
+}

@@ -1,0 +1,20 @@
+
+.signin-info class="{{ if expanded 'expanded' }}"
+  .logo
+    = link-to 'application' tabindex='-1'
+      img.logo-icon.animated.zoomInDown.delay-05s src='images/melis-full.svg'
+
+  = unless expanded
+    .heading
+      .slogan
+        .label.label-danger.uppercase = cm.config.network
+
+      = if message
+        br
+        = leaf-note type='info' class='no-bg'
+          p.text-white = message
+
+      .version
+        = app-version
+
+= yield

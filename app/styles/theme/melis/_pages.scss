@@ -1,0 +1,72 @@
+// history
+//
+
+& .history {
+
+  .history-xxdetail,
+  .history-xxdetail:before,
+  .history-nav,
+  .history-nav:before {
+    background: $body-color;
+  }
+
+
+
+  .history-nav .sections li.active {
+    .label,
+    .badge {
+      background: $primary-color;
+    }
+  }
+
+  .history-detail,
+  .history-detail:before,
+  .history-nav,
+  .history-nav .compose-btn,
+  .history-nav .sections li.active,
+  .history-nav:before {
+    border-color: $theme-border-color;
+  }
+
+  .history-nav .navigation.open .sections li.active {
+    background: desaturate(darken($body-color, 4%), 10%);
+  }
+
+  .history-nav li.divider {
+    background: $theme-border-color;
+  }
+
+  .history-nav .sections {
+    li.active {
+      a {
+        color: desaturate(darken($body-color, 70%), 70%);
+      }
+
+      &:after {
+        color: desaturate(darken($body-color, 30%), 70%);
+      }
+    }
+
+    a {
+      color: desaturate(darken($body-color, 55%), 70%);
+    }
+  }
+
+  .history-nav-header {
+    color: desaturate(darken($body-color, 30%), 70%);
+  }
+
+  .history-nav .add-more a {
+    color: desaturate(darken($body-color, 30%), 70%);
+  }
+}
+
+@media (min-width: $screen-md) {
+  &.history .history-nav .navigation .sections li.active {
+    background: desaturate(darken($body-color, 4%), 10%);
+  }
+
+  &.page-history .history-nav .sections a:hover {
+    color: desaturate(darken($body-color, 70%), 70%);
+  }
+}

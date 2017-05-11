@@ -1,0 +1,38 @@
+= ember-wormhole to='modal-wormhole'
+  = leaf-modal id='new-acct-wizard' as |mod|
+    = if mod.is-open
+      = account/new-account-wizard modal=mod on-wizard-finish='doneNewAccount'
+
+.content-wrapper id='content-wrapper'
+  .page-profile
+    .profile-full-name
+      span.text-semibold = t 'wallet.title'
+    .profile-row
+      .left-col
+        = partial 'main/wallet/sidebar'
+      .right-col
+        = wallet/backup-reminder showBackupWizard=credentialsBackup
+        .profile-content
+          = leaf-tabs-control-slide selected-idx=tab as |control|
+            = leaf-tab parent=control idx='preferences' title=(t 'view.tabs.preferences') icon='fa fa-cog'
+            = leaf-tab parent=control idx='security' title=(t 'view.tabs.security') icon='fa fa-key'
+            = leaf-tab parent=control idx='devices' title=(t 'view.tabs.devices') icon='fa fa-mobile'
+            = leaf-tab parent=control idx='accounts' title=(t 'view.tabs.accounts') icon='fa fa-folder-open'
+            = leaf-tab parent=control idx='maintenance' title=(t 'view.tabs.maintenance') icon='fa fa-cog'
+
+          = leaf-navs-content  bordered=true class='panel-padding' selected-idx=tab as |content|
+
+            = leaf-navs-panel parent=content idx='preferences'
+              = partial 'main/wallet/preferences'
+
+            = leaf-navs-panel parent=content idx='security'
+              = partial 'main/wallet/security'
+
+            = leaf-navs-panel parent=content idx='devices'
+              = partial 'main/wallet/devices'
+
+            = leaf-navs-panel parent=content idx='accounts'
+              = partial 'main/wallet/accounts'
+
+            = leaf-navs-panel parent=content idx='maintenance'
+              = partial 'main/wallet/maintenance'

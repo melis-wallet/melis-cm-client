@@ -1,0 +1,28 @@
+= if displayed
+  .affix-panel.urgent-panel style='transition: width 0.3s ease-in-out;'
+    .panel.no-border
+      = liquid-if displayed class='ll-down-up'
+
+        .panel-body.bg-primary.text-center.has-action click='resetScroll'
+          .id-box
+          i.summary-icon.cm-icon.cmi-inbox2.animated.bounce
+          = liquid-bind newEntries.length use='toDown' as |entries|
+            span.text-slg.text-light-gray.text-semibold = entries
+
+        /= liquid-if newEntries class='ll-down-up'
+          .panel-body.no-padding-vr.text-center click='showNewer'
+            .id-box.urgent
+            i.newer-icon.cm-icon.cmi-mailbox-full
+            = liquid-bind newEntries.length use='toRight'as |ne|
+              span.text-lg.text-default.text-semibold
+                | +
+                '
+
+= else
+  .stat-panel.hidden-xs style='min-height: 150px;'
+    .stat-cell.bg-warning.no-padding-b.text-right
+      .text-lg.text-slim
+        = moment-format (now) 'LL'
+      /.text-lg.text-slim
+        strong = moment-format (now) 'HH:MM:ss' interval=1000
+      img src='images/melis-badger.svg' style='opacity: 0.05; position: absolute; height: 130px; bottom: -20px; left: -20px;'

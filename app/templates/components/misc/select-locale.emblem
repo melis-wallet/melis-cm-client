@@ -1,0 +1,2 @@
+= power-select options=locales selected=locale searchField='text' onchange=(action 'changeLocale') as |loc|
+  b = loc.text

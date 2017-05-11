@@ -1,0 +1,189 @@
+
+.summary {
+
+  .canopy {
+    position: relative;
+    bottom: 20px;
+    width: 100%;
+    padding-top: 65px;
+
+  }
+
+  .hero {
+    height: 220px;
+    transition: height 0.5s ease-in-out;
+
+    .img {
+      transform: scaleX(-1);
+      height: 300px;
+      width: 100%;
+      background-image: url('../images/splash-bg-1.jpg');
+      z-index: -2;
+      position: absolute;
+      top: 0;
+      background-position: center;
+      background-size: cover;
+      transition: height 0.5s ease-in-out;
+    }
+
+    .img-summ {
+      height: 100%;
+      width: 100%;
+      background-image: url('../images/gray-summary.svg');
+      background-repeat: no-repeat;
+      background-position: -3px bottom;
+    }
+
+    .bg {
+      height: 100%;
+      width: 100%;
+      opacity: 0.35;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .content {
+      position: relative;
+      left: calc(20% + 100px);
+      top: -200px;
+      height: 200px;
+      color: #fff;
+    }
+
+
+  }
+
+  .data {
+    width: 100%;
+    min-height: 30px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+
+    .content {
+      color: #999;
+      position: relative;
+      left: calc(20% + 100px);
+    }
+  }
+
+  .name {
+    position: absolute;
+    bottom: 40px;
+    width: 70%;
+    left: calc(10% + 120px);
+    color: #fff;
+    opacity: 0.9;
+  }
+
+  .avatar-cnt {
+
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    bottom: -16px;
+    left: 10%;
+  }
+
+  .avatar {
+    /*
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    bottom: -16px;
+    left: 10%;
+    */
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 80px;
+    color: #fff;
+
+    background-color: #faa937;
+    border-radius: 4px;
+    padding: 8px;
+
+    border: 2px solid;
+    transition: background-color 0.5s ease-in-out;
+  }
+  .subline {
+    position: relative;
+    left: calc(20% + 100px);
+    top: -20px;
+    font-size: 75%;
+    color: #999
+  }
+
+}
+
+
+
+.stream {
+
+  .id-box {
+    height: 16px;
+    width: 16px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border-radius: 2px;
+    background-color: $brand-warning;
+
+    &.urgent {
+      background-color: $brand-success;
+      bottom: 10px;
+    }
+  }
+
+  .urgent-panel {
+    .panel-body { min-height: 60px; }
+  }
+
+  .stream-entry {
+    .panel {
+      min-height: 140px;
+    }
+  }
+}
+
+@media (max-height: 768px) {
+
+  .summary {
+    .hero {
+      height: 80px;
+
+      .img {
+        height: 180px;
+
+      }
+    }
+  }
+
+}
+
+
+
+@media (max-width: $screen-sm-max) {
+  .summary {
+    .hero .name h3 {
+      font-size: 18px;
+    }
+
+    .data {
+      min-height: 36px;
+    }
+    .content {
+      .text-xlg {
+        font-size: 22px;
+      }
+      .text-lg {
+        font-size: 18px;
+      }
+
+    }
+  }
+
+}
+
+@media (min-width: $screen-xs-max) {
+  .stream-cnt {
+    padding-top: 26px;
+  }
+}

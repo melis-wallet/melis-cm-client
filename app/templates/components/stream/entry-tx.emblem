@@ -1,0 +1,32 @@
+
+.col-md-12
+  .panel class="{{if invalidated 'inactive' }} {{if tx.negative 'negative-bg' 'positive-bg'}}"
+    .panel-heading.light
+      = if apiOps.isRunning
+        .w-status.spinner.bounce-middle style='right: 75px; top: 10px;'
+      = if tx.negative
+        span.icon: i.fa.fa-arrow-circle-o-left
+      = else
+        span.icon: i.fa.fa-arrow-circle-o-right
+
+      = leaf-tooltip tooltip=(moment-format entry.updated)
+        i.text-default = live-moment-from-now entry.updated
+      .panel-heading-controls
+        = leaf-button type='sm' outline=true icon=(if showControls 'fa fa-chevron-up' 'fa fa-chevron-down') on-click='toggleControls'
+    .panel-body
+      .row.padding-sm-vr.no-padding-t
+        .col-sm-3.col-xs-2
+          = each tx.cmo.labels as |label|
+            .label.label-tag.m-sm-r = label
+
+        .col-sm-8.col-xs-9.col-xs-offset-1
+          = liquid-if showControls use='fade'
+            = partial 'components/stream/entry-tx-detail'
+          = else
+            = partial 'components/stream/entry-tx-detail'
+
+
+      = if replacingPtx.signing
+        .row.padding-sm-vr.no-padding-b
+          .col-xs-12
+            p = leaf-progress value=replacingPtx.signingProgress striped=true style='height: 4px;'

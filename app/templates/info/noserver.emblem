@@ -1,0 +1,5 @@
+.main-wrapper id='main-wrapper'
+  = partial 'common/navbar-main'
+  .content-wrapper id='content-wrapper'
+    = noserver-recovery
+  div id='main-menu-bg'

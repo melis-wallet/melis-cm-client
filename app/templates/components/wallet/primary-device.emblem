@@ -1,0 +1,39 @@
+
+= if cm.currentWallet.info.isPrimaryDevice
+  p = leaf-note type='info'
+    h4 = t 'wallet.devices.primary.title'
+    p = t 'wallet.devices.primary.caption'
+
+  = if cm.currentWallet.info.nextDeviceId
+    p.alert.alert-warning
+      = t 'wallet.devices.primary.scheduled' relative=(moment-from-now cm.currentWallet.info.nextDeviceIdExecutable) when=(moment-format cm.currentWallet.info.nextDeviceIdExecutable)
+
+    p = leaf-button label=(t 'wallet.devices.primary.cancel') block=true type='warning' on-click='makePrimary'
+
+
+  p = leaf-note
+    h4 = t 'wallet.devices.prchange.title'
+    p = t 'wallet.devices.prchange.caption'
+    p = x-range-input min=1 max=maxRecoveryDays step=1 value=recoveryDays
+    p = t 'wallet.devices.prchange.days' count=recoveryDays
+    = if recoveryConfirm
+      p = leaf-button icon='fa fa-check' block=true on-click='updateRecovery'
+
+= else
+  p = leaf-note type='default'
+    h4 = t 'wallet.devices.non-prim.title'
+    p = t 'wallet.devices.non-prim.caption'
+
+  = if dateExecutable
+    p.alert.alert-success
+      = t 'wallet.devices.primary.willchange' relative=(moment-from-now dateExecutable) when=(moment-format dateExecutable)
+
+  = else
+    p = leaf-button label=(t 'wallet.devices.primary.make') block=true type='warning' on-click='makePrimary'
+
+
+p = leaf-note
+  h4 = t 'wallet.devices.name.title'
+  p = t 'wallet.devices.name.caption'
+  = leaf-editable-text value=creds.deviceName on-change='changeDeviceName' inputError=nameChangError allowBlank=false min-length=4 max-length=32
+

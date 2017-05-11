@@ -1,0 +1,5 @@
+= unless hide
+  = if isCutoff
+    i.fa.fa-check
+  = else
+    height

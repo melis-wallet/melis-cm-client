@@ -1,0 +1,1 @@
+= wallet/import-wizard class='signin-form no-padding' on-backbutton='abortWizard'

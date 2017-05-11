@@ -1,0 +1,11 @@
+= if (and cm.ready cm.currentAccount)
+  = outlet
+= else
+  .content-wrapper id='content-wrapper'
+    .loader
+
+    /= leaf-note type='warning'
+      h4 = t 'account.unavailable.title'
+      p = t 'account.unavailable.caption'
+      = link-to 'index' class='btn btn-outline'
+        i.fa.fa-home

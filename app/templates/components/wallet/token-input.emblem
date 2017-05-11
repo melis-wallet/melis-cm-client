@@ -1,0 +1,16 @@
+
+= if validateError
+  = leaf-alert type='danger' dark=true dismiss=false
+    = t  'aa.modal.token.error'
+
+= else if invalidToken
+  = leaf-alert type='warning' dark=true dismiss=false
+    = t  'aa.modal.token.invalid'
+
+
+= em-form model=this submitButton=false action='enterToken'
+  = em-input property='token' label=(t 'aa.modal.token.label') placeholder=(t 'aa.modal.token.ph')
+
+br
+= if isValid
+  = leaf-button type='primary' block=true icon='fa fa-check' on-click='enterToken' disabled=enterToken.isRunning

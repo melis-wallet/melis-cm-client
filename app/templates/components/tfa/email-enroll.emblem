@@ -1,0 +1,18 @@
+= leaf-note type='default' class='no-margin-b'
+  h4 = t 'tfa.email.title'
+  p = t 'tfa.email.caption'
+
+  = if enrollError
+    = leaf-alert type='danger' dark=true
+      = enrollError
+
+  = em-form model=this submitButton=false action='enterEmail'
+    = em-input property='emailAddress' type='text' placeholder=(t 'tfa.email.form.email.ph')  cid='email_input'
+
+  = liquid-if isValid class='ll-down-up'
+    .row
+      .col-sm-4
+        /= leaf-button icon='fa fa-trash' type='default' block=true on-click='cancelEnroll' disabled=busy
+      .col-sm-8
+        /= leaf-button icon='fa fa-check' type='primary' block=true on-click='enterEmail'
+        = leaf-button icon='fa fa-check' type='primary' on-click='enterEmail' icon-executing='fa fa-refresh fa-spin' block=true disabled=busy btnstate=btnstate

@@ -1,0 +1,3 @@
+= leaf-note type='warning'
+  h4 Enroll
+  = leaf-button type='warning' label='Enroll' on-click='doEnrollKey'

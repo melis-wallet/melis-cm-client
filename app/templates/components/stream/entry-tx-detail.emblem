@@ -1,0 +1,92 @@
+
+table.table.table-condensed
+  tbody
+    tr
+      td.no-border-t colspan='2'
+        = if tx.negative
+          = t 'stream.tx.sent' time=(live-moment-from-now tx.time)
+        = else
+          = t 'stream.tx.received' time=(live-moment-from-now tx.time)
+
+        = if invalidated
+          p.text-warning =  t 'stream.tx.invalidated'
+        = else
+          span.pull-right
+            = if tx.cmo.optInRbf
+              .label = t 'stream.tx.rbf'
+              '
+            = common/block-height tx=tx.cmo
+
+    = if tx.cmo.meta.currencyData.native
+      tr
+        td.lowercase: = tx.cmo.meta.currencyData.currency
+        td.text-right.text-lg.text-semibold.text-light-gray
+          = format-money tx.cmo.meta.currencyData.amount compact=false abs=true
+
+      tr
+        td
+        td.text-right.text-light-gray
+          = format-btc tx.cmo.amount withUnit=true
+
+    = else
+      tr
+        td.lowercase: = cm.btcUnit
+        td.text-right.text-lg.text-semibold.text-default
+          = format-btc tx.cmo.amount compact=true
+      tr
+        td
+        td.text-right.text-light-gray
+          = to-currency tx.cmo.amount withUnit=true
+
+    = if (and tx.negative showControls)
+      tr
+        td = t 'stream.tx.fees'
+        td.break-words.text-right
+          = if oldMult
+            span.text-light-gray
+              |(
+              = oldMult
+              |x)
+              '
+          = format-btc tx.cmo.fees
+
+
+    = if tx.negative
+      tr
+        td = t 'stream.tx.to'
+        td.break-words.text-right.text-small = tx.cmo.address
+
+    = if showControls
+      = if (and tx.positive tx.cmo.address)
+        tr
+          td: b = t 'stream.tx.received-ad'
+          td.break-words.text-right.text-small
+            = link-to 'main.account.address.detail' entry.account.num tx.cmo.address
+              = tx.cmo.address
+
+      tr
+        td: b = t 'stream.tx.hash'
+        td.text-right.small.break-words = tx/link-to-explorer hash=tx.cmo.tx
+          tx.cmo.tx
+
+      tr style='height: 48px;'
+        td: i.fa.fa-file-text
+        td.text-right.break-words = leaf-editable-text value=tx.cmo.meta.info if-empty='---' on-change='changeTxInfo' ident=tx max-length=160
+      tr style='height: 58px;'
+        td: i.fa.fa-tags
+        td.text-right = misc/tags-list selection=tx.cmo.labels labelsSet='txLabels' on-done-edit='changeTxLabels' control='right'
+
+      = if showBump
+        tr
+          td: .label = t 'stream.tx.bump'
+          td.text-right
+
+            .input-group
+              span.input-group-btn
+                = leaf-button outline='true' icon='fa fa-check' on-click='requestRbf' disabled=apiOps.isRunning
+              = send/fees-selector greaterThan=oldMult feesMult=feesMult onchange=(action (mut feesMult)) disabled=apiOps.isRunning
+
+    = else
+      = if tx.cmo.meta.info
+        tr
+          td.break-words colspan='2': b = tx.cmo.meta.info

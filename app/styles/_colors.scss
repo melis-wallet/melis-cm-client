@@ -1,0 +1,116 @@
+
+
+$ac-red            : #db2828;
+$ac-orange         : #f2711c;
+$ac-yellow         : #fbbd08;
+$ac-olive          : #b5cc18;
+$ac-green          : #21ba45;
+$ac-teal           : #00b5ad;
+$ac-blue           : #2185d0;
+$ac-violet         : #6435c9;
+$ac-purple         : #a333c8;
+$ac-pink           : #e03997;
+$ac-brown          : #a5673f;
+$ac-grey           : #767676;
+$ac-black          : #000000;
+
+
+@mixin ac-colors() {
+  &.red { background-color: $ac-red; }
+  &.orange { background-color: $ac-orange; }
+  &.yellow { background-color: $ac-yellow; }
+  &.olive { background-color: $ac-olive; }
+  &.green { background-color: $ac-green; }
+  &.teal { background-color: $ac-teal; }
+  &.blue { background-color: $ac-blue; }
+  &.violet { background-color: $ac-violet; }
+  &.purple { background-color: $ac-purple; }
+  &.pink { background-color: $ac-pink; }
+  &.brown { background-color: $ac-brown; }
+  &.grey { background-color: $ac-grey; }
+  &.black { background-color: $ac-black; }
+}
+
+#main-menu .navigation .menu-icon.accent {
+ @include ac-colors()
+}
+
+.page-profile .account-id,
+.account-identifier .account-id {
+  display: inline-block;
+  padding: 5px;
+  min-width: 50px;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: bold;
+  margin-right: 5px;
+  background-color: $brand-warning;
+  text-align: left;
+
+  @include ac-colors()
+
+}
+
+.summary .accented {
+  @include ac-colors()
+}
+
+
+
+.account-state {
+  padding-left: 2px;
+  display: inline-block;
+
+
+  .icon {
+    display: inline-block;
+    line-height: 20px;
+    min-width: 20px;
+    text-align: center;
+    border-radius: 2px;
+  }
+
+  .warning {
+    background-color: $brand-warning;
+    color: white;
+  }
+  .success  {
+    background-color: $brand-success;
+    color: white;
+  }
+}
+
+.account-icon {
+  padding-left: 2px;
+  display: inline-block;
+  z-index: 100;
+
+  .icon {
+    display: inline-block;
+    line-height: 26px;
+    min-width: 26px;
+    text-align: center;
+    border-radius: 2px;
+  }
+}
+
+
+
+.colored-bg {
+  @include ac-colors()
+  color: white;
+}
+
+.accent {
+  min-height: 3px;
+}
+
+
+.stream-entry {
+  .positive-bg {
+    background-color: #f5fbf5;
+  }
+  .negative-bg {
+    background-color: #fbf5f5;
+  }
+}

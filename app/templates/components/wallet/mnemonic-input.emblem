@@ -1,0 +1,25 @@
+= em-form model=this submitButton=false action='submitMnemonicEnter'
+
+  /= em-text rows=3 property='mnemonic' label=(t 'wallet.mnemo.input.label') placeholder=(t 'wallet.mnemo.input.ph') cid='mnemonic_input'
+
+  label style='margin-bottom: 10px;' = t 'wallet.mnemo.input.label'
+  .pull-right
+    = leaf-multiple-toggler options=wordlists value=selectedList on-change=(action (mut selectedList)) class='btn-xs btn-outline' icon='fa fa-flag-o'
+  .clearfix
+
+  = leaf-keywords-input source=wordlist value=mnemonic valid=isValid placeholder=(t 'wallet.mnemo.input.ph')  as | ki |
+    = leaf-keywords-suggest [
+      suggestions=ki.firstSuggestions
+      active=ki.suggestActive
+      on-add=(action 'addSuggestion' target=ki)
+      on-escape=(action 'suggestClosed' target=ki)
+      on-blur=(action 'suggestClosed' target=ki)
+    ]
+
+  = liquid-if encrypted use='toDown'
+    br
+    = em-input property='passphrase' type='password' label=(t 'wallet.mnemo.pass.label')  placeholder=(t 'wallet.mnemo.pass.ph')  cid='passphrase_input'
+
+br
+if isValid
+  p = leaf-button btype='button' type='primary' block=true icon='fa fa-check' on-click='submitMnemonic' id='submit-phrase'
