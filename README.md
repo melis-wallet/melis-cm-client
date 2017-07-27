@@ -1,7 +1,8 @@
 # Melis-cm-client
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+This is the Melis Wallet, as found at [melis.io](https://melis.io/).
+You can download prebuilt versions for several platforms at: [melis.io/download](https://melis.io/download.html).
+
 
 ## Prerequisites
 
