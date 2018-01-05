@@ -79,8 +79,8 @@
             p = leaf-note type='info'
               h4 = t 'backup.ck.cmnemo.title'
               p = t 'backup.ck.cmnemo.caption'
-          p = em-form model=this submitButton=false action='submitPassphrase'
-            = em-input property='passphrase' type='password' label=(t 'wallet.mnemo.pass.label')  placeholder=(t 'wallet.mnemo.pass.ph')
+          p = em-form model=this submitButton=false action='submitPassphrase' as |f|
+            = f.input property='passphrase' type='password' label=(t 'wallet.mnemo.pass.label')  placeholder=(t 'wallet.mnemo.pass.ph')
 
           = if failed
             .row

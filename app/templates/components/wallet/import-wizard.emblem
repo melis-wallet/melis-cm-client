@@ -45,7 +45,7 @@
             = leaf-note type='success'
               h4 = t 'wallet.import.w.done.title'
               p = t 'wallet.import.w.done.caption'
-            = link-to 'main.account.summary' cm.currentAccount.num class='btn btn-primary btn-block'
+            = link-to 'main.account.summary' cm.currentAccount.pubId class='btn btn-primary btn-block'
               i.fa.fa-user
               '
               = t 'wallet.import.w.summary'
@@ -69,6 +69,7 @@
 = else
   = leaf-navs-content class="wizard-content" selected-idx=step delay-render=false as |content|
     = leaf-navs-panel parent=content idx=1
+
       .row
         .col-sm-4.hidden-xs.text-center
           i.fa.fa-exclamation-triangle.icon-side-lg.animated.fadeIn.delay-1s
@@ -89,10 +90,19 @@
         .col-sm-4.hidden-xs.text-center
           img.icon-side-lg.animated.fadeIn.delay-1s src='images/icons/import-mnemonic.svg'
         .col-sm-8
-          = leaf-note type='warning'
-            h4 = t 'wallet.import.w.input.title'
-            p = t 'wallet.import.w.input.caption'
-          = wallet/mnemonic-input on-valid-mnemonic='doneImportMnemo'
+          = if apiOps.isRunning
+            .w-status.spinner.bounce-middle
+          = liquid-if validationFailed class='ll-down-up'
+            = leaf-note type='danger'
+              h4  = t 'wallet.import.w.wrong.title'
+              p  = t 'wallet.import.w.wrong.caption'
+              = if importPassphrase
+                p.text-warning: b = t 'wallet.import.w.wrong.warn'
+          = else
+            = leaf-note type='warning'
+              h4 = t 'wallet.import.w.input.title'
+              p = t 'wallet.import.w.input.caption'
+          = wallet/mnemonic-input on-valid-mnemonic='doneImportMnemo' disabled=disableInput
 
 
     = leaf-navs-panel parent=content idx=3

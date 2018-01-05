@@ -9,7 +9,7 @@ AccountsManagement = Ember.Component.extend(ModalAlerts,
   aa: Ember.inject.service('aa-provider')
   i18n: Ember.inject.service()
 
-  accountsSorting: ['name:asc'],
+  accountsSorting: ['pos:asc', 'name:asc'],
   accounts: Ember.computed.sort('cm.accounts', 'accountsSorting')
 
   apiOps: taskGroup().enqueue()
@@ -37,6 +37,9 @@ AccountsManagement = Ember.Component.extend(ModalAlerts,
         return unless ok == 'ok'
 
         res = yield @get('aa').tfaOrLocalPin(op)
+        if (pubId = Ember.get(res, 'account.pubId'))
+          @get('cm').accountSecure(pubId, Ember.get(res, 'account.hidden'))
+
       catch error
         Ember.Logger.error "Error: ", error
 
@@ -51,6 +54,8 @@ AccountsManagement = Ember.Component.extend(ModalAlerts,
           api.accountUpdate(acct.get('cmo'), hidden: false, tfa: tfa.payload)
       try
         res = yield @get('aa').tfaOrLocalPin(op)
+        if (pubId = Ember.get(res, 'account.pubId'))
+          @get('cm').accountSecure(pubId, Ember.get(res, 'account.hidden'))
       catch error
         Ember.Logger.error "Error: ", error
   ).group('apiOps')

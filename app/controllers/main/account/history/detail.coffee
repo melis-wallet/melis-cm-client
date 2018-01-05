@@ -5,6 +5,11 @@ MainHistoryDetailController = Ember.Controller.extend(
 
   historyCtrl: Ember.inject.controller('main.account.history')
 
+  modelChanged: ( ->
+    @set('historyCtrl.activeModel', @get('model'))
+
+  ).observes('model')
+
   actions:
     changeTxLabels: (labels, tx) ->
       api = @get('cm.api')

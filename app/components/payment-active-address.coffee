@@ -11,6 +11,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
 
   service: Ember.inject.service('cm-address-provider')
   currencySvc: Ember.inject.service('cm-currency')
+  coinsvc: Ember.inject.service('cm-coin')
   cm: Ember.inject.service('cm-session')
   routing:  Ember.inject.service('-routing')
   i18n: Ember.inject.service()
@@ -39,7 +40,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
 
   urlAmount: (->
     if amount = @get('activeAddress.cmo.meta.amount')
-      @get('currencySvc').satoshisToBtc(amount)
+      @get('currencySvc').satoshisToCoin(amount)
   ).property('activeAddress.cmo.meta.amount')
 
   addressUrl: (->
@@ -152,7 +153,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
 
 
     changeAmount: (amount) ->
-      amount = @get('currencySvc').parseBtc(amount)
+      amount = @get('coinsvc').parseUnit(@get('cm.currentAccount'), amount)
       addr = @get('activeAddress')
       @get('updateAddress').perform(addr, amount: amount)
 

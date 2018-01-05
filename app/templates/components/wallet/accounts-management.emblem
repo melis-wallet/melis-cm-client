@@ -8,7 +8,9 @@ table.table.table-striped
         td
           .account-icon class="{{ if a.invisible 'inactive' }}"
             span.icon.colored-bg class=a.color
-              = a.identifier
+              = account-identifier account=a
+        td style='opacity: 0.5;'
+          img.tb-coin-icon src="{{coin-img-path a.coin}}"
         td
           b = a.name
           = if a.invisible

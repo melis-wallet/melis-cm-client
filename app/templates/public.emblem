@@ -3,4 +3,3 @@
     .page-public
       = outlet
   div id='main-menu-bg'
-= common/aa-modal

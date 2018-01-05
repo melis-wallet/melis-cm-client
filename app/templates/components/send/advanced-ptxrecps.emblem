@@ -1,0 +1,50 @@
+  table.table
+    tbody
+      = each preparedRecps as |rec|
+        tr class="{{if rec.isRemainder 'warning'}}"
+          = if rec.pubId
+            td: span.label.label-danger: i.fa.fa-vcard
+            td
+              p
+                span.label.brk.m-sm = rec.pubId
+              small
+                = each rec.labels as |l|
+                  span.label.m-sm = l
+                span.text-light-gray = format-text rec.meta.info len=15
+          = else
+            td: span.label.label-info: i.fa.fa-btc
+            td.break-words
+              p
+                b = rec.address
+              small
+                = each rec.labels as |l|
+                  span.label.m-sm = l
+                span.text-light-gray = format-text rec.meta.info len=15
+          = if rec.isRemainder
+            td.text-right
+              p.text-light-gray
+                | ~
+                = format-unit preparedRemainder account=account
+            td.text-right
+              p.text-light-gray
+                | ~
+                = to-currency preparedRemainder withUnit=true account=account
+          = else
+            td.text-right
+              = format-unit rec.amount account=account
+            td.text-right
+              span.text-light-gray = to-currency rec.amount withUnit=true account=account
+
+
+
+
+
+      tr.warning
+        td colspan='2' = t 'paysend.tx.info.fees'
+        td.text-right: span.animated.flash = format-unit preparedFees account=account
+        td.text-right: span.text-light-gray = to-currency preparedFees withUnit=true account=account
+      tr
+        td colspan='2': b = t 'paysend.tx.info.total' unit=(unit-id account=account)
+        td.text-right: b
+          = format-unit  preparedTotal account=account
+        td.text-right = to-currency preparedTotal withUnit=true account=account

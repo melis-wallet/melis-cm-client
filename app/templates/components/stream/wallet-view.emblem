@@ -9,10 +9,5 @@
     = component (concat 'stream/entry-' entry.subclass) entry=entry id=entry.id on-goto='goto'
 
 
-// BUG https://github.com/emberjs/ember.js/issues/12716
-
-= if inited
-  = unless (gt streamEntries.length 1)
-    = stream/entry-ph
-= else
+= unless inited
   .loader

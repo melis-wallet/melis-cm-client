@@ -1,7 +1,8 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 APP=$(cd "${DIR}/.." && pwd)
-CDV=$APP/ember-cordova/cordova
+CDV=$APP/corber/cordova
+corber=./node_modules/corber/bin/corber
 
 if [ "$#" -le 2 ]; then
    echo "Usage: build <target> <version> <keystorepassword>"
@@ -23,7 +24,7 @@ if [ ! -z "$pass" ]; then
 fi
 
 DIR=$CDV/platforms/android/build/outputs/apk/
-DEPLOY_TARGET="$target" ember cordova:build --environment=production --platform=android --release
+DEPLOY_TARGET="$target" $corber build --environment=production --platform=android --release
 if [[ $? != 0 ]]; then
   echo "*** BUILD ERRORS"
 else

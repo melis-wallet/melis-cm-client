@@ -1,3 +1,4 @@
+
 .main-wrapper id='main-wrapper'
   = partial 'common/navbar-main'
   = partial 'common/menu-main'
@@ -7,5 +8,4 @@
     .content-wrapper id='content-wrapper'
 
   div id='main-menu-bg'
-= common/aa-modal
 = common/scanner-modal

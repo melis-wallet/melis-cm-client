@@ -2,15 +2,14 @@
   label.control-label
     = label
 
-.input-group
+/.input-group
   span.input-group-btn
     = leaf-button icon='fa fa-check' on-click='updateLabels'
-  = power-select-multiple [
-    options=allLabels
-    selected=selection
-    onchange=(action (mut selection))
-    onkeydown=(action "createOnEnter")
-    onblur=(action 'lostFocus')
-    onfocus=(action 'gotFocus')
-    ] as |label|
-    = label
+= power-select-multiple [
+  options=allLabels
+  selected=selection
+  onchange=(action (mut selection))
+  onkeydown=(action "createOnEnter")
+  onblur=(action 'lostFocus')
+  ] as |label|
+  = label

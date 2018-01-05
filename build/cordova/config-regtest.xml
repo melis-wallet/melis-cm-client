@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.melis.regtest" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="io.melis.regtest" android-versionCode="1" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Melis Regtest</name>
     <description>
       An Advanced Bitcoin Wallet
@@ -29,7 +29,7 @@
         <preference name="StatusBarStyle" value="lightcontent" />
         <preference name="StatusBarBackgroundColor" value="#cccccc" />
     </platform>
-    <engine name="android" spec="~5.2.2" />
+    <engine name="android" spec="~6.2.2" />
     <preference name="loadUrlTimeoutValue" value="90000" />
     <preference name="AppendUserAgent" value="Melis" />
     <preference name="xwalkVersion" value="20+" />
@@ -40,6 +40,7 @@
     <preference name="DisallowOverScroll" value="false" />
     <preference name="FadeSplashScreen" value="true" />
     <preference name="AutoHideSplashScreen" value="false" />
-    <plugin name="cordova-plugin-crosswalk-webview" spec="~2.0.0" />
+    <preference name="SplashMaintainAspectRatio" value="true" />
+    <plugin name="cordova-plugin-crosswalk-webview" spec="~2.2.0" />
     <plugin name="phonegap-plugin-barcodescanner" spec="~6.0.1" />
 </widget>

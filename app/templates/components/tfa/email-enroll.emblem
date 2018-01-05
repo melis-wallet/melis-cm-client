@@ -6,8 +6,8 @@
     = leaf-alert type='danger' dark=true
       = enrollError
 
-  = em-form model=this submitButton=false action='enterEmail'
-    = em-input property='emailAddress' type='text' placeholder=(t 'tfa.email.form.email.ph')  cid='email_input'
+  = em-form model=this submitButton=false action='enterEmail' as |f|
+    = f.input property='emailAddress' type='text' placeholder=(t 'tfa.email.form.email.ph')  cid='email_input'
 
   = liquid-if isValid class='ll-down-up'
     .row

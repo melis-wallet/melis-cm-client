@@ -10,7 +10,7 @@
           = each preparedTxs as |tx|
             li  class={ if (eq tx.id currentTx.id) 'active' }
               a href='#' click="'selectTx' tx"
-                b = format-btc tx.cmo.amount withUnit=true
+                b = format-unit tx.cmo.amount withUnit=true account=tx.account
                 |,
                 '
                 = moment-from-now tx.cmo.cd
@@ -22,7 +22,7 @@
                       = moment-from-now tx.cmo.cd
                       br
                       .text-light-gray.small = format-text (co-signer tx.cmo.account you="You") len=10
-                  td: b = format-btc tx.cmo.amount
+                  td: b = format-unit tx.cmo.amount account=tx.account
                   /td = leaf-label content=tx.cmo.status
                   td = leaf-label class=tx.signIconClass
                     i.fa class=tx.signIcon

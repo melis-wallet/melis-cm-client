@@ -38,7 +38,7 @@ RegtestEnroll = Ember.Component.extend(Validations, ValidationsHelper,
         @get('aa').tfaAuth(op, "Add Email TFA").then((res) =>
 
           @set('btnstate', 'resolved')
-          @sendAction('on-new-enroll')
+          @sendAction('on-new-complete-enroll')
         ).catch((err) =>
 
           Ember.Logger.error "error enrolling regtest: ", err

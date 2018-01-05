@@ -1,0 +1,6 @@
+
+= leaf-accordion selected-idx=(unbound coinsvc.coins.firstObject.unit) as |chord|
+  = each coinsvc.coins as |c|
+    = leaf-accordion-panel title=(t c.i18n) icon='fa fa-bitcoin' simple-header=true parent=chord idx=c.unit
+      = prefs/coin-prefs coin=c
+

@@ -4,7 +4,7 @@ StreamSummary = Ember.Helper.extend(
 
   i18n: Ember.inject.service()
   cm:  Ember.inject.service('cm-session')
-  currencySvc: Ember.inject.service('cm-currency')
+  coinsvc: Ember.inject.service('cm-coin')
 
   compute: (params, hash) ->
     entry = params[0]
@@ -15,12 +15,12 @@ StreamSummary = Ember.Helper.extend(
     account = Ember.get(entry, 'account')
     i18n = @get('i18n')
 
-    svc = @get('currencySvc')
+    svc = @get('coinsvc')
 
     switch Ember.get(entry, 'subclass')
       when 'ptx'
         amount = Ember.get(entry, 'content.cmo.amount')
-        title = svc.formatBtc(amount, ratio: @get('currencySvc.btcDivider')) + ' ' + @get('currencySvc.btcUnit').toLowerCase()
+        title = svc.formatUnit(account, amount) + ' ' + account.get('subunit.symbol').toLowerCase()
         caption = i18n.t('stream.helper.ptx.caption', by: account.cosignerName( Ember.get(entry, 'content.cmo.accountPubId'), you: i18n.t('tx.you'), keyIsFine: false  ))
       when 'txinfo'
         title = i18n.t('stream.helper.txinfo.title')
@@ -29,7 +29,7 @@ StreamSummary = Ember.Helper.extend(
       when 'address'
         title = Ember.get(entry, 'content.cmo.meta.info') || i18n.t('stream.helper.address.title')
         if amount = Ember.get(entry, 'content.cmo.meta.amount')
-          caption = svc.formatBtc(amount, ratio: @get('currencySvc.btcDivider')) + ' ' + @get('currencySvc.btcUnit').toLowerCase()
+          caption = svc.formatUnit(account, amount) + ' ' + account.get('subunit.symbol').toLowerCase()
 
 
 

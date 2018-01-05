@@ -1,6 +1,7 @@
 `import CMCore from 'npm:melis-api-js'`
 `import CmSessionService from 'melis-cm-svcs/services/cm-session'`
 `import config from '../config/environment'`
+`import { waitTime } from 'melis-cm-svcs/utils/delayed-runners'`
 
 DEFAULT_LOCALE = 'en'
 
@@ -29,6 +30,10 @@ SessionService = CmSessionService.extend(
       @set('i18n.locale', locale)
       @get('moment').changeLocale(locale)
   ).observes('locale').on('init')
+
+
+  resetApp: ->
+    waitTime(650).then( -> window.location.reload())
 )
 
 `export default SessionService`

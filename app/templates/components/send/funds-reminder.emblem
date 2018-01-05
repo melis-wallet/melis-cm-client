@@ -1,0 +1,43 @@
+= if (not account.amSummary)
+  .panel.panel-transparent
+    .note.note-warning
+      h4 = t 'paysend.no-coins.title'
+      p = t 'paysend.no-coins.caption'
+
+= else if account.balance.amUnconfirmed
+  .panel.panel-transparent
+    .note
+      h4 = t 'paysend.funds.title'
+      table.table
+        thead
+          tr
+            td.text-right.text-light-gray.uppercase = t 'paysend.funds.unconfirmed'
+            td.text-right.text-light-gray.text-semibold.uppercase = t 'paysend.funds.available'
+        tbody
+          tr
+            td.text-right
+              span.text-light-gray.lowercase = unit-id account=account
+              '
+              span.label = format-unit account.balance.amUnconfirmed compact=true account=account
+            td.text-right
+              span.text-light-gray.lowercase = unit-id account=account
+              '
+              span.label.label-warning = format-unit account.balance.amAvailable compact=true account=account
+
+      p = t 'paysend.funds.caption'
+
+= else
+  .panel.panel-transparent
+    .note
+      table.table
+        thead
+          tr
+            td.text-right.text-light-gray.text-semibold.uppercase = t 'paysend.funds.available'
+        tbody
+          tr
+            td.text-right
+              span.text-light-gray.lowercase = unit-id account=account
+              '
+              span.label.label-warning = format-unit account.balance.amAvailable compact=true account=account
+
+= yield

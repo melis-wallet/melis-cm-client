@@ -20,7 +20,7 @@ DeviceRecovery = Ember.Component.extend(
       api.tfaProposeDeleteDevices()
 
     try
-      res = yield @get('aa').askLocalPin(op, "Reset TFA Devices")
+      res = yield @get('aa').askLocalPin(op, "Reset TFA Devices", true, true)
       @set 'doneRequest', true
     catch error
       Ember.Logger.error('Error resetting TFA', error)

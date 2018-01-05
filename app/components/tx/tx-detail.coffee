@@ -41,7 +41,6 @@ TxDetail = Ember.Component.extend(
 
 
     changeTxLabels: (labels)->
-      console.error "change labels", labels
       @sendAction('on-change-tx-labels', labels, @get('tx'))
 
 )

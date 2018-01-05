@@ -10,17 +10,19 @@ Router.map ->
   @route 'main', ->
     @route 'wallet'
     @route 'accounts'
-    @route 'account', {path: '/account/:account_num'},  ->
+    @route 'account', {path: '/account/:account_id'},  ->
       @route 'view'
       @route 'dashboard'
       @route 'summary'
       @route 'ops', ->
         @route 'send'
+        @route 'advanced-send'
         @route 'receive'
       @route 'history', ->
         @route 'detail', {path: ':txinfo_id'}
       @route 'ptx', ->
         @route 'detail', {path: ':ptx_id'}
+      @route 'unspents'
       @route 'address', ->
         @route 'detail', {path: ':addr_id'}
     @route 'abs',  ->

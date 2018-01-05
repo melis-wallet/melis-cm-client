@@ -25,7 +25,7 @@ WalletAccountsDropdown = Ember.Component.extend(
 
     selectAccount: (acc) ->
       cm = @get('cm')
-      cm.selectAccount(acc.get('num'))
+      cm.selectAccount(acc.get('pubId'))
 
 )
 

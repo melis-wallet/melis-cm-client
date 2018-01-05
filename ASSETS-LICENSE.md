@@ -26,8 +26,8 @@ d. use the Licensed Material to build any other application than the Melis Appli
 
 e. re-distribute or transfer the Melis Application you have built with this Licensed Materials.
 
-f. transfer any right or license regarding
+f. transfer any right or license regarding the License Material.
 
 g. use the Licensed Material to create promotional materials, images, artwork, videos.
 
-e. use the Licensed Material to misrepresent yourself, or your products, applications, services, promotional materials as Melis srl or any of its services or products.
+h. use the Licensed Material to misrepresent yourself, or your products, applications, services, promotional materials as Melis srl or any of its services or products.

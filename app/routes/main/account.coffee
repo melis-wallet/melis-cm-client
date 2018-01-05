@@ -10,13 +10,12 @@ MainAccountRoute = Ember.Route.extend(
 
     cm = @get('cm')
     cm.waitForReady().then( =>
-      curr_acct_num = cm.get('currentAccount.num')
-      account_num = parseInt(params.account_num)
+      curr_acct_id = cm.get('currentAccount.pubId')
 
-      if curr_acct_num != account_num
+      if curr_acct_id != params.account_id
 
-        Ember.Logger.info '++ Selecting Account: ', account_num
-        cm.selectAccount(account_num, true)
+        Ember.Logger.info '++ Selecting Account: ', params.account_id
+        cm.selectAccount(params.account_id, true)
         false
     )
 

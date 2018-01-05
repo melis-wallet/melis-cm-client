@@ -2,7 +2,7 @@
 .history-container-header
   .account-identifier.no-padding-b
     span.account-id class=account.color
-      account.identifier
+      = account-identifier account=account
     span.text-semibold: = account.name
     |:
     '
@@ -24,16 +24,16 @@ ul.history-list
     li.history-item class={ if (eq tx selected) 'active' } class={ if tx.cmo.meta.starred 'starred'}
       = if tx.negative
         .h-lbl style='opacity: 0.5;'
-          = common/block-height tx=tx.cmo
+          = common/block-height tx=tx
       = else
         .h-lbl
-          = common/block-height tx=tx.cmo
+          = common/block-height tx=tx
       .h-star: a.has-action click="'toggleStar' tx"
       .h-amount: a.expandable click="'selectTx' tx"
-        span.data
-          = format-btc tx.cmo.amount compact=true withUnit=true fullPrecision=true
+        span.data class={ if tx.negative 'text-danger' }
+          = format-unit tx.cmo.amount compact=true withUnit=true fullPrecision=true account=tx.account
       .h-subject: a.expandable click="'selectTx' tx"
-        .span
+        span
           = each tx.cmo.labels as |label|
             .label.label-danger.label-tag = label
           |&nbsp;&nbsp;
@@ -45,7 +45,7 @@ ul.history-list
         = leaf-tooltip tooltip=(moment-format tx.time) tooltip-position='left'
           = live-moment-from-now tx.time
 
-      /span.data = format-btc tx.cmo.fees
+      /span.data = format-unit tx.cmo.fees account=tx.account
     = if (eq tx.id selected.id)
       li.history-detail-c
         = yield tx this

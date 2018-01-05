@@ -1,50 +1,82 @@
 `import Ember from 'ember'`
 `import { task, taskGroup } from 'ember-concurrency'`
+`import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'`
 
-PaymentQuickSend = Ember.Component.extend(
+PaymentQuickSend = Ember.Component.extend(ModelFactory,
 
   cm: Ember.inject.service('cm-session')
   currencySvc: Ember.inject.service('cm-currency')
+  coinsvc: Ember.inject.service('cm-coin')
   aa: Ember.inject.service('aa-provider')
   i18n: Ember.inject.service()
 
   error: null
   success: null
 
-  recipient: null
+  unit: null
 
-  apiOps: taskGroup().drop()
+  recipientId: null
+  recipientAddr: null
+  recipientInfo: null
+  amount: null
 
-  currency: Ember.computed.alias('currencySvc.currencySymbol')
-  currencyAmount: ( ->
-    amount = @get('recipient.amount')
-    @get('currencySvc').convertTo(amount)
-  ).property('recipient.amount', 'currencySvc.value')
+  info: null
 
-  accounts: Ember.computed.alias('cm.accounts')
-  selectedAccount: null
+  activeAccount: null
 
-  selectableAccts: ( ->
-    @get('accounts').map((a) =>
-      {id: a.get('num'), value: a.get('name')}
+  apiOps: taskGroup().enqueue()
+
+
+  coin: ( ->
+    @get('coinsvc.coins')?.findBy('unit', @get('unit'))
+  ).property('coin', 'coinsvc.inited')
+
+
+  recipient: ( ->
+    return if Ember.isBlank('activeAccount')
+
+    @createSimpleModel('payment-recipient',
+      type: if @get('recipientInfo') then 'cm' else 'address'
+      value: if @get('recipientInfo') then {pubId: @get('recipientInfo.pubId')} else @get('recipientAddr')
+      account: @get('activeAccount')
+      amount: @get('coinsvc').formatUnit(@get('activeAccount'), @get('amount'))
+      currency: @get('currencySvc.currency')
+      info: @get('info')
     )
-  ).property('accounts', 'recipient')
+  ).property('coin', 'recipientInfo', 'recipientAddr', 'activeAccount', 'amount')
 
-  activeAccount: ( ->
-    console.log "changed! ", @get('selectedAccount')
-    @get('accounts').findBy('num', @get('selectedAccount'))
-  ).property('selectedAccount')
 
   changedAccts: ( ->
-    if Ember.isBlank(@get('selectedAccount'))
-      @set('selectedAccount', @get('accounts.firstObject.num'))
-
-  ).observes('accounts').on('init')
+    if Ember.isBlank(@get('activeAccount')) && (unit = @get('unit'))
+      @set('activeAccount', @get('cm.accounts')?.findBy('coin', unit))
+  ).observes('accounts', 'unit').on('init')
 
 
   enoughBalance: ( ->
-    @get('activeAccount.amSummary') > @get('recipient.amount')
-  ).property('activeAccount', 'recipient.amount')
+    @get('activeAccount.balance.amAvailable') > @get('recipient.fullAmount')
+  ).property('activeAccount.balance.amAvailable', 'recipient.fullAmount')
+
+
+  setup: ( ->
+    Ember.Logger.error("[QuickSend] Unit is required") if Ember.isBlank('unit')
+
+    if @get('recipientId') && Ember.isBlank(@get('recipientInfo'))
+      @get('findRecipient').perform()
+  ).on('init')
+
+  pubIdChanged: ( ->
+    if @get('recipientId')
+      @get('findRecipient').perform()
+  ).observes('pubId')
+
+
+  findRecipient: task( ->
+    api = @get('cm.api')
+    @set('recipientInfo', null)
+    if (pubId = @get('recipientId'))
+      res = yield api.accountGetPublicInfo(name: pubId)
+      @set('recipientInfo', res)
+  ).group('apiOps')
 
 
   payNow: task( ->
@@ -53,30 +85,11 @@ PaymentQuickSend = Ember.Component.extend(
       error: null
       success: null
 
-    if (acct = @get('activeAccount.cmo')) && (recipient = @get('recipient')) && (pubId = @get('recipient.pubId'))
+    if (acct = @get('activeAccount.cmo')) && (recipient = @get('recipient'))
 
       try
-        res = yield api.getPaymentAddressForAccount(pubId, Ember.get(recipient, 'info'))
-      catch error
-        Ember.Logger.error error
-        @set('error', @get('i18n').t('quicksend.error.addr'))
-
-      if res
-        console.log "addr ok ", res
-        rcpt = {
-          address: res
-          amount: recipient.get('amount')
-          info: recipient.get('info')
-        }
-      else
-        return
-
-
-      try
-        console.error "HEEEEE"
-        op = (tfa) =>
-          api.payRecipients(acct, [rcpt], tfa: tfa.payload)
-
+        op = (tfa) ->
+          api.payRecipients(acct, [recipient.toCmo()], tfa: tfa.payload)
 
         yield @get('aa').tfaAuth(op, @get('i18n').t('paysend.prompts.prepare'))
         @set 'success', @get('i18n').t('quicksend.success')
@@ -91,6 +104,7 @@ PaymentQuickSend = Ember.Component.extend(
   actions:
     payNow: ->
       @get('payNow').perform()
+
 
 
 )

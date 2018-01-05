@@ -1,10 +1,15 @@
+.mm-buttons
+  .btn-group
+    = each coins as |c|
+      = leaf-button class='btn btn-primary btn-outline dark btn-sm' on-click='setFilter' value=c.unit active=(eq c.unit coin)
+        img.btn-coin-icon src="{{coin-img-path c.unit}}"
 
 = each accounts as |account|
   li role='menu-item' class='animated fadeIn' class={ if (and accountRoute (eq account cm.currentAccount)) 'selected' }
-    /= link-to targetRoute account.num disabled=(eq account cm.currentAccount)
-    = link-to targetRoute account.num
+    /= link-to targetRoute account.pubId disabled=(eq account cm.currentAccount)
+    = link-to targetRoute account.pubId
       span.menu-icon.accent class=account.color
-        = account.identifier
+        = account-identifier account=account
       span.mm-text
         = format-text account.name len=20
         = stream/stream-counter account=account property='urgent' vclass='label-warning'

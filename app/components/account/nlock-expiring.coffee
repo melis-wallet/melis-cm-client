@@ -1,6 +1,7 @@
 `import Ember from 'ember'`
 `import CMCore from 'npm:melis-api-js'`
 `import { task, taskGroup } from 'ember-concurrency'`
+`import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'`
 
 
 NlockExpiring = Ember.Component.extend(
@@ -30,6 +31,7 @@ NlockExpiring = Ember.Component.extend(
 
 
   apiOps: taskGroup().drop()
+  refreshOps: taskGroup().drop()
 
   confirmRotation: task( (tx) ->
     @setProperties
@@ -46,7 +48,8 @@ NlockExpiring = Ember.Component.extend(
       @set('error', true)
       Ember.Logger.error "Error signing: ", error
 
-  )
+    @get('delayRefresh').perform()
+  ).group('apiOps')
 
 
   cancelRotation: task( (tx) ->
@@ -64,7 +67,8 @@ NlockExpiring = Ember.Component.extend(
       @set('error', true)
       Ember.Logger.error "Error cancelling: ", error
 
-  )
+    @get('refresh').perform()
+  ).group('apiOps')
 
 
   rotateInputs: task( (inputs) ->
@@ -77,7 +81,9 @@ NlockExpiring = Ember.Component.extend(
       unspents = inputs.map((i) -> {hash: i.tx, n: i.n })
 
       try
-        state = yield @get('cm.api').payPrepare(account.get('cmo'), [{pubId: @get('account.uniqueId'), amount: 0, isRemainder: true}], autoSignIfValidated: true, disableRbf: true, unspents: unspents)
+        state = yield @get('cm.api').payPrepare(account.get('cmo'),
+          null,
+          autoSignIfValidated: true, disableRbf: true, unspents: unspents)
         ptx = @get('ptxsvc').ptxFromState(state, @get('account'))
         @set 'preparedTx', ptx
 
@@ -87,6 +93,11 @@ NlockExpiring = Ember.Component.extend(
 
   ).group('apiOps')
 
+
+  delayRefresh: task( ->
+    yield waitIdleTime(4000)
+    @get('refresh').perform()
+  )
 
   refresh: task( ->
     return unless (acc = @get('account'))
@@ -113,7 +124,6 @@ NlockExpiring = Ember.Component.extend(
         @get('cancelRotation').perform(tx)
 
     clearDone: ->
-      console.error 'clearDone'
       @set('doneTx', false)
 
 )

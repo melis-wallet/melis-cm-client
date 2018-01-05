@@ -1,5 +1,32 @@
 
-/.history-controls
+.history-controls
+  = if cm.currentAccount.canSignMessage
+    .row
+      .col-md-6
+      .col-md-6.text-right
+        = leaf-button icon='fa fa-pencil-square' outline='true' on-click='doSignature'
+        '
+        = leaf-button label=(t 'sign.check.button') outline='true' on-click='chkSignature'
+
+= ember-wormhole  to='modal-wormhole'
+  = leaf-modal id=chkSignId as |ckmod|
+    = leaf-modal-header title=(t 'sign.check.title') modal=ckmod
+    = leaf-modal-body
+      = if ckmod.did-open
+        .delay-05s.animated.fadeIn
+          = account/check-message-signature account=cm.currentAccount
+    = leaf-modal-footer modal=mod
+      = leaf-modal-button icon='fa fa-check' type='primary' label=(t 'sign.check.dismiss') modal=ckmod value='ok' block=true
+
+
+  = leaf-modal id=doSignId as |mod|
+    = leaf-modal-header title=(t 'sign.message.title') modal=mod
+    = leaf-modal-body
+      = if mod.did-open
+        .delay-05s.animated.fadeIn
+          = account/sign-message account=cm.currentAccount
+    = leaf-modal-footer modal=mod
+      = leaf-modal-button icon='fa fa-check' type='primary' label=(t 'sign.message.dismiss') modal=mod value='ok' block=true
 
 ul.history-list
   li.history-item
@@ -20,9 +47,13 @@ ul.history-list
       = if a.meta.amount
         .h-amount: a.expandable click="'selectAddr' a"
           span.data
-            = format-btc a.meta.amount compact=true withUnit=true
+            = format-unit a.meta.amount compact=true withUnit=true account=cm.currentAccount
       .h-subject: a.expandable click="'selectAddr' a"
-        .code-label = a.address
+        p.code-label = a.address
+        = if a.labels
+          p
+            = each a.labels as |label|
+              .label.label-info.label-tag.m-sm-r = label
         = if a.meta.info
           .bar: b = a.meta.info
       .h-date = moment-from-now a.lastRequested

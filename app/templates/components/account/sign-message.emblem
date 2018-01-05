@@ -1,0 +1,29 @@
+= if address
+
+  = leaf-note type='default'
+    h4 = t 'sign.message.text'
+    hr
+    p = textarea autoresize=true value=text rows='3' class='form-control'
+    p
+      = t 'sign.message.with'
+
+      span.code-label.pull-right = address.address
+      .clearfix
+  p = leaf-button icon='fa fa-pencil-square' block=true outline=true on-click='doSign' label=(t 'sign.message.sign') disabled=signingDisabled
+  = liquid-if signature class='ff-dn-up'
+    .row
+      .col-md-10
+        p = leaf-note type='warning' class='break-words'
+
+          code = formattedSig
+      .col-md-2.text-right
+        =leaf-clipboard size='xs' block=false outline=true content=formattedSig
+= else
+  = em-form model=this submitButton=false action='findAddr' as |f|
+    = leaf-note type='info'
+      h4 = t 'sign.message.findaddr.title'
+      p = t 'sign.message.findaddr.caption'
+      hr
+      = f.input property='addressText' label=(t 'sign.check.address')
+      = if isValid
+        p = leaf-button icon='fa fa-search' block=true outline=true on-click='searchAddress'

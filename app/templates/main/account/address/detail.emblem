@@ -1,3 +1,5 @@
 br
 br
 = account/address-detail address=model on-address-change='addressUpdated'
+= tx/txs-list-mini account=cm.currentAccount txs=txInfos
+

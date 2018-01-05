@@ -23,6 +23,8 @@ PaymentSend = Ember.Component.extend(Alertable,
   hasRecipients: Ember.computed.notEmpty('recipients')
   currency: Ember.computed.alias('cm.globalCurrency')
 
+  coin: Ember.computed.alias('cm.currentAccount.unit')
+
   optRBF: true
   allowUnconfirmed: false
 
@@ -30,22 +32,30 @@ PaymentSend = Ember.Component.extend(Alertable,
     (@get('currentRecipient.entireBalance') || @get('recipients').any((item) -> item.get('entireBalance')))
   ).property('recipients.@each.entireBalance', 'currentRecipient.entireBalance')
 
-  blockEntireBalance: ( ->
-    @get('cm.currentAccount.balance.amUnconfirmed') || (!@get('isEntireBalance') && !Ember.isEmpty(@get('recipients')))
-  ).property('cm.currentAccount.balance.amUnconfirmed', 'isEntireBalance', 'recipients.[]')
+  canToggleEntireBalance: ( ->
+    @get('currentRecipient.entireBalance') || !@get('cm.currentAccount.balance.amUnconfirmed')
+  ).property('cm.currentAccount.balance.amUnconfirmed', 'currentRecipient.entireBalance')
 
+  canAddRecipient: ( ->
+    @get('currentRecipient.isValid') && !@get('isEntireBalance')
+  ).property('isEntireBalance', 'currentRecipient.isValid')
+
+  # at least one of the recipients DOES not get the entire balance
+  hasNormalDests: ( ->
+    (recipients = @get('recipients')) && recipients.any((item) -> !item.get('entireBalance'))
+  ).property('recipients.@each.entireBalance')
 
   feesMult: 1.0
 
   currencies: ( ->
     curr = @get('currency')
-    btc = @get('cm.btcUnit')
+    unit = @get('cm.currentAccount.subunit.symbol')
 
-    [ {id: btc, value: btc}
-      {id: curr, value: @get('currency')}
+    [ {id: unit, value: unit}
+      {id: curr, value: curr}
     ]
 
-  ).property('currency', 'cm.btcUnit')
+  ).property('currency', 'cm.currentAccount.subunit')
 
   fees: Ember.computed.alias('preparedTx.cmo.fees')
 
@@ -53,6 +63,7 @@ PaymentSend = Ember.Component.extend(Alertable,
     @getWithDefault('fees', 0.0)
   ).property('preparedTx')
 
+  abClose: ( -> @set('abOpened', false)).observes('cm.currentAccount')
 
   total: (->
     @get('amount') + @get('computedFees')
@@ -83,6 +94,9 @@ PaymentSend = Ember.Component.extend(Alertable,
     @set('currentRecipient.allowUnconfirmed', @get('allowUnconfirmed'))
   ).observes('allowUnconfirmed')
 
+  coinChanged: ( ->
+    @set('optRBF', @get('coin.features.rbf'))
+  ).observes('coin').on('init')
 
   actions:
 

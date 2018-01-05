@@ -16,7 +16,7 @@ FingerPrintEnroll = Ember.Component.extend(
     op = (data) =>
       @get('fpa').enroll(data.pin)
 
-    @get('aaProvider').askLocalPin(op, 'Authorize Pin', true)
+    @get('aaProvider').askLocalPin(op, 'Authorize Pin', true, true)
 
   doRemove: ->
     @get('fpa').disable()

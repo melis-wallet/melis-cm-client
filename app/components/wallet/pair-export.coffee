@@ -43,14 +43,11 @@ PairExportWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
     if @get('resp.isMobile')
       256
     else
-      480
+      320
   ).property('resp.isMobile')
 
 
-
   requestPair: task((pin, deviceName) ->
-
-    console.log "request pair"
     try
       res = yield @get('cm').exportForPairing(pin, deviceName)
       @setProperties
@@ -71,8 +68,6 @@ PairExportWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
 
 
   deviceDeleted: (data) ->
-    console.error "DEVICE DELETED: ", data, @get('deviceId')
-
     if Ember.get(data, 'id') == @get('deviceId')
       @pairCompleted()
 

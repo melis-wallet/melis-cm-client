@@ -10,6 +10,7 @@
       = if lazyfetchInfo.isRunning
         .w-status.spinner.bounce-middle
       .panel-body
+        img.ab-entry-icon src="{{coin-img-path model.coin}}"
         .ab-entry
           span.ab-entry-avatar class="{{if model.isCm 'cm' }}"
             = model.identifier

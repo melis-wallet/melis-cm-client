@@ -48,8 +48,11 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
     try
       yield @get('service').getCurrentAddress()
     catch error
-      @set 'error', error
       Ember.Logger.error "Error: ", error
+      if error.ex == 'CmNoResourcesException'
+        @set 'noResources', true
+      else
+        @set 'error', error
   ).group('apiOps')
 
   observeCode: ( ->

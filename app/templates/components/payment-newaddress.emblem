@@ -15,7 +15,7 @@
             = if currentAddress.cmo.amount
               tr
                 td = t 'stream.address.amount'
-                td = = format-btc currentAddress.cmo.amount
+                td = = format-unit currentAddress.cmo.amount account=currentAddress.account
 
             = if currentAddress.cmo.meta.info
               tr
@@ -31,7 +31,7 @@
          = leaf-button type='primary' icon='fa fa-magic' block=true on-click='editAddress' tabindex='0'
       .col-xs-3
         /= leaf-button type='default' icon='fa fa-trash' block=true on-click='deleteAddress' tabindex='0'
-        = link-to 'main.account.address' cm.currentAccount.num class='btn btn-block'
+        = link-to 'main.account.address' cm.currentAccount.pubId class='btn btn-block'
           i.fa.fa-list
       .col-xs-6
         = leaf-button type='default' icon='fa fa-magic' block=true on-click='makeCurrentActive' tabindex='0'
@@ -54,22 +54,22 @@
                 td.text-right
                   = live-moment-from-now activeAddress.time
             tr.bg-light-gray
-              td = cm.btcUnit
+              td = unit-id account=activeAddress.account
               td: .pull-right
                 = leaf-editable-number [
                   size='lg'
-                  value=(scale-btc activeAddress.cmo.meta.amount)
+                  value=(scale-unit activeAddress.cmo.meta.amount account=activeAddress.account)
                   on-change='changeAmount'
                   if-empty=(t 'newaddr.empty.amount')
                   inputClass='text-right text-bold']
                   = if activeAddress.cmo.meta.amount
-                    span.text-xlg.text-default.text-semibold = format-btc activeAddress.cmo.meta.amount
+                    span.text-xlg.text-default.text-semibold = format-unit activeAddress.cmo.meta.amount account=activeAddress.account
                   = else
                     | [ request a specific amount ]
             = if activeAddress.cmo.meta.amount
               tr
                 td.lowercase = cm.globalCurrency
-                td: .pull-right = to-currency activeAddress.cmo.meta.amount
+                td: .pull-right = to-currency activeAddress.cmo.meta.amount account=activeAddress.account
 
 
             tr

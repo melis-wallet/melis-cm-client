@@ -1,0 +1,23 @@
+= leaf-note type='default'
+  h4 = t 'tfa.rfc6238.title'
+  p = t 'tfa.rfc6238.caption'
+
+  = if enrollError
+    = leaf-alert type='danger' dark=true
+      = enrollError
+
+  = if currentUrl
+    .row
+      .col-md-5
+        p = t 'tfa.rfc6238.explain'
+        br
+        br
+        p = tfa/enter-token device=currentDevice on-valid-token='enrollFinish'
+        br
+        .alert.alert-info.break-words
+          span.small = currentSecret
+      .col-md-7.text-right
+        = misc/qr-code class='pull-right' content=currentUrl id='qrcode'  height=256 width=256
+
+  = else
+    = leaf-button label=(t 'tfa.actions.enroll') on-click='enrollTotp'

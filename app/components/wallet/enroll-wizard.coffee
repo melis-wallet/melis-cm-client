@@ -80,7 +80,7 @@ EnrollWizard = Ember.Component.extend(AsWizard, BackButton,
         @updateState 60, 'enroll.state.acreate'
         account = yield cm.accountCreate(type: @get('simpleAccount'), meta: {name: @get('defaultAccountName').toString()})
         if account
-          cm.selectAccount(account.get('num'))
+          cm.selectAccount(account.get('pubId'))
         @updateState 100, 'enroll.state.done'
         @set 'enrollDone', true
       catch err
@@ -115,7 +115,7 @@ EnrollWizard = Ember.Component.extend(AsWizard, BackButton,
         @updateState 60, 'enroll.state.acreate'
         account = yield cm.accountCreate(type: @get('simpleAccount'), meta: {name: @get('defaultAccountName').toString()})
         if account
-          cm.selectAccount(account.get('num'))
+          cm.selectAccount(account.get('pubId'))
         @updateState 100, 'enroll.state.done'
         @set 'enrollDone', true
       catch err

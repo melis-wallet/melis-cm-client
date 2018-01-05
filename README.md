@@ -1,8 +1,7 @@
 # Melis-cm-client
 
-This is the Melis Wallet, as found at [melis.io](https://melis.io/).
-You can download prebuilt versions for several platforms at: [melis.io/download](https://melis.io/download.html).
-
+This README outlines the details of collaborating on this Ember application.
+A short introduction of this app could easily go here.
 
 ## Prerequisites
 
@@ -95,3 +94,7 @@ or
 * Development Browser Extensions
   * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
   * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+
+
+
+----1.1.3+d0f7c245

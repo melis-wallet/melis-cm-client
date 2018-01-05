@@ -15,28 +15,28 @@ table.table.table-condensed
             = if tx.cmo.optInRbf
               .label = t 'stream.tx.rbf'
               '
-            = common/block-height tx=tx.cmo
+            = common/block-height tx=tx
 
     = if tx.cmo.meta.currencyData.native
       tr
-        td.lowercase: = tx.cmo.meta.currencyData.currency
+        td.lowercase: b = tx.cmo.meta.currencyData.currency
         td.text-right.text-lg.text-semibold.text-light-gray
           = format-money tx.cmo.meta.currencyData.amount compact=false abs=true
 
       tr
         td
         td.text-right.text-light-gray
-          = format-btc tx.cmo.amount withUnit=true
+          = format-unit tx.cmo.amount withUnit=true account=tx.account
 
     = else
       tr
-        td.lowercase: = cm.btcUnit
+        td.lowercase: = unit-id account=tx.account
         td.text-right.text-lg.text-semibold.text-default
-          = format-btc tx.cmo.amount compact=true
+          = format-unit tx.cmo.amount compact=true account=tx.account
       tr
         td
         td.text-right.text-light-gray
-          = to-currency tx.cmo.amount withUnit=true
+          = to-currency tx.cmo.amount withUnit=true account=tx.account
 
     = if (and tx.negative showControls)
       tr
@@ -48,7 +48,7 @@ table.table.table-condensed
               = oldMult
               |x)
               '
-          = format-btc tx.cmo.fees
+          = format-unit tx.cmo.fees account=tx.account
 
 
     = if tx.negative
@@ -61,12 +61,12 @@ table.table.table-condensed
         tr
           td: b = t 'stream.tx.received-ad'
           td.break-words.text-right.text-small
-            = link-to 'main.account.address.detail' entry.account.num tx.cmo.address
+            = link-to 'main.account.address.detail' entry.account.pubId tx.cmo.address
               = tx.cmo.address
 
       tr
         td: b = t 'stream.tx.hash'
-        td.text-right.small.break-words = tx/link-to-explorer hash=tx.cmo.tx
+        td.text-right.small.break-words = tx/link-to-explorer hash=tx.cmo.tx account=entry.account
           tx.cmo.tx
 
       tr style='height: 48px;'

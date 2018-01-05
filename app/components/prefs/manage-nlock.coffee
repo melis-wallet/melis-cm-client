@@ -1,8 +1,6 @@
 `import Ember from 'ember'`
 `import { task, taskGroup } from 'ember-concurrency'`
 
-
-
 ManageNlock = Ember.Component.extend(
 
 
@@ -10,7 +8,7 @@ ManageNlock = Ember.Component.extend(
   recovery: Ember.inject.service('cm-recovery-info')
   aa: Ember.inject.service('aa-provider')
   i18n: Ember.inject.service()
-
+  device: Ember.inject.service('device-support')
 
   lockTimeOpts: [
     {value: 180, label: 'view.nlock.time.6mo'}
@@ -57,7 +55,7 @@ ManageNlock = Ember.Component.extend(
         if res && (days = Ember.get(res, 'lockTimeDays'))
           @set 'lockTime', days
       catch error
-        console.error error
+        Ember.Logger.error error
 
     else
 

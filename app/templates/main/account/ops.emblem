@@ -1,7 +1,8 @@
-.content-wrapper id='content-wrapper' 
+.content-wrapper id='content-wrapper'
   = if cm.walletOpenFailed
       | Login failed
   = else
     .row
       .col-md-12
-        = outlet
+        = if cm.ready
+          = outlet

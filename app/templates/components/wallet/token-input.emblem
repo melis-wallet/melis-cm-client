@@ -8,8 +8,8 @@
     = t  'aa.modal.token.invalid'
 
 
-= em-form model=this submitButton=false action='enterToken'
-  = em-input property='token' label=(t 'aa.modal.token.label') placeholder=(t 'aa.modal.token.ph')
+= em-form model=this submitButton=false action='enterToken' as |f|
+  = f.input property='token' label=(t 'aa.modal.token.label') placeholder=(t 'aa.modal.token.ph')
 
 br
 = if isValid

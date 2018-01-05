@@ -31,4 +31,3 @@
       img.logo-text src='images/melis-text.svg'
       .loader Connecting...
 = common/scanner-modal
-= common/aa-modal

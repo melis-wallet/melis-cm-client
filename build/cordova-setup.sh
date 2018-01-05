@@ -1,7 +1,8 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 APP=$(cd "${DIR}/.." && pwd)
-CDV=$APP/ember-cordova/cordova
+CDV=$APP/corber/cordova
+corber=./node_modules/corber/bin/corber
 
 platform=$1
 if [ -z "$1" ]; then
@@ -33,7 +34,8 @@ case "$target" in
 esac
 
 
-ember generate ember-cordova --name=$appname --cordovaid=cid
+#ember generate ember-cordova --name=$appname --cordovaid=cid
+$corber init --name=$appname --cordovaid=$cid
 
 cp $CDV/config.xml $CDV/config.xml-
 cp $DIR/cordova/config-$target.xml $CDV/config.xml
@@ -43,17 +45,20 @@ cp $APP/public/images/melis-badger-r.svg $CDV/res/melis.svg
 cp $APP/public/images/melis-splash.svg $CDV/res/melis-splash.svg
 
 
-ember cordova:make-icons --source $CDV/res/melis.svg --platform $platform
-ember cordova:make-splashes --source $CDV/res/melis-splash.svg --platform $platform
+$corber make-icons --source $CDV/res/melis.svg --platform $platform
+$corber make-splashes --source $CDV/res/melis-splash.svg --platform $platform
 
-ember cordova:platform add $platform
-ember cordova:prepare
-ember cordova:plugin add phonegap-plugin-barcodescanner
-ember cordova:plugin add ionic-plugin-keyboard
-ember cordova:plugin add cordova-plugin-network-information
-ember cordova:plugin add cordova-plugin-statusbar
-ember cordova:plugin add cordova-plugin-splashscreen
+$corber platform add $platform
+$corber prepare
+$corber plugin add phonegap-plugin-barcodescanner
+$corber plugin add ionic-plugin-keyboard
+$corber plugin add cordova-plugin-network-information
+$corber plugin add cordova-plugin-statusbar
+$corber plugin add cordova-plugin-splashscreen
+$corber plugin add https://github.com/hypery2k/cordova-email-plugin.git
 
 if [ "$platform" == "android" ]; then
-  ember cordova:plugin add cordova-plugin-android-fingerprint-auth
+  $corber plugin add cordova-plugin-android-fingerprint-auth
 fi
+
+patch -p0 < $DIR/cordova/patch/studio.patch

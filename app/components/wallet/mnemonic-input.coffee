@@ -13,7 +13,7 @@ Validations = buildValidations(
   ]
   passphrase: [
     validator('presence', presence: true, disabled: Ember.computed.not('model.encrypted'))
-    validator('length', min: 8, max: 32, disabled: Ember.computed.not('model.encrypted'))
+    validator('length', min: 4, max: 32, disabled: Ember.computed.not('model.encrypted'))
   ]
 )
 
@@ -33,6 +33,8 @@ MnemonicInput = Ember.Component.extend(Validations, ValidationsHelper,
   ).property('credentials.wordlist')
 
   selectedList: null
+
+  disabled: false
 
   wordlist: ( ->
     wl = @get('credentials.wordlists')

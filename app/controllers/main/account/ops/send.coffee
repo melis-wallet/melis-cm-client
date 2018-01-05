@@ -53,7 +53,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
   #
   accountHasChanged: ( ->
     @setProperties(
-      currentRecipient: @createSimpleModel('payment-recipient')
+      currentRecipient: @createSimpleModel('payment-recipient', account: @get('cm.currentAccount'))
       recipients: Ember.A()
       preparedTx: null
     )
@@ -100,6 +100,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
   setRecipientFromQuery: ( ->
     if (pubid = @get('pubId')) || (addr = @get('address'))
       n =  @createSimpleModel('payment-recipient',
+        account: @get('cm.currentAccount')
         pubId: pubid
         value: addr
         amount: @get('amount')
@@ -113,7 +114,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
     @setProperties(
       preparedTx: null
       recipients: []
-      currentRecipient: @createSimpleModel('payment-recipient')
+      currentRecipient: @createSimpleModel('payment-recipient', account: @get('cm.currentAccount'))
     )
 
   #
@@ -128,7 +129,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
       false
     else
       recipients.pushObject(recipient)
-      @set('currentRecipient',  @createSimpleModel('payment-recipient'))
+      @set('currentRecipient',  @createSimpleModel('payment-recipient', account: @get('cm.currentAccount')))
       true
 
 
@@ -203,8 +204,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
         @alertSuccess  "<b>#{@get('i18n').t('paysend.success')}:</b> #{@get('i18n').t('paysend.tx-done')}", true
         @clearState()
       catch err
-        Ember.Logger.error "confirmPayment: ", err
-        @alertWarning "#{@get('i18n').t('paysend.err.occurred', error: err.msg)}", true
+        @alertWarning @get('i18n').t('paysend.err.occurred', error: @get('i18n').t_ex(err)), true
     else
       Ember.Logger.error '[SEND] prepared has no fields signatures.', preparedTx, preparedTx.get('hasFieldsSignature')
       Ember.RSVP.reject('invalid prepared tx')
@@ -276,12 +276,12 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
   accountChanged: (->
     @closeAllAlerts()
     @set('recipients', Ember.A())
-    @set('currentRecipient', @createSimpleModel('payment-recipient'))
+    @set('currentRecipient', @createSimpleModel('payment-recipient', account: @get('cm.currentAccount')))
   ).observes('cm.currentAccount')
 
   setup: ( ->
     @set('recipients', Ember.A())
-    @set('currentRecipient', @createSimpleModel('payment-recipient'))
+    @set('currentRecipient', @createSimpleModel('payment-recipient', account: @get('cm.currentAccount')))
 
     # cancel
     @get('ptxsvc').on('update-ptx', (ptx) =>
@@ -294,7 +294,6 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
   actions:
     openScanner: ->
       @openScanner()
-
 
     addRecipientPrepare: (recipient, opts) ->
       @get('addRecipientPrepare').perform(recipient, opts)
@@ -319,6 +318,8 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
 
     confirmPayment: ->
       @get('autoConfirmPayment').perform()
+
+
 
 )
 

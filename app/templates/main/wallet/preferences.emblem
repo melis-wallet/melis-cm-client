@@ -34,28 +34,11 @@
   .col-md-6
     = prefs/change-currency
 
-  .col-md-6
-    =  leaf-note type='default'
-      h4 = t 'wallet.prefs.btcunit.title'
-      p = t 'wallet.prefs.btcunit.caption'
-      = power-select options=btcUnits selected=btcUnit searchField='text' onchange=(action 'changeBtcUnit') as |cur|
-        b = cur.text
-        '
-        = if cur.divider
-          |(
-          = cur.divider
-          |)
-
 
 .row
   .col-md-6
     = prefs/notifications-prefs
   .col-md-6
-    = leaf-note type='default'
-      h4 = t 'wallet.prefs.explorer.title'
-      p = t 'wallet.prefs.explorer.caption'
-      = tx/select-explorer
-
     = fingerprint-enroll
 
 

@@ -33,24 +33,24 @@
                     td.text-right
                       = live-moment-from-now address.time
                 tr.bg-light-gray
-                  td.lowercase = cm.btcUnit
+                  td.lowercase = unit-id account=address.account
                   td: .pull-right
                     = leaf-editable-number [
                       positive=true
                       allowBlank=true
                       size='lg'
-                      value=(scale-btc address.cmo.meta.amount)
+                      value=(scale-unit address.cmo.meta.amount account=address.account)
                       on-change='changeAmount'
                       if-empty=(t 'newaddr.empty.amount')
                       inputClass='text-right text-bold']
                       = if address.cmo.meta.amount
-                        span.text-xlg.text-default.text-semibold = format-btc address.cmo.meta.amount
+                        span.text-xlg.text-default.text-semibold = format-unit address.cmo.meta.amount account=address.account
                       = else
                         = t 'newaddr.empty.amount'
                 = if address.cmo.meta.amount
                   tr
                     td.lowercase = cm.globalCurrency
-                    td.text-right = to-currency address.cmo.meta.amount
+                    td.text-right = to-currency address.cmo.meta.amount account=address.account
 
 
                 tr style='height: 48px;'
@@ -85,8 +85,8 @@
 
                 = if address.cmo.meta.amount
                   tr.bg-light-gray
-                    td.lowercase = cm.btcUnit
-                    td.text-right.text-lg.text-semibold.text-default = format-btc address.cmo.meta.amount compact=true
+                    td.lowercase = unit-id account=address.account
+                    td.text-right.text-lg.text-semibold.text-default = format-unit address.cmo.meta.amount compact=true account=address.account
 
                 = if address.cmo.meta.info
                   tr
@@ -99,7 +99,8 @@
                     td colspan='2'
                       = t 'stream.addr.used-in' count=address.usedIn.length
                       '
-                      a click="'selectUsedTx' tx.address.usedIn.lastObject.id"
+                      /a click="'selectUsedTx' tx.address.usedIn.lastObject.id"
+                      = link-to 'main.account.history.detail' address.account.pubId address.usedIn.lastObject.id
                         = t 'stream.addr.see-it'
 
                     /td Used in

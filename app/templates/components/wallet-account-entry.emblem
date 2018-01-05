@@ -1,14 +1,14 @@
-= link-to targetRoute content.num active=active
+= link-to targetRoute content.pubId active=active
   .entry-icon.colored-bg class=content.color
     = content.identifier
 
   .entry-title class=titleColor
     = content.cmo.meta.name
   .entry-note
-    = format-btc content.amSummary compact=true
+    = format-unit content.amSummary compact=true account=content
     '
     | (
-    = to-currency content.amSummary
+    = to-currency content.amSummary account=content
     '
     = cm.globalCurrency
     |)

@@ -6,7 +6,7 @@
       .col-md-8.col-md-offset-4
         .account-identifier
           span.account-id class=cm.currentAccount.color
-            cm.currentAccount.identifier
+            = account-identifier account=cm.currentAccount
           span.text-semibold: = cm.currentAccount.name
 
     .row

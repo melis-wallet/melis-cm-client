@@ -35,7 +35,6 @@ OverlayNetworkStatus = Ember.Component.extend(
       showRestart: false
 
     if @get('displayed')
-      console.error "hello"
       @get('displayRecovery').perform()
     else
       @get('displayRecovery').cancelAll()
@@ -43,7 +42,7 @@ OverlayNetworkStatus = Ember.Component.extend(
 
   actions:
     doRestart: ->
-      window.location.reload()
+      @get('cm').resetApp()
 
     doConnect: ->
       @get('cm').reconnect()

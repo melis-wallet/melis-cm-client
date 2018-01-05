@@ -14,7 +14,7 @@
 
       = liquid-bind account use='toDown' class='avatar-cnt' as |a|
         .avatar.accented.animated.fadeInDown class=a.color
-          = a.identifier
+          = account-identifier account=a
 
 
     .data
@@ -22,15 +22,15 @@
       .content
         = liquid-bind account.amSummary use='toDown' as |amount|
           span.text-xlg style='margin-right: 10px;'
-            span.text-lg.text-slim.lowercase = cm.btcUnit
-            strong = format-btc amount compact=true
+            span.text-lg.text-slim.lowercase = unit-id account=account
+            strong = format-unit amount compact=true account=account
           '
           span.text-lg.hidden-xs
             span.text-bg.text-slim.lowercase = cm.globalCurrency
-            strong = to-currency amount compact=true
+            strong = to-currency amount compact=true account=account
   .subline.visible-xs
     span.text-slim.lowercase = cm.globalCurrency
-    strong = to-currency account.amSummary compact=true
+    strong = to-currency account.amSummary compact=true account=account
 
 .content-wrapper.no-padding-t id='content-wrapper'
   /= content-wrapper class='no-padding-t' id='content-wrapper'

@@ -6,12 +6,15 @@
     = success
 = else
 
-  = if recipient
-    .note.note-info
-      h4 = t 'quicksend.title'
-      p = t 'quicksend.caption'
-    table.table
-      tbody
+
+  .note.note-info
+    h4 = t 'quicksend.title'
+    p = t 'quicksend.caption'
+    img.snd-coin-icon src="{{coin-img-path unit}}"
+
+  table.table
+    tbody
+      = if recipient
         tr
           td: b = t 'quicksend.to'
           td
@@ -20,33 +23,30 @@
             else
               = recipient.pubId
         tr
-          td: b = cm.btcUnit
+          td: b = unit-id account=recipient.account
           td
-            b = format-btc recipient.amount
-            '
-            = cm.btcUnit
+            b = format-unit recipient.fullAmount account=recipient.account
             '
             |(
-            = currency
+            = currencySvc.currencySymbol
             '
-            = format-money currencyAmount
+            = format-money recipient.amountInTickerCurrency account=recipient.account
             |)
 
-        = unless cm.simpleMode
-          tr
-            td
-              b = t 'quicksend.account'
-              br
-              = if activeAccount
-                .label.colored-bg class=activeAccount.color style='min-width: 60px;'
-                  = activeAccount.identifier
-            td
-              = em-form model=this submitButton=false
-                = em-select content=selectableAccts property='selectedAccount'
-        tr
-          td: b = t 'quicksend.balance'
-          td class="{{ if enoughBalance 'success' 'danger' }}"
-            = format-btc activeAccount.amSummary
+      tr
+        td
+          b = t 'quicksend.account'
+          br
+          = if activeAccount
+            .account-identifier
+              span.account-id.animated.fadeInDown class=activeAccount.color
+                = account-identifier account=activeAccount
+        td
+          = send/account-selector coin=unit on-account-change=(action (mut activeAccount)) selected=activeAccount
+      tr
+        td: b = t 'quicksend.available'
+        td class="{{ if enoughBalance 'success' 'danger' }}"
+          = format-unit activeAccount.balance.amAvailable account=activeAccount withUnit=true
 
-    = liquid-if enoughBalance class='ll-down-up'
-      = leaf-button icon='fa fa-check' type='warning' on-click='payNow' block=true
+  = liquid-if enoughBalance class='ll-down-up'
+    = leaf-button icon='fa fa-check' type='warning' on-click='payNow' block=true disabled=apiOps.isRunning

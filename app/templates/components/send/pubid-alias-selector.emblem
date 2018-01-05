@@ -41,5 +41,5 @@
                 td.break-words.text-right = accountInfo.pubMeta.name
 
             tr
-              td colspan=2
+              td colspan='2'
                 = leaf-button type='success' icon='fa fa-check' outline=true class='pull-right'  on-click='confirmInfo'

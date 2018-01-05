@@ -17,6 +17,10 @@
     .public-date
       = moment-format date
 
+
+    img.public-unit src="{{coin-img-path unit}}"
+
+
   .public-info
     .public-recipient
       h4.text-semibold.text-light-gray
@@ -44,14 +48,14 @@
     .public-total click='setEditAmount'
       = leaf-editable-number local-template=true editing=editAmount as |value displayedValue editing isvalid displayedError|
         = if editing
-          .pull-left = cm.btcUnit
+          .pull-left = coin.subunit.symbol
           .pull-right.padding-xs-vr
-            = input type='text' value=btcAmount placeholder=(t 'public.payto.amount.ph') width=40 focus-out='changeAmount' enter='changeAmount' autofocus=true class='input-lg form-control animated fadeIn quick' tabindex='0'
+            = input type='text' value=(unbound fmtdAmount) placeholder=(t 'public.payto.amount.ph') width=40 focus-out='changeAmount' enter='changeAmount' autofocus=true class='input-lg form-control animated fadeIn quick' tabindex='0'
 
         = else
           = leaf-tooltip class='value' tooltip=(t 'public.payto.amount.ph')
-            = format-btc amount
-          = t 'public.payto.total' unit=cm.btcUnit
+            = fmtdAmount
+          = t 'public.payto.total' unit=coin.subunit.symbol
 
 
 
@@ -65,7 +69,7 @@
         = leaf-panel simple-header=true title=(t 'public.payto.note.title')
           .panel-body
             = leaf-editable-value value=info if-empty=(t 'public.payto.note.not-set') textArea=true on-change='changeInfo'
-        = if recipient.amount
+        = if amount
           = liquid-if (not cm.ready)
             = if credentials.validCredentials
               = leaf-note
@@ -79,7 +83,7 @@
                 = t 'app.wallet'
               = wallet/sign-in-place class='animated flash'
           = else
-            = payment-quick-send recipient=recipient
+            = payment-quick-send recipientId=recipient.pubId amount=amount info=info unit=unit foo='bar'
 
       .col-md-6.border-l
         = if error

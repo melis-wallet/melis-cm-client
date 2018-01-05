@@ -1,4 +1,4 @@
-= link-to 'main.account.summary' account.num
+= link-to 'main.account.summary' account.pubId
   = stream/stream-counter account=account property='urgent' as |v|
     = if v
       .account-state.animated.slideInDown.delay-1s
@@ -7,7 +7,10 @@
     = if v
       .account-state.animated.slideInDown.delay-1s
         span.icon.success = v
-  .account-icon
+  .account-icon.tb
     span.icon.colored-bg class=account.color
       = account.identifier
+  .account-icon.tb
+    span.icon
+      img.tb-coin-icon src="{{coin-img-path account.cmo.coin}}"
 

@@ -1,54 +1,55 @@
-= leaf-modal id=modalId bottom=true class='no-over' as |mod|
-  = leaf-modal-header title=currentPrompt modal=mod class='top-accent-warning'
-  = if (eq type 'pin')
-    = leaf-modal-body
-      .row
-        .col-sm-4.hidden-xs.text-center
-          i.fa.fa-lock.icon-side-lg.animated.fadeIn.delay-1s
-        .col-sm-8
-          = leaf-note type='warning'
-            h4 = t 'aa.modal.pin.title'
-            p = t 'aa.modal.pin.caption'
-          = component aComponent on-valid-pin='validPin' running=running data=componentData
+= ember-wormhole to='aa-wormhole'
+  = leaf-modal id=modalId bottom=true class='no-over' as |mod|
+    = leaf-modal-header title=currentPrompt modal=mod class='top-accent-warning'
+    = if (eq type 'pin')
+      = leaf-modal-body
+        .row
+          .col-sm-4.hidden-xs.text-center
+            i.fa.fa-lock.icon-side-lg.animated.fadeIn.delay-1s
+          .col-sm-8
+            = leaf-note type='warning'
+              h4 = t 'aa.modal.pin.title'
+              p = t 'aa.modal.pin.caption'
+            = component aComponent on-valid-pin='validPin' running=running data=componentData
 
-  = else if (eq type 'remotepin')
-    = leaf-modal-body
-      .row
-        .col-sm-4.hidden-xs.text-center
-          i.fa.fa-lock.icon-side-lg.animated.fadeIn.delay-1s
-        .col-sm-8
-          = leaf-note type='warning'
-            h4 = t 'aa.modal.pin.title'
-            p = t 'aa.modal.pin.caption'
-          = component aComponent on-valid-pin='validRemotePin' running=running data=componentData
-          /= if currentError
-            = leaf-alert type='danger' dark=true
-              = currentError
+    = else if (eq type 'remotepin')
+      = leaf-modal-body
+        .row
+          .col-sm-4.hidden-xs.text-center
+            i.fa.fa-lock.icon-side-lg.animated.fadeIn.delay-1s
+          .col-sm-8
+            = leaf-note type='warning'
+              h4 = t 'aa.modal.pin.title'
+              p = t 'aa.modal.pin.caption'
+            = component aComponent on-valid-pin='validRemotePin' running=running data=componentData
+            /= if currentError
+              = leaf-alert type='danger' dark=true
+                = currentError
 
-  = else if (eq type 'tfa')
-    = leaf-modal-body
+    = else if (eq type 'tfa')
+      = leaf-modal-body
 
-      = if running
-        h1 RUNNING
-      .row
-        .col-sm-4.hidden-xs.text-center
-          i.fa.fa-mobile.icon-side-lg.animated.fadeIn.delay-1s
-        .col-sm-8
-          = leaf-note type='warning'
-            h4 = t 'aa.modal.tfa.title'
-            p = t 'aa.modal.tfa.caption'
-          = component aComponent on-valid-tfa='validTfa' running=running data=componentData
-          = if currentError
-            = leaf-alert type='danger' dark=true
-              = currentError
+        = if running
+          h1 RUNNING
+        .row
+          .col-sm-4.hidden-xs.text-center
+            i.fa.fa-mobile.icon-side-lg.animated.fadeIn.delay-1s
+          .col-sm-8
+            = leaf-note type='warning'
+              h4 = t 'aa.modal.tfa.title'
+              p = t 'aa.modal.tfa.caption'
+            = component aComponent on-valid-tfa='validTfa' running=running data=componentData
+            = if currentError
+              = leaf-alert type='danger' dark=true
+                = currentError
 
-  = else if (eq type 'token')
-    = leaf-modal-body
-      .row
-        .col-sm-4.hidden-xs.text-center
-          i.fa.fa-ticket.icon-side-lg.animated.fadeIn.delay-1s
-        .col-sm-8
-          = leaf-note type='warning'
-            h4 = t 'aa.modal.token.title'
-            p = t 'aa.modal.token.caption'
-          = component aComponent on-valid-token='validToken' running=running data=componentData
+    = else if (eq type 'token')
+      = leaf-modal-body
+        .row
+          .col-sm-4.hidden-xs.text-center
+            i.fa.fa-ticket.icon-side-lg.animated.fadeIn.delay-1s
+          .col-sm-8
+            = leaf-note type='warning'
+              h4 = t 'aa.modal.token.title'
+              p = t 'aa.modal.token.caption'
+            = component aComponent on-valid-token='validToken' running=running data=componentData

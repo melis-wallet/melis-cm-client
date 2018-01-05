@@ -1,7 +1,7 @@
 .affix-panel.urgent-panel class="{{ if affix 'affix'}}" style='transition: width 0.3s ease-in-out;'
   .panel.no-border
     = if displayTicker
-      = bitcoin-ticker compact=true
+      = coin-ticker compact=true coin=account.unit.tsym
     = liquid-if displayed class='ll-down-up'
 
       .panel-body.bg-primary.text-center.has-action click='resetScroll'

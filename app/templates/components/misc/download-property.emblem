@@ -1,3 +1,6 @@
 = if data
-  a.btn class=btnClass download=filename href=dataUri
-    i class=icon
+  = if device.isMobile
+    = leaf-button icon='fa fa-envelope-o' type='sm' outline=true on-click='mobileSend' disabled=(not device.hasMail)
+  = else
+    a.btn class=btnClass download=filename href=dataUri
+      i class=icon

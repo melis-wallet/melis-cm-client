@@ -4,9 +4,7 @@
 MainAddressDtController = Ember.Controller.extend(
 
 
-  addressesSorting: ['lastRequested:desc']
-  addresses: Ember.computed.sort('model', 'addressesSorting')
-
+  txInfos: null
 
   actions:
     addressUpdated: (addr) ->

@@ -18,15 +18,15 @@ Validations = buildValidations(
 
   amount: [
     validator('presence', presence: true, disabled: Ember.computed.bool('model.entireBalance'))
-    validator('number', positive: true, allowString: true, allowBlank: true)
+    validator('number', positive: true, gt: 0, allowString: true, allowBlank: true)
     validator(((value, options, model, attribute) ->
       return true if model.get('allowUnconfirmed')
       amount = model.get('fullAmount')
-      if amount > model.get('cm.currentAccount.balance.amAvailable')
+      if amount > model.get('account.balance.amAvailable')
         return model.get('i18n').t(INSUFF_FUNDS).toString()
       else
         true
-    ), dependentKeys: ['model.allowUnconfirmed', 'model.cm.currentAccount.balance.amAvailable'])
+    ), dependentKeys: ['model.allowUnconfirmed', 'model.account.balance.amAvailable'])
   ]
 )
 
@@ -34,21 +34,22 @@ PaymentRecipient = Model.extend(Validations, ValidationsHelper,
 
   cm: Ember.inject.service('cm-session')
   currencySvc: Ember.inject.service('cm-currency')
+  coinsvc: Ember.inject.service('cm-coin')
   i18n: Ember.inject.service('i18n')
 
+  account: null
   type: 'address'
 
   value: null
 
   amount: null
-  fullAmount: false
 
   info: null
   labels: null
   meta: null
 
   currency: null
-  rate: null
+  currencyValue: Ember.computed.alias('account.unit.value')
 
   entireBalance: false
   allowUnconfirmed: false
@@ -57,15 +58,17 @@ PaymentRecipient = Model.extend(Validations, ValidationsHelper,
   isCm: Ember.computed.equal('type', 'cm')
   isAccount: Ember.computed.equal('type', 'account')
 
+
+
   currencyChanged: (->
     meta = @get('meta')
 
-    if @get('currencyIsBtc')
-      data = {currency: @get('currencySvc.currency'), amount: @get('amountInTickerCurrency'), rate: @get('currencySvc.value') }
+    if @get('currencyIsCrypto')
+      data = {currency: @get('currencySvc.currency'), amount: @get('amountInTickerCurrency'), rate: @get('currencyValue') }
     else
-      data = {currency: @get('currency'), amount: @get('amountInTickerCurrency'), rate: @get('currencySvc.value'), native: true }
+      data = {currency: @get('currency'), amount: @get('amountInTickerCurrency'), rate: @get('currencyValue'), native: true }
     Ember.set(meta, 'currencyData', data)
-  ).observes('currency', 'amount')
+  ).observes('currency', 'amount', 'account.unit.value')
 
 
   info: Ember.computed('meta',
@@ -76,12 +79,12 @@ PaymentRecipient = Model.extend(Validations, ValidationsHelper,
       @setMeta('info', val)
   )
 
-  currencyIsBtc: (->
-    (@get('currency') == @get('cm.btcUnit'))
-  ).property('currency', 'cm.btcUnit')
+  currencyIsCrypto: (->
+    (@get('currency') == @get('account.subunit.id'))
+  ).property('currency', 'account.subunit.id')
 
-  amountInBtcFmt: ( ->
-    @get('currencySvc').formatBtc(@get('fullAmount'))
+  amountInCryptoUnit: ( ->
+    @get('coinsvc').formatUnit(@get('account'), @get('fullAmount'))
   ).property('fullAmount')
 
 
@@ -93,41 +96,47 @@ PaymentRecipient = Model.extend(Validations, ValidationsHelper,
 
   fullAmount: ( ->
     { amount,
+      account,
       currency,
-      currencySvc } = @getProperties('amount', 'currency', 'currencySvc')
+      currencySvc,
+      coinsvc } = @getProperties('amount', 'account', 'currency', 'currencySvc', 'coinsvc')
+
 
     return 0 unless amount
-    return currencySvc.parseBtc(amount) if (currency == @get('cm.btcUnit'))
+    return coinsvc.parseUnit(account, amount) if @get('currencyIsCrypto')
 
     tickerCurrency = @get('currencySvc.currency')
 
     if currency == tickerCurrency
-      currencySvc.convertFrom(amount)
+      @get('account.unit')?.convertFromCurrency(amount)
     else
+      0 # change this, temp fix for cash not having a value
       # fixme! fetch the current value through an api?
-      throw "no value for currency"
-  ).property('currency', 'amount', 'currencySvc.value', 'cm.btcUnit')
+      #throw "no value for currency"
+  ).property('currency', 'amount', 'currencyValue', 'account.subunit')
 
 
   amountInTickerCurrency: ( ->
     { amount,
+      account,
       currency,
-      currencySvc } = @getProperties('amount', 'currency', 'currencySvc')
+      currencySvc,
+      coinsvc } = @getProperties('amount', 'account', 'currency', 'currencySvc', 'coinsvc')
 
-    return amount if (currency != @get('cm.btcUnit'))
-    currencySvc.convertTo(currencySvc.parseBtc(amount))
-  ).property('currency', 'amount', 'currencySvc.value', 'cm.btcUnit')
+    return amount unless @get('currencyIsCrypto')
+    @get('account.unit')?.convertToCurrency(coinsvc.parseUnit(account, amount))
+  ).property('currency', 'amount', 'currencyValue', 'account.subunit')
 
 
   amountInCurrFmt: (-> formatMoney(@get('amountInTickerCurrency')) ).property('amountInTickerCurrency')
 
-  amountsChanged: ( -> @validate() ).observes('cm.currentAccount.amSummary', 'currency')
+  amountsChanged: ( -> @validate() ).observes('account.amSummary', 'currency')
 
   typeChanged: ( -> @set('value', null) ).observes('type')
 
   btcUnitChanged: ( -> @set('amount', null)).observes('cm.btcUnit')
 
-  resetUnit: ( -> @set 'currency', @get('cm.btcUnit') ).observes('cm.btcUnit').on('init')
+  resetUnit: ( -> @set 'currency', @get('account.subunit.id') ).observes('account.subunit').on('init')
 
   toCmo: ->
     { type,
@@ -157,6 +166,7 @@ PaymentRecipient = Model.extend(Validations, ValidationsHelper,
     @setProperties
       meta: {}
       labels: Ember.A()
+    Ember.Logger.warn("[recp] Account is not defined") if Ember.isBlank(@get('account'))
   ).on('init')
 )
 

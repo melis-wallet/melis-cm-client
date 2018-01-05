@@ -56,7 +56,6 @@ PrimaryDevice = Ember.Component.extend(
       if h = Ember.get(data, 'hours')
         @set('recoveryDays', Math.round(h / 24))
         @set('recoveryConfirm', false)
-      console.error data
     catch e
       Ember.Logger.error "Error: ", e
   )

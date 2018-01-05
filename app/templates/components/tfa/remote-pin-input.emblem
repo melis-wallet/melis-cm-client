@@ -5,7 +5,7 @@
 
 = else
 
-  p = em-form model=this submitButton=false action='enterPIN'
+  p = em-form model=this submitButton=false action='enterPIN' as |f|
     = liquid-if data.wrongPin class='ll-down-up'
       p
         = leaf-label type='danger'
@@ -18,7 +18,7 @@
           = leaf-label type=attemptsType class='animated shake' type='warning'
             = t 'tfa.pin.last-attempt'
         '
-    = em-input property='pin' type='password' label=(t 'tfa.pin.label') placeholder=(t 'tfa.pin.ph') cid='pin_input'
+    = f.input property='pin' type='password' label=(t 'tfa.pin.label') placeholder=(t 'tfa.pin.ph') cid='pin_input'
 
   br
   = if isValid

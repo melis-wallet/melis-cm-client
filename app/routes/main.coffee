@@ -11,7 +11,8 @@ MainRoute = Ember.Route.extend(StyleBody, AuthenticatedRoute,
   init: ->
     @_super(arguments...)
     @get('cm').on('device-gone', this, (data) ->
-      @transitionTo('wallet.no-creds')
+
+      @get('cm').walletClose().then( => @transitionTo('wallet.no-creds'))
     )
 )
 

@@ -1,0 +1,18 @@
+--- corber/cordova/platforms/android/cordova/lib/check_reqs.js.orig	2017-05-19 17:36:40.373077710 +0200
++++ corber/cordova/platforms/android/cordova/lib/check_reqs.js	2017-05-19 17:36:46.836990033 +0200
+@@ -118,7 +118,14 @@
+                 } else { ++i; }
+             }
+         }
+-    }
++      } else {
++             program_dir = process.env['ANDROID_STUDIO'];
++             if (program_dir) {
++                androidStudioPath = path.join(program_dir, 'gradle');
++                foundStudio = true;
++             }
++      }
++
+
+     if (androidStudioPath !== null && fs.existsSync(androidStudioPath)) {
+         var dirs = fs.readdirSync(androidStudioPath);

@@ -3,6 +3,7 @@
 MainController = Ember.Controller.extend(
 
   media: Ember.inject.service('responsive-media')
+  coin:  Ember.inject.service('cm-coin')
   stream:  Ember.inject.service('cm-stream')
   toastsSvc: Ember.inject.service('cm-toasts-provider')
   accountInfo: Ember.inject.service('cm-account-info')
@@ -19,6 +20,7 @@ MainController = Ember.Controller.extend(
   setup: ( ->
     # force preloading of services
     @getProperties(
+      'coin',
       'stream',
       'toastsSvc',
       'accountInfo',

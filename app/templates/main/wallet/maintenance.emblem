@@ -12,6 +12,13 @@
       p = t 'wallet.maint.backup.caption'
       = leaf-button type='default' on-click='doCredBackup' block=true icon='fa fa-check' label=(t 'wallet.maint.backup.btn')
 
+
+    = leaf-note type='default'
+      h4 = t 'wallet.maint.backupck.title'
+      p = t 'wallet.maint.backupck.caption'
+      = leaf-button type='default' on-click='doCredBackupCk' block=true icon='fa fa-check' label=(t 'wallet.maint.backupck.btn')
+
+
     = leaf-note type='info'
       h4 = t 'wallet.maint.new.title'
       p = t 'wallet.maint.new.caption'

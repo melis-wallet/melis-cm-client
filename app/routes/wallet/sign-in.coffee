@@ -16,7 +16,7 @@ WalletSignInRoute = Ember.Route.extend(
 
 
   goToDashboard: ->
-    acc = (@get('cm.visibleAccts.firstObject.num') || 0)
+    acc = @get('cm.visibleAccts.firstObject.pubId')
     if @get('cm.simpleMode')
       @transitionTo('main.account.summary', acc)
     else

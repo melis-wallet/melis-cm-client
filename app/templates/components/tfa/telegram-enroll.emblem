@@ -24,8 +24,8 @@
 
 
   = else
-    = em-form model=this submitButton=false action='enterAddress'
-      = em-input property='telegramAddress' type='text' placeholder=(t 'tfa.telegram.form.address.ph') cid='telegram_input'
+    = em-form model=this submitButton=false action='enterAddress' as |f|
+      = f.input property='telegramAddress' type='text' placeholder=(t 'tfa.telegram.form.address.ph') cid='telegram_input'
 
     = liquid-if isValid class='ll-down-up'
       .row

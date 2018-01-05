@@ -1,0 +1,20 @@
+.row
+  .col-md-4.hidden-sm.hidden-xs
+    img.snd-coin-icon src="{{coin-img-path cm.currentAccount.coin}}"
+  .col-md-8
+    .account-identifier
+      = liquid-bind cm.currentAccount use='toLeft' as |a|
+        span.account-id.animated.fadeInRight class=a.color
+          = account-identifier account=a
+        span.text-semibold: = a.name
+
+
+.row
+  = send/funds-reminder account=cm.currentAccount class='col-md-4'
+
+    p = link-to 'main.account.ops.send' cm.currentAccount.pubId class='btn btn-block btn-outline'
+      i.fa.fa-arrow-left
+
+
+  .col-md-8
+    = send/advanced-send account=cm.currentAccount

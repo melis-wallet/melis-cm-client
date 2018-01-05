@@ -12,7 +12,7 @@
             td
               b = t 'wallet.prefs.notif.native.t'
               p: i = t 'wallet.prefs.notif.native.c'
-            td  = leaf-switcher checked=notif.nativeEnabled size='sm' theme='modern'
+            td  = leaf-switcher checked=notif.nativeEnabled size='sm' theme='modern' disabled=(not notif.nativeSupported)
           tr
             td
               b = t 'wallet.prefs.notif.inapp.t'

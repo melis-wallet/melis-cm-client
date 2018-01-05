@@ -6,7 +6,7 @@
     .history-container-header
       .account-identifier.no-padding-b
         span.account-id class=cm.currentAccount.color
-          cm.currentAccount.identifier
+          = account-identifier account=cm.currentAccount
         span.text-semibold: = cm.currentAccount.name
         |:
         '

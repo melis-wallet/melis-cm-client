@@ -1,10 +1,10 @@
 `import Ember from 'ember'`
-`import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'`
 
-PayToController = Ember.Controller.extend(ModelFactory,
+PayToController = Ember.Controller.extend(
 
   credentials: Ember.inject.service('cm-credentials')
   currencySvc: Ember.inject.service('cm-currency')
+  coinsvc: Ember.inject.service('cm-coin')
   i18n: Ember.inject.service()
 
   queryParams: ['amount', 'info']
@@ -12,7 +12,23 @@ PayToController = Ember.Controller.extend(ModelFactory,
   editAmount: false
 
   address: null
-  recipient: null
+  amount: null
+  info: null
+
+  recipient: Ember.computed.alias('model')
+
+  unit: Ember.computed.alias('model.coin')
+  coin: ( ->
+    @get('coinsvc.coins')?.findBy('unit', @get('unit'))
+  ).property('coin', 'coinsvc.inited')
+
+
+  fmtdAmount: ( ->
+    if (amount = @get('amount'))
+      @get('coinsvc').formatUnit(@get('coin'), amount)
+  ).property('coin.subunit', 'amount')
+
+
 
   makeEditable: (->
     if @get('amount')
@@ -22,32 +38,19 @@ PayToController = Ember.Controller.extend(ModelFactory,
   ).observes('amount').on('init')
 
   urlAmount: (->
-    if amount = @get('recipient.amount')
-      @get('currencySvc').satoshisToBtc(amount)
-  ).property('recipient.amount')
+    if amount = @get('amount')
+      @get('currencySvc').satoshisToCoin(amount)
+  ).property('amount')
 
   paymentUrl: ( ->
     amount = @get('urlAmount')
-    address = @get('recipient.address')
+    address = @get('address')
 
     if address
       "bitcoin:#{address}?amount=#{amount}"
 
-  ).property('recipient', 'recipient.address', 'urlAmount')
+  ).property('model', 'address', 'urlAmount')
 
-
-  setRecipientChange: ( ->
-    if model = @get('model')
-      n =  @createSimpleModel('payment-recipient',
-        address: @get('address')
-        pubId: @get('model.pubId')
-        amount: parseInt(@get('amount'))
-        currency: @get('currencySvc.currency')
-        info: @get('info')
-      )
-
-      @set('recipient', n)
-  ).observes('amount', 'info', 'model', 'address')
 
 
   resetOnChange: ( ->
@@ -60,8 +63,7 @@ PayToController = Ember.Controller.extend(ModelFactory,
   requestAddress: (->
     if (id = @get('model.pubId'))
       @set 'error', null
-      @get('cm.api').getPaymentAddressForAccount(id, @get('recipient.info')).then((res) =>
-        console.log("GOT: ", res)
+      @get('cm.api').getPaymentAddressForAccount(id, memo: @get('info'), address: @get('address')).then((res) =>
         @set('address', res)
       ).catch((err) =>
         Ember.Logger.error('Error getting payment address: ', err)
@@ -73,11 +75,6 @@ PayToController = Ember.Controller.extend(ModelFactory,
   )
 
 
-  setup: ( ->
-    @set('recipient', @createSimpleModel('payment-recipient'))
-  ).on('init')
-
-
   actions:
     showCode: ->
       @requestAddress()
@@ -85,6 +82,8 @@ PayToController = Ember.Controller.extend(ModelFactory,
 
     changeInfo: (value) ->
       @set 'info', value
+      @requestAddress() if @get('address')
+      false
 
 
     setEditAmount: ->
@@ -94,8 +93,11 @@ PayToController = Ember.Controller.extend(ModelFactory,
     changeAmount: (newValue) ->
       if newValue
         @setProperties
-          #editAmount: false
-          amount:  (newValue || 0.0) * @get('currencySvc.btcDivider')
+          editAmount: false
+          amount: @get('coinsvc').parseUnit(@get('coin'), newValue)
+      else
+        @setProperties
+          amount:  null
 
 )
 

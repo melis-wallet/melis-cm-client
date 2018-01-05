@@ -1,15 +1,23 @@
 .panel
   .accent.colored-bg class=account.color
-  .panel-body class="{{ if (eq account.num cm.currentAccount.num) 'current' 'idle' }}"
+  .panel-body class="{{ if (eq account.pubId cm.currentAccount.pubId) 'current' 'idle' }}"
+    .account-identifier.db
+      span.account-id class=account.color
+        = account-identifier account=account
+    img.db-coin-icon src="{{coin-img-path account.cmo.coin}}"
     //.expandable click='toggleExpand'
-    .not-expandable
+    .not-expandable style='margin-left: 7px;'
       .row
         .col-sm-12
-          = link-to 'main.account.summary' account.num
+          = link-to 'main.account.summary' account.pubId
             h4.text-semibold
               span.break-words = account.name
               |&nbsp;
               '
+              = if account.secure
+                span.label.label-info
+                  i.fa.fa-lock
+                '
               = stream/stream-counter account=account property='urgent' vclass='label-warning'
               '
               = stream/stream-counter account=account property='newer' vclass='label-success animated tada'
@@ -19,12 +27,12 @@
           = if account.isComplete
             = liquid-bind account.amSummary use='toDown' as |amount|
               span.text-xlg style='margin-right: 10px;'
-                span.text-lg.text-slim.lowercase = cm.btcUnit
-                strong = format-btc amount compact=true
+                span.text-lg.text-slim.lowercase = unit-id account=account
+                strong = format-unit amount compact=true account=cm.currentAccount
               '
               span.text-lg
                 span.text-bg.text-slim.lowercase = cm.globalCurrency
-                strong = to-currency amount compact=true
+                strong = to-currency amount compact=true account=account
           = else
             .text-xs.text-light-gray
               span.text-semibold = t 'dash.multi.joinwait'
@@ -43,6 +51,6 @@
           .primary-val 4
           = t 'dash.account.notifications'
         .col-xs-4
-          = link-to 'main.account.ptx' account.num
+          = link-to 'main.account.ptx' account.pubId
             .primary-val.text-warning = account.ptxs.relevant.length
             .text-default = t 'dash.account.pending'

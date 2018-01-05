@@ -10,7 +10,7 @@
 Validations = buildValidations(
   passphrase: [
     validator('presence', true)
-    validator('length', min: 8, max: 32)
+    validator('length', min: 4, max: 32)
   ]
 )
 
@@ -24,6 +24,7 @@ RecoverWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
 
   importError: null
   wrongSignature: null
+  tryingToPair: false
 
   importData: null
   rawGenerator: null
@@ -36,6 +37,21 @@ RecoverWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
   stepBack: true
 
   completeOn: 4
+
+
+  disableInput: ( ->
+    @get('apiOps.isRunning')
+  ).property('apiOps.isRunning')
+
+  changedInput: ( ->
+
+    @setProperties
+      tryingToPair: false
+      validationFailed: false
+      importFailed: false
+      importError: null
+      wrongSignature: null
+  ).observes('passphrase', 'generator')
 
   backupImport: task((generator, passphrase, pin) ->
 
@@ -53,22 +69,40 @@ RecoverWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
   ).group('apiOps')
 
 
+  validateOpen: task( (generator, passphrase) ->
+
+    @setProperties
+      importFailed: null
+      validationFailed: null
+    try
+      yield @get('cm').validateGenerator(generator, passphrase)
+      @markCompleted(3, 4)
+
+    catch err
+      Ember.Logger.error('[recover]', err)
+      if err.ex == 'CmLoginWrongSignatureException'
+        @set('validationFailed', err.msg)
+      else
+        @set('importFailed', err.msg)
+      false
+  ).group('apiOps')
+
   parseData: (data) ->
     @set 'importError', null
     if data && (data.charAt(0) == '{')
-      ## trying to pair
+      @set('tryingToPair', true)
 
     else
       uri = parseURI(data)
       if uri.scheme == BACKUP_SCHEME
-        @validateGenerator(uri.address)
+        @validateParsedData(uri.address)
       else
         Ember.Logger.error 'Invalid scan'
         @set 'importError', 'Invalid Scan'
         # not a valid scan
 
 
-  validateGenerator: (data) ->
+  validateParsedData: (data) ->
     if(res = @get('credentials').isGeneratorValid(data))
       @set 'generator', data
       @markCompleted(2, 3)
@@ -112,7 +146,7 @@ RecoverWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
         @parseData(data)
 
     doneInputPass:  ->
-      @markCompleted(3, 4)
+      @get('validateOpen').perform(@get('generator'), @get('passphrase'))
 
     doneInputPin: (pin) ->
       @markCompleted(4)

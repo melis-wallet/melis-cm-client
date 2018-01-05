@@ -20,17 +20,27 @@
           tr
             td: b
               = t 'view.prefs.account.num'
-            td = account.num
+            td.text-right = account.num
           tr
             td: b
               = t 'view.prefs.account.name'
-            td = leaf-editable-validated model=account property='name' maxlength=32 on-change='changeAccountName' inputError=accountChangeError if-empty=(t 'generic.not-set')
+            td.text-right = leaf-editable-validated model=account property='name' maxlength=32 on-change='changeAccountName' inputError=accountChangeError if-empty=(t 'generic.not-set')
+          tr
+            td: b
+              = t 'view.prefs.account.color'
+            td = prefs/account-color-picker account=account on-change='changeAccountColor' class='pull-right'
+          tr
+            td: b
+              = t 'view.prefs.account.identifier'
+            td = prefs/account-icon-picker account=account on-change='changeAccountIcon' class='pull-right'
 
           tr
             td: b
               = t 'view.prefs.account.created'
-            td = leaf-tooltip tooltip=(moment-format account.cmo.cd)
+            td.text-right = leaf-tooltip tooltip=(moment-format account.cmo.cd)
               i.text-default = live-moment-from-now account.cmo.cd
+
+
 
 
 .row

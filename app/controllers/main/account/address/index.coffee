@@ -1,6 +1,9 @@
 `import Ember from 'ember'`
 `import { mergedProperty } from 'melis-cm-svcs/utils/misc'`
 `import { task, taskGroup } from 'ember-concurrency'`
+`import CMCore from 'npm:melis-api-js'`
+
+C = CMCore.C
 
 MainAddressIdxController = Ember.Controller.extend(
 
@@ -18,7 +21,7 @@ MainAddressIdxController = Ember.Controller.extend(
   nextPage: task( ->
     page = @incrementProperty('currentPage')
     try
-      res = yield @get('cm.api').addressesGet(@get('cm.currentAccount.cmo'), page: page, sortField: 'lastRequested')
+      res = yield @get('cm.api').addressesGet(@get('cm.currentAccount.cmo'), page: page, sortField: 'lastRequested', sortDir: C.DIR_DESCENDING)
       @set('hasNext', res.hasNext)
       newAddrs = Ember.get(res, 'list')
       if newAddrs

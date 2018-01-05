@@ -1,0 +1,4 @@
+= power-select options=icons renderInPlace=true searchEnabled=false selected=selected onchange=(action 'iconChanged') as |c|
+  .account-icon style='height: 28px; margin: 2px 0 0 0;'
+    span.icon.colored-bg class=account.color
+      i.fa class="{{concat 'fa-' c}}"

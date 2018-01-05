@@ -1,14 +1,14 @@
-= em-form model=value submitButton=false action='submitEntry'
+= em-form model=value submitButton=false action='submitEntry' as |f|
+
 
   .form-group
     label.control-label = t 'ab.form.type.label'
 
+
     = power-select options=contactTypes selected=currentType searchEnabled=false onchange=(action 'changeType') as |type|
       b = type.label
 
-
-
-  = em-input property='name' label=(t 'ab.form.name.label') placeholder=(t 'ab.form.name.ph') class='form-group required'
+  = f.input property='name' label=(t 'ab.form.name.label') placeholder=(t 'ab.form.name.ph') class='form-group required'
 
   = if value.isCm
     .form-group class="{{if aliasError 'has-error has-feedback'}}{{if aliasInfo 'has-success has-feedback'}} required"
@@ -26,6 +26,10 @@
         table.table.table-compact
 
           tbody
+            tr
+              td
+              td: b.pull-right
+                img.tb-coin-icon src="{{coin-img-path accountInfo.coin}}"
             tr
               td: b
                 = t 'ab.table.pubid'
@@ -49,9 +53,16 @@
 
 
   = else
+    .form-group
+      label.control-label = t 'ab.form.type.coin'
+
+      = power-select renderInPlace=true options=availableCoins selected=selectedCoin searchEnabled=false onchange=(action 'selectCoin') as |c|
+        img.tb-coin-icon style='height: 24px; padding-right: 15px;' src="{{coin-img-path c.unit}}"
+        strong = t (concat "coins.unit." c.label)
+
     .row
       .col-xs-10
-        = em-input property='address' label=(t 'ab.form.address.label') placeholder=(t 'ab.form.address.ph')
+        = f.input property='address' label=(t 'ab.form.address.label') placeholder=(t 'ab.form.address.ph')
       .col-xs-2
         = leaf-button type='default' icon='fa fa-camera' outline=true  type='sm' on-click='scanAddress' class="xr-top-sp-f"
 

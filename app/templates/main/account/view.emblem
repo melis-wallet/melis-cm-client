@@ -2,7 +2,7 @@
   .page-profile
     .profile-full-name
       span.account-id class=account.color
-        account.identifier
+        = account-identifier account=account
       span.text-semibold: = account.cmo.meta.name
       =t 'view.details'
     .profile-row

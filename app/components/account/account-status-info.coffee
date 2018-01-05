@@ -7,7 +7,7 @@ InfoWidget = Ember.Component.extend(
   received: 56
 
   cm: Ember.inject.service('cm-session')
-  currencySvc: Ember.inject.service('cm-currency')
+  coinsvc: Ember.inject.service('cm-coin')
   account: Ember.computed.alias('cm.currentAccount')
 
 
@@ -17,15 +17,15 @@ InfoWidget = Ember.Component.extend(
 
 
   amReserved: (->
-    @get('currency').formatBtc(@get('account.balance.amReserved'), {blank: '---'})
+    @get('coinsvc').formatUnit(@get('account'), @get('account.balance.amReserved'), {blank: '---'})
   ).property('account.cmo')
 
   amUnconfirmed: (->
-    @get('currency').formatBtc(@get('account.balance.amUnconfirmed'), {blank: '---'})
+    @get('coinsvc').formatUnit(@get('account'), @get('account.balance.amUnconfirmed'), {blank: '---'})
   ).property('account.cmo')
 
   amAvailable: (->
-    @get('currency').formatBtc(@get('account.balance.amAvailable'), {blank: '---'})
+    @get('coinsvc').formatUnit(@get('account'), @get('account.balance.amAvailable'), {blank: '---'})
   ).property('account.cmo')
 
   updateValues: ->

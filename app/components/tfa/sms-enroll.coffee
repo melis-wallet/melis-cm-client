@@ -43,7 +43,7 @@ SmsEnroll = Ember.Component.extend(Validations, ValidationsHelper,
       try
         res = yield @get('aa').tfaAuth(op, "Add SMS TFA")
         @set('btnstate', 'resolved')
-        @sendAction('on-new-enroll')
+        @sendAction('on-new-complete-enroll')
       catch error
         if error.ex == 'xxxx'
           @set  'enrollError', @get('i18n').t('tfa.sms.invalid')

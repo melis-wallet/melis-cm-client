@@ -1,0 +1,35 @@
+.row
+  .col-md-12
+    = leaf-note type='info' class='no-padding text-right'
+      img.coin-icon src="{{coin-img-path coin.unit}}"
+
+.row
+  .col-md-6
+    =  leaf-note type='default'
+      h4 = t 'wallet.prefs.coinunit.title'
+      p = t 'wallet.prefs.coinunit.caption'
+      = power-select options=subunits selected=subunit searchEnabled=false onchange=(action 'changeUnit') as |cur|
+        b = cur.symbol
+        '
+        = if cur.ratio
+          |(
+          = cur.ratio
+          |)
+
+
+
+.row
+  .col-md-6
+    =  leaf-note type='default'
+      h4 = t 'wallet.prefs.exchange.title'
+      p = t 'wallet.prefs.exchange.caption'
+      p = power-select options=exchanges selected=exchange searchField='text' onchange=(action 'changeExchange') as |ex|
+        b = ex.text
+
+  .col-md-6
+    = leaf-note type='default'
+      h4 = t 'wallet.prefs.explorer.title'
+      p = t 'wallet.prefs.explorer.caption'
+      = power-select options=explorers selected=currentExplorer searchField='label' onchange=(action 'changeExplorer') as |cur|
+        b = cur.label
+

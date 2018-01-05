@@ -10,7 +10,6 @@ Validations = buildValidations(
   ]
 )
 
-
 RemotePinInput = Ember.Component.extend(Validations, ValidationsHelper, Fpa,
 
   cm: Ember.inject.service('cm-session')
@@ -26,8 +25,6 @@ RemotePinInput = Ember.Component.extend(Validations, ValidationsHelper, Fpa,
   setup: (->
     Ember.run.later(this, (-> @.$('input#pin_input')?.focus()), 500)
   ).on('didInsertElement')
-
-
 
   actions:
     enterPIN: ->

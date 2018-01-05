@@ -12,6 +12,7 @@ StreamAddress = Ember.Component.extend(
   addrsvc: Ember.inject.service('cm-address-provider')
   routing: Ember.inject.service('-routing')
   currencySvc: Ember.inject.service('cm-currency')
+  coinsvc: Ember.inject.service('cm-coin')
 
   entry: null
 
@@ -40,7 +41,7 @@ StreamAddress = Ember.Component.extend(
 
   urlAmount: (->
     if amount = @get('address.cmo.meta.amount')
-      @get('currencySvc').satoshisToBtc(amount)
+      @get('currencySvc').satoshisToCoin(amount)
   ).property('address.cmo.meta.amount')
 
 
@@ -112,7 +113,7 @@ StreamAddress = Ember.Component.extend(
         @get('releaseAddr').perform(addr)
 
     changeAmount: (amount) ->
-      amount = @get('currencySvc').parseBtc(amount)
+      amount = @get('coinsvc').parseUnit(@get('entry.account'), amount)
       addr = @get('address')
       @get('updateAddress').perform(addr, amount: amount)
 

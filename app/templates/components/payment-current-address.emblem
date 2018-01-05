@@ -21,7 +21,7 @@
                 = if currentAddress.cmo.amount
                   tr
                     td = t 'stream.address.amount'
-                    td = = format-btc currentAddress.cmo.amount
+                    td = = format-unit currentAddress.cmo.amount account=currentAddress.account
 
                 = if currentAddress.cmo.meta.info
                   tr
@@ -31,9 +31,7 @@
                     span.pull-right
                       = leaf-clipboard size='xs' block=true outline=true content=currentAddress.cmo.address tooltip=(t 'newaddr.a.clip')
                     = liquid-bind currentAddress.cmo.address use='toLeft' as |a|
-                      .label = a
-
-
+                      span.code-label = a
         .row
           = if error
             .col-xs-12
@@ -46,11 +44,18 @@
           .col-xs-3
              = leaf-button type='default' icon='fa fa-recycle' block=true on-click='renew' tabindex='0' tooltip=(t 'newaddr.a.renew') disabled=apiOps.isRunning
           .col-xs-3
-            = link-to 'main.account.address' cm.currentAccount.num class='btn btn-block'
-              i.fa.fa-list
+            = leaf-tooltip tooltip=(t 'newaddr.a.addr-list') tooltip-placement='top'
+              = link-to 'main.account.address' cm.currentAccount.pubId class='btn btn-block'
+                i.fa.fa-list
           .col-xs-6
             = leaf-button type='primary' icon='fa fa-magic' block=true on-click='makeCurrentActive' tabindex='0' tooltip=(t 'newaddr.a.make-active') disabled=apiOps.isRunning
       = else
-        | no current address
+        .row.padding-sm-vr
+          .col-md-12
+            p.note.note-default.no-margin-vr
+              = t 'newaddr.nocurrent'
+        .row
+          .col-xs-6
+            p = leaf-button type='default' icon='fa fa-recycle' block=true on-click='renew' tabindex='0' tooltip=(t 'newaddr.a.renew') disabled=apiOps.isRunning
   = else
     | &nbsp;

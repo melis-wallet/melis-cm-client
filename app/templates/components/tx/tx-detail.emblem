@@ -6,25 +6,26 @@
     = if tx.cmo.optInRbf
       .label.label-warning = t 'tx.detail.rbf'
       '
-    = common/block-height tx=tx.cmo always-show=true
+    = common/block-height tx=tx always-show=true
 .row
   .col-md-4
   .col-md-8.text-right
     = if tx.cmo.meta.currencyData.native
       .text-xlg.text-default
-        strong = format-money  tx.cmo.meta.currencyData.amount compact=false abs=true
+        strong = format-money tx.cmo.meta.currencyData.amount compact=false abs=true
         span.text-lg.text-slim.lowercase = tx.cmo.meta.currencyData.currency
       .text-lg.text-default
-        strong = format-btc tx.cmo.amount compact=false abs=true
-        span.text-bg.text-slim.lowercase = cm.btcUnit
+        strong = format-unit tx.cmo.amount compact=false abs=true account=tx.account
+        span.text-bg.text-slim.lowercase = unit-id account=tx.account
     = else
       .text-xlg.text-default
-        strong = format-btc tx.cmo.amount compact=false abs=true fullPrecision=true
-        span.text-lg.text-slim.lowercase = cm.btcUnit
+        strong = format-unit tx.cmo.amount compact=false abs=true fullPrecision=true account=tx.account
+        span.text-lg.text-slim.lowercase = unit-id account=tx.account
       .text-lg.text-default
-        strong = to-currency tx.cmo.amount compact=false abs=true
+        strong = to-currency tx.cmo.amount compact=false abs=true account=tx.account
         span.text-bg.text-slim.lowercase = cm.globalCurrency
-
+      .small.lowercase.light-gray
+        = t 'tx.detail.orig-currency' amount=(format-money  tx.cmo.meta.currencyData.amount) unit=tx.cmo.meta.currencyData.currency when=(live-moment-from-now tx.time)
 
 .row
   .col-md-3
@@ -38,15 +39,19 @@
     table.table.table-compact
       tbody
 
-
         = if tx.negative
           tr
-            td: b = t 'tx.detail.to'
-            td.text-right: span.break-words = tx.cmo.address
+            td: b = t 'tx.detail.address'
+            td.text-right: span.small.break-words = tx.cmo.address
           tr
             td: b = t 'tx.detail.fees'
-            td.text-right = format-btc tx.cmo.fees blank='---' withUnit=true
-
+            td.text-right = format-unit tx.cmo.fees blank='---' withUnit=true account=tx.account
+        = else if tx.cmo.address
+          tr
+            td: b = t 'tx.detail.received-ad'
+            td.break-words.text-right.text-small
+              = link-to 'main.account.address.detail' tx.account.pubId tx.cmo.address
+                = tx.cmo.address
 
         tr
           td: b.break-words = t 'tx.detail.info'
@@ -58,18 +63,10 @@
         tr
           td: b = t 'tx.detail.hash'
           td.text-right
-            = tx/link-to-explorer hash=tx.cmo.tx class='small break-words'
+            = tx/link-to-explorer hash=tx.cmo.tx class='small break-words' account=tx.account
               tx.cmo.tx
 
-        tr
-          = if tx.negative
-            td: b = t 'tx.detail.address'
-            td.text-right: span.small.break-words = tx.cmo.address
-          = else if tx.cmo.address
-            td: b = t 'tx.detail.received-ad'
-            td.break-words.text-right.text-small
-              = link-to 'main.account.address.detail' tx.account.num tx.cmo.address
-                = tx.cmo.address
+
 
 
 

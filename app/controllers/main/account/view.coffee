@@ -114,14 +114,35 @@ AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
       )
       return unless ok == 'ok'
       yield cm.accountDelete(account)
-      @transitionToRoute('main.account.dashboard', @get('cm.accounts.firstObject.num'))
+      @transitionToRoute('main.account.dashboard', @get('cm.accounts.firstObject.pubId'))
     catch e
       @alertDanger(e.msg, true)
       Ember.Logger.error 'Error: ', e
   ).group('apiOps')
 
-  changeAcctName: task((account, newname) ->
 
+  changeAcctColor: task((account, color) ->
+    try
+      cmo = Ember.get(account, 'cmo')
+      meta = mergedProperty(cmo, 'meta', color: color)
+      yield @get('cm.api').accountUpdate(cmo, {meta: meta})
+    catch e
+      @alertDanger(e.msg, true)
+      Ember.Logger.error 'Error: ', e
+  ).group('apiOps')
+
+  changeAcctIcon: task((account, icon) ->
+    try
+      cmo = Ember.get(account, 'cmo')
+      meta = mergedProperty(cmo, 'meta', icon: icon)
+      yield @get('cm.api').accountUpdate(cmo, {meta: meta})
+    catch e
+      @alertDanger(e.msg, true)
+      Ember.Logger.error 'Error: ', e
+  ).group('apiOps')
+
+
+  changeAcctName: task((account, newname) ->
     try
       cmo = Ember.get(account, 'cmo')
       meta = mergedProperty(cmo, 'meta', name: newname)
@@ -131,14 +152,14 @@ AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
       Ember.Logger.error 'Error: ', e
   ).group('apiOps')
 
-
-  deleteCredentials: task((account, newname) ->
-    { cm, currentWallet, credentials } = @getProperties('cm', 'currentWallet', 'credentials')
+  deleteCredentials: task( ->
+    { cm, credentials } = @getProperties('cm', 'credentials')
 
     try
       yield cm.walletClose()
       credentials.reset()
-      window.location.reload()
+
+      @get('cm').resetApp()
     catch e
       @alertDanger(e.msg, true)
       Ember.Logger.error 'Error: ', e
@@ -190,6 +211,15 @@ AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
     changeAccountName: (newname) ->
       if (account = @get('account'))
         @get('changeAcctName').perform(account, newname)
+
+    changeAccountColor: (account, color) ->
+      if account
+        @get('changeAcctColor').perform(account, color)
+
+    changeAccountIcon: (account, icon) ->
+      if account
+        @get('changeAcctIcon').perform(account, icon)
+
 )
 
 `export default AccountIndexController`

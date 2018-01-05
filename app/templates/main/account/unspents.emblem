@@ -1,0 +1,11 @@
+.content-wrapper id='content-wrapper'
+  .row
+    .col-md-12
+      .account-identifier
+        = liquid-bind cm.currentAccount use='toLeft' as |a|
+          span.account-id.animated.fadeInRight class=a.color
+            = account-identifier account=a
+          span.text-semibold: = a.name
+  .row
+    .col-md-12
+      = account/utxo-list account=cm.currentAccount

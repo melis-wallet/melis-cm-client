@@ -1,0 +1,18 @@
+.row
+  .form-group
+    .col-xs-8
+      label.control-label = t 'paysend.form.feesperbyte'
+      = if feesData
+        br
+        i.text-small
+          = t 'paysend.form.fees-provider' provider=feesData.detail.provider
+
+    .col-xs-4.text-right
+
+      = leaf-editable-number [
+        positive=true
+        allowBlank=false
+        value=value
+        on-change='changedValue'
+        if-empty=(t 'paysend.form.feesnr')
+        inputClass='text-right text-bold']

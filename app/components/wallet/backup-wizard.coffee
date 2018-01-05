@@ -35,7 +35,7 @@ ExportWizard = Ember.Component.extend(AsWizard,
     {credentials, devicePass, passphrase} = @getProperties('credentials', 'devicePass', 'passphrase')
     res = credentials.backupGenerator(devicePass, passphrase)
 
-    @set('credentials.backupConfirmed', true)
+    @get('cm').updateBackupState(backupConfirmed: (moment().unix() * 1000))
     @set('exportedGenerator', res.entropy)
 
 
@@ -65,7 +65,6 @@ ExportWizard = Ember.Component.extend(AsWizard,
         pin: pin
         devicePass: devicePass
         passphrase: null
-
       )
       @markCompleted(1, 2)
 

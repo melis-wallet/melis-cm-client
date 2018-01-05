@@ -34,7 +34,7 @@
 
               '
               = if enoughSigners
-                = link-to 'main.account.ptx.detail' ptx.account.num ptx.id
+                = link-to 'main.account.ptx.detail' ptx.account.pubId ptx.id
                   = t 'stream.txm.ptx'
               = else
                 a href='' click="'goto' ptxAnchor"

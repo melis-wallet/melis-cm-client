@@ -6,8 +6,8 @@
     = leaf-alert type='danger' dark=true
       = enrollError
 
-  = em-form model=this submitButton=false action='enterId'
-    = em-input property='identifier' type='text' placeholder=(t 'tfa.regtest.form.identifier.ph') cid='id_input'
+  = em-form model=this submitButton=false action='enterId' as |f|
+    = f.input property='identifier' type='text' placeholder=(t 'tfa.regtest.form.identifier.ph') cid='id_input'
 
   = liquid-if isValid class='ll-down-up'
     .row

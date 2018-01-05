@@ -9,6 +9,7 @@
   /= leaf-button type='default' icon='fa fa-code' active=false
 
 
+
 // About box
 = leaf-panel simple-header=true class='panel-transparent' title=(t 'view.side.account.title')
   .panel-body
@@ -24,6 +25,7 @@
         img src='images/icons/acc_sing_server.svg'  class='account-icon large'
     = else
       img src='images/icons/acc_sing.svg'  class='account-icon large'
+    img.sum-coin-icon src="{{coin-img-path account.cmo.coin}}"
 
     /p = t 'view.side.account.caption'
     p: .label: = t ( account-types account.cmo.type )
@@ -31,6 +33,21 @@
       p = leaf-label content=(t 'account.multi.status.server-sig')
     = if account.info.serverMandatory
       p = leaf-label content=(t 'account.multi.status.server-mand')
+    = if account.secure
+      p
+        span.label.label-info
+          i.fa.fa-lock
+          '
+          = t 'account.secure'
+
+    hr
+    ul.nav.nav-pills.nav-stacked
+      li = link-to 'main.account.history'
+        = t 'view.side.nav.history'
+      li = link-to 'main.account.address'
+        = t 'view.side.nav.addresses'
+      li = link-to 'main.account.unspents'
+        = t 'view.side.nav.unspents'
 
 /= leaf-panel simple-header=true class='panel-transparent' title=(t 'view.side.backup.status')
   .panel-body
@@ -74,13 +91,13 @@
         tbody
           tr.active
             td: b = t 'view.side.movements.day'
-            td: = format-btc account.balance.spentInDay blank='---'
+            td: = format-unit account.balance.spentInDay blank='---' account=account
           tr
             td: b = t 'view.side.movements.week'
-            td: = format-btc account.balance.spentInWeek blank='---'
+            td: = format-unit account.balance.spentInWeek blank='---' account=account
           tr
             td: b = t 'view.side.movements.month'
-            td: = format-btc account.balance.spentInMonth blank='---'
+            td: = format-unit account.balance.spentInMonth blank='---' account=account
 
 
   = leaf-panel simple-header=true class='panel-transparent' title=(t 'view.side.balance.title')
@@ -92,16 +109,16 @@
         tbody
           tr.active
             td: b = t 'view.side.balance.available'
-            td.text-right: = format-btc account.balance.amAvailable blank='---'  fullPrecisionAligned=true
+            td.text-right: = format-unit account.balance.amAvailable blank='---'  fullPrecisionAligned=true account=account
           tr
             td: b = t 'view.side.balance.reserved'
-            td.text-right: = format-btc account.balance.amReserved blank='---'  fullPrecisionAligned=true
+            td.text-right: = format-unit account.balance.amReserved blank='---'  fullPrecisionAligned=true account=account
           tr
             td: b = t 'view.side.balance.unconfirmed'
-            td.text-right: = format-btc account.balance.amUnconfirmed blank='---'  fullPrecisionAligned=true
+            td.text-right: = format-unit account.balance.amUnconfirmed blank='---'  fullPrecisionAligned=true account=account
           tr
             td: b = t 'view.side.balance.unmature'
-            td.text-right: = format-btc account.balance.amUnmature blank='---'  fullPrecisionAligned=true
+            td.text-right: = format-unit account.balance.amUnmature blank='---'  fullPrecisionAligned=true account=account
 
   / tags are gone? lele fixme
   /= leaf-panel simple-header=true class='panel-transparent' title='Tags'

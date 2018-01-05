@@ -14,9 +14,12 @@ CdvDeviceSupport = Ember.Service.extend(Ember.Evented,
   deviceReady: false
   connectionType: null
 
+  hasMail: false
+
   paused: false
 
   isMobile: Ember.computed.alias('platform.isHybrid')
+  hasDownload: Ember.computed.not('isMobile')
 
   setup: ( ->
 
@@ -31,7 +34,14 @@ CdvDeviceSupport = Ember.Service.extend(Ember.Evented,
   ready: subscribe('cordova.deviceready', ->
     Ember.Logger.debug('CDV Device Ready')
     @set('deviceReady', true)
+    @checkMail()
   )
+
+  checkMail: ->
+    cordova.plugins.email.isAvailable( (isAvailable) =>
+      Ember.Logger.debug('CDV Mail is available:', isAvailable)
+      @set('hasMail', isAvailable)
+    )
 
   pause: subscribe('cordova.pause', ->
     return unless @get('isMobile')
@@ -80,6 +90,19 @@ CdvDeviceSupport = Ember.Service.extend(Ember.Evented,
     Ember.Logger.debug('CDV Menu')
   )
 
+
+  mailFile: (subject, name, body, data) ->
+    new Ember.RSVP.Promise((resolve, reject) =>
+      if @get('hasMail')
+        cordova.plugins.email.open({
+          subject: subject
+          body: body
+          attachments: "base64:" + name + '//' + window.btoa(data)
+        }, (-> resolve()))
+      else
+        Ember.Logger.warn('CDV Mail is not available')
+        reject('no-mail')
+    )
 )
 
 `export default CdvDeviceSupport`

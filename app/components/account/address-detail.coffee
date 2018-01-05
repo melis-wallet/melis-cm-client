@@ -5,12 +5,18 @@
 AddressDetail = Ember.Component.extend(
 
   address: null
+
   cm: Ember.inject.service('cm-session')
   currencySvc: Ember.inject.service('cm-currency')
+  mm: Ember.inject.service('modals-manager')
+  aa: Ember.inject.service('aa-provider')
 
   showControls: false
 
   wantLink: false
+  signId: 'sign-msg'
+
+  wif: null
 
   isActive: (->
 
@@ -33,7 +39,7 @@ AddressDetail = Ember.Component.extend(
 
   urlAmount: (->
     if amount = @get('address.meta.amount')
-      @get('currencySvc').satoshisToBtc(amount)
+      @get('currencySvc').satoshisToCoin(amount)
   ).property('address.meta.amount')
 
 
@@ -51,8 +57,6 @@ AddressDetail = Ember.Component.extend(
 
     url
   ).property('address.addressURL',  'urlAmount', 'address.meta.info')
-
-
 
 
   apiOps: taskGroup().drop()
@@ -82,7 +86,36 @@ AddressDetail = Ember.Component.extend(
   ).group('apiOps')
 
 
+  signWithAddr: task(->
+    try
+      yield @get('mm').showModal(@get('signId'))
+    catch error
+
+  )
+
+  exportKey: task((addr)->
+    account = @get('cm.currentAccount.cmo')
+    api = @get('cm.api')
+
+    op = (tfa) =>
+      Ember.RSVP.resolve(api.accountAddressToWIF(account, addr))
+
+
+    try
+      wif = yield @get('aa').askLocalPin(op, 'Pin', '', true, true)
+      @set('wif', wif)
+    catch error
+      Ember.Logger.error "Error: ", error
+  )
+
+
+
   actions:
+
+    signWithAddr: ->
+      if addr = @get('address')
+        @get('signWithAddr').perform()
+      false
 
     releaseAddr: ->
       if addr = @get('address')
@@ -92,10 +125,19 @@ AddressDetail = Ember.Component.extend(
       addr = @get('address')
       @get('updateAddress').perform(addr, labels: labels)
 
-
     changeInfo: (info) ->
       addr = @get('address')
       @get('updateAddress').perform(addr, info: info)
+
+    exportKey:  ->
+      addr = @get('address')
+      if addr && @get('cm.currentAccount.canSignMessage')
+        @get('exportKey').perform(addr)
+      false
+
+    trashKey: () ->
+      @set('wif', null)
+
 
 )
 

@@ -22,6 +22,7 @@ Validations = buildValidations(
 NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
 
   cm: Ember.inject.service('cm-session')
+  coinsvc: Ember.inject.service('cm-coin')
 
   apiOps: taskGroup().drop()
 
@@ -40,6 +41,8 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
   masterName: 'Master'
   masterMandatory: false
 
+  coin: null
+
   cosignersCnt: Ember.computed.alias('cosigners.length')
 
   totalSignatures: ( ->
@@ -50,19 +53,26 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
 
   cosigners: null
 
-  step: 1
-
   createError: null
   serverLocked: false
   newAccount: null
 
   completeOn: ( ->
     if @get('isMulti')
-      4
+      5
     else
-      3
+      4
   ).property('isMulti')
 
+
+  availableCoins: Ember.computed.alias('coinsvc.coins')
+
+  selectedCoin: ( ->
+    if c = @get('coin')
+      @get('availableCoins').findBy('unit', c)
+  ).property('coin', 'availableCoins')
+
+  coin: null
 
   selectedScheme: ( ->
     { type, wantsServer } = @getProperties('type', 'wantsServer')
@@ -99,11 +109,12 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
 
   accountCreate: ->
     cm = @get('cm')
-    { accountName,
+    { coin,
+      accountName,
       masterName,
       masterMandatory,
       minSignatures,
-      selectedScheme } = @getProperties('accountName', 'masterName', 'masterMandatory', 'minSignatures', 'selectedScheme')
+      selectedScheme } = @getProperties('coin', 'accountName', 'masterName', 'masterMandatory', 'minSignatures', 'selectedScheme')
 
 
     if @get('isMulti')
@@ -117,6 +128,7 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
       masterName = null
 
     @get('accountCreateTask').perform(
+      coin: coin
       type: selectedScheme
       meta: {name: accountName, masterName: masterName}
       pubMeta: {name: accountName}
@@ -127,7 +139,9 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
 
 
   setup: ( ->
-    @set('cosigners', Ember.A())
+    @setProperties
+      cosigners: Ember.A()
+      #coin: @get('availableCoins.firstObject.unit')
   ).on('init')
 
   finishWizard: (account) ->
@@ -140,9 +154,13 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
       @sendAction('on-wizard-finish', account)
 
   actions:
+    selectCoin: (c) ->
+      if unit = Ember.get(c, 'unit')
+        @set('coin', unit)
+
     destroyWizard: ->
       # not sure, but lets do this
-      if newA = @get('newAccount.num')
+      if newA = @get('newAccount.pubId')
         @get('cm').selectAccount(newA)
 
       @finishWizard(@get('newAccount'))
@@ -167,14 +185,18 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
 
     doneCosigners: (data) ->
       @setProperties(data)
-      @markCompleted(3, 4)
+      @markCompleted(4, 5)
 
     typeSelected: ->
       if @get('type')
+        @markCompleted(2, 3)
+
+    coinSelected: ->
+      if @get('coin')
         @markCompleted(1, 2)
 
     serverSelected: ->
-      @markCompleted(2, 3)
+      @markCompleted(3, 4)
 
     singleAccount: ->
       @set('type', 'single')

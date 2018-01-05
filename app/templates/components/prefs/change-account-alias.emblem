@@ -22,7 +22,7 @@ p
     = unless aliasInfo.walletMinimumBalanceMet
       = if aliasInfo.minBalanceNeeded
         = leaf-alert type='info' dismiss=false
-          p = t 'prefs.alias.ableto' amount=(format-btc aliasInfo.minBalanceNeeded withUnit=true)
+          p = t 'prefs.alias.ableto' amount=(format-unit aliasInfo.minBalanceNeeded withUnit=true account=cm.currentAccount)
       = else
         = leaf-note type=info
           p = t 'prefs.alias.unableto'
@@ -33,8 +33,8 @@ p
     hr
     = leaf-alert type='danger' dismiss=false
       = t 'prefs.alias.once'
-    = em-form model=this submitButton=false
-      = em-input property='newAlias' type='text' placeholder=(t 'prefs.alias.ph')
+    = em-form model=this submitButton=false as |f|
+      = f.input property='newAlias' type='text' placeholder=(t 'prefs.alias.ph')
     = liquid-if canSubmit class='ll-down-up'
       = leaf-button type='warning' label=(t 'prefs.alias.button') block=true on-click='confirmAliasChange'
 = else

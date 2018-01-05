@@ -1,9 +1,10 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 APP=$(cd "${DIR}/.." && pwd)
-CDV=$APP/ember-cordova/cordova
+CDV=$APP/corber/cordova
+corber=./node_modules/corber/bin/corber
 
-file=ember-cordova/cordova/config.xml
+file=corber/cordova/config.xml
 
 SETUP=$DIR/cordova-setup.sh
 
@@ -17,7 +18,7 @@ target=$2
 version=$3
 
 
-rm -rf tmp ember-cordova
+rm -rf tmp corber
 $SETUP $platform $target
 sed -i -e 's:version=".*" xmlns=:version="'$version'" xmlns=:g' $file
 
@@ -40,5 +41,7 @@ esac
 
 # we do not have a correspondig app profile for regtest fcm
 if [ "$target" != "regtest" ]; then
-  ember cordova:plugin add cordova-plugin-fcm
+  #ember cordova:plugin add cordova-plugin-fcm
+  $corber plugin add https://github.com/lp1bp/cordova-plugin-fcm.git
+  #patch -p0 < $DIR/cordova/patch/plugins-fcm.patch
 fi

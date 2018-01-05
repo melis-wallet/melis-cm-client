@@ -4,7 +4,7 @@
 
   ul.navigation role='navigation'
     = mm/main-navigation-entry
-      = link-to 'main.account.dashboard' cm.currentAccount.num
+      = link-to 'main.account.dashboard' cm.currentAccount.pubId
         i.menu-icon.fa.fa-dashboard
         span.mm-text.mmc-dropdown-delay.animated.fadeIn
           = t 'mm.entries.dashboard'
@@ -17,24 +17,24 @@
 
 
     = mm/main-navigation-entry class='mm-button-alt'
-      = link-to 'main.account.view' cm.currentAccount.num
+      = link-to 'main.account.view' cm.currentAccount.pubId
         i.menu-icon.fa.fa-cog
         span.mm-text.mmc-dropdown-delay.animated.fadeIn = t 'mm.entries.account'
 
     = mm/main-navigation-entry class='mm-button-alt'
-      = link-to 'main.account.history' cm.currentAccount.num
+      = link-to 'main.account.history' cm.currentAccount.pubId
         i.menu-icon.fa.fa-list
         span.mm-text.mmc-dropdown-delay.animated.fadeIn = t 'mm.entries.history'
 
 
     = if cm.currentAccount.isComplete
       = mm/main-navigation-entry
-        = link-to 'main.account.ops.send' cm.currentAccount.num
+        = link-to 'main.account.ops.send' cm.currentAccount.pubId
           i.menu-icon.fa.fa-credit-card
           span.mm-text.mmc-dropdown-delay.animated.fadeIn = t 'mm.entries.send'
 
       = mm/main-navigation-entry
-        = link-to 'main.account.ops.receive' cm.currentAccount.num
+        = link-to 'main.account.ops.receive' cm.currentAccount.pubId
           i.menu-icon.fa.fa-inbox
           span.mm-text.mmc-dropdown-delay.animated.fadeIn = t 'mm.entries.receive'
 

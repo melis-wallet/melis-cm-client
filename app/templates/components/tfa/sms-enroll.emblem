@@ -6,8 +6,8 @@
     = leaf-alert type='danger' dark=true
       = enrollError
 
-  = em-form model=this submitButton=false action='enterSms'
-    = em-input property='phoneNumber' type='text' placeholder=(t 'tfa.sms.form.sms.ph')  cid='sms_input'
+  = em-form model=this submitButton=false action='enterSms' as |f|
+    = f.input property='phoneNumber' type='text' placeholder=(t 'tfa.sms.form.sms.ph')  cid='sms_input'
 
   = liquid-if isValid class='ll-down-up'
     .row

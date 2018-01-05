@@ -1,6 +1,6 @@
-= em-form model=this submitButton=false action='submitNewPIN'
-  = em-input property='pin' type='password' label=(t 'wallet.pin.set.label') placeholder=(t 'wallet.pin.set.ph') cid='set_pin_input' tabindex='0' autofocus=true
-  = em-input property='pinCheck' type='password' label=(t 'wallet.pin.check.label')placeholder=(t 'wallet.pin.check.ph') cid='set_pin_check' tabindex='0'
+= em-form model=this submitButton=false action='submitNewPIN' as |f|
+  = f.input property='pin' type='password' label=(t 'wallet.pin.set.label') placeholder=(t 'wallet.pin.set.ph') cid='set_pin_input' tabindex='0' autofocus=true
+  = f.input property='pinCheck' type='password' label=(t 'wallet.pin.check.label')placeholder=(t 'wallet.pin.check.ph') cid='set_pin_check' tabindex='0'
 br
 if isValid
   = leaf-button type='primary' block=true icon='fa fa-check' on-click='submitNewPIN' id='submit-pin' tabindex='0'

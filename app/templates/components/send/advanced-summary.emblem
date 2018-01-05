@@ -1,0 +1,73 @@
+.panel.panel-success.panel-dark.panel-body-colorful
+  .panel-body
+    .row
+      .col-md-8
+        table.table
+          tbody
+            tr
+              td = t 'paysend.sum.sources'
+              td.text-right
+                = unless parent.autoSource
+                  = if parent.insuffSources
+                    b.text-danger = format-unit parent.sourcesAmount account=account
+                  = else
+                    b = format-unit parent.sourcesAmount account=account
+              td.text-right
+                = if parent.autoSource
+                  .label A
+                = else
+                  .label.label-warning M
+
+            tr
+              td = t 'paysend.sum.dsts'
+              td.text-right
+                = if parent.isEntireBalance
+                  = if parent.autoSource
+                    b.text-danger = t 'paysend.form.entire-balance'
+                  = else
+                    b.text-warning = t 'paysend.form.entire-sources'
+                = else
+                  b = format-unit parent.totalAmount if-empty='---' account=account
+              td.text-right
+                = if recipients
+                  .label.label-info = recipients.length
+
+            = if parent.computedRemainder
+              tr
+                td = t 'paysend.sum.remainder'
+                td.text-right
+                  b = format-unit parent.computedRemainder if-empty='---' account=account
+                td.text-right
+
+            tr
+              td = t 'paysend.sum.fees'
+              = if parent.autoFees
+                td.text-right
+                  = t parent.feesLabel
+                td.text-right
+                  .label A
+
+              = else
+                td.text-right
+                  | (per byte:
+                  '
+                  = parent.feesPerByte
+                  |)
+                  '
+                  b = format-unit parent.feeEstimate account=account
+
+                td.text-right
+                  .label.label-warning M
+
+      .col-md-4.text-right
+        p
+          .text-lg.text-slim.lowercase = unit-id account=account
+          .text-semibold.text-xlg: b = format-unit parent.spendingAmount account=account
+          .small = to-currency parent.spendingAmount withUnit=true account=account
+
+
+    .row
+      .col-xs-4
+        = leaf-button icon='fa fa-trash' on-click='resetPayment' block=true outline=true tooltip=(t 'paysend.form.a.discard')
+      .col-xs-8
+        = leaf-button icon='fa fa-check' on-click='preparePayment' block=true outline=true type='success' disabled=(not valid) tooltip=(t 'paysend.form.a.confirm')

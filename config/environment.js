@@ -82,6 +82,12 @@ module.exports = function(environment) {
 
   var deployTarget = process.env.DEPLOY_TARGET;
 
+  if (deployTarget === 'local') {
+    ENV.APP.publicUrl= 'https://wallet-regtest.melis.io';
+    session.apiDiscoveryUrl =  'http://localhost:9090/api/v1/endpoint/stomp';
+    csp['connect-src'] = "'self' ws://localhost:9090/stomp";
+  }
+
   if (deployTarget === 'regtest') {
     ENV.APP.publicUrl= 'https://wallet-regtest.melis.io';
     session.apiDiscoveryUrl =  'https://discover-regtest.melis.io/api/v1/endpoint/stomp';

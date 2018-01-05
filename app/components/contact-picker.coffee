@@ -8,12 +8,14 @@ ContactPicker = Ember.Component.extend(SlyEnabled,
 
   cm: Ember.inject.service('cm-session')
   ab: Ember.inject.service('cm-addressbook')
+
   searchSeed: null
   addrs: null
 
   shown: true
 
   scope: 'address'
+  coin: null
   resolveAddress: false
 
   searchable: true
@@ -26,20 +28,25 @@ ContactPicker = Ember.Component.extend(SlyEnabled,
   noMatches: Ember.computed.empty('filteredEntries')
 
   filteredEntries: (->
-    if seed = @get('searchSeed')
-      seed = seed.toLowerCase()
-      @get('entriesSorted').filter( (item)->
+    @get('entriesSorted').filter( (item) =>
+      return false if ((coin = @get('coin')) && (Ember.get(item, 'coin') != coin))
+      if seed = @get('searchSeed')
+        seed = seed.toLowerCase()
         item.getWithDefault('name', '').toLowerCase().includes(seed)
-      )
-    else
-      @get('entriesSorted')
-  ).property('entriesSorted.[]', 'searchSeed')
+      else
+        true
+    )
+  ).property('entriesSorted.[]', 'searchSeed', 'coin')
 
   notifySly: (->
     if @get('filteredEntries.length')
       @reloadSly()
   ).observes('filteredEntries.[]', 'shown')
 
+
+  setup: (->
+    @get('ab').findAll().then((res) => @set('addrs', res))
+  ).on('init')
 
   actions:
     selectEntry: (entry) ->
@@ -65,11 +72,6 @@ ContactPicker = Ember.Component.extend(SlyEnabled,
     returnBtn: ->
       @sendAction('on-return')
 
-  setup: (->
-    @get('ab').findAll().then((res) =>
-      @set('addrs', res)
-    )
-  ).on('init')
 )
 
 `export default ContactPicker`

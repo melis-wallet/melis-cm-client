@@ -32,8 +32,8 @@ hr
         p = leaf-button icon='fa fa-check' type='primary' block=true on-click='doJoin' disabled=apiOps.isRunning
 
 = else
-  = em-form model=this submitButton=false action='enterJoinCode'
-    = em-input property='joinCode' type='text' label=(t 'account.multi.join.code.label') placeholder=(t 'account.multi.join.code.ph')
+  = em-form model=this submitButton=false action='enterJoinCode' as |f|
+    = f.input property='joinCode' type='text' label=(t 'account.multi.join.code.label') placeholder=(t 'account.multi.join.code.ph')
   .row
     .col-sm-4
       p = leaf-button icon='fa fa-trash' type='default' block=true on-click='cancelJoin' disabled=apiOps.isRunning

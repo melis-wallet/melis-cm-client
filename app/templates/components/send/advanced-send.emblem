@@ -1,0 +1,82 @@
+
+= liquid-if preparedTx class='ll-down-up'
+  = leaf-alert-area alerts=elementAlerts dark=true embedded=true
+  .panel
+    .panel-body
+      = send/advanced-ptxrecps account=account parent=this recipients=recipients preparedTx=preparedTx on-delete='deleteRecipient' fees=fees
+      = send/advanced-ptx account=account preparedTx=preparedTx on-cancel='cancelPayment' on-propose='proposePayment' on-confirm='confirmPayment'
+  = if signing
+    .panel-body
+      = leaf-progress value=signingProgress striped=true style='height: 4px;'
+= else
+  = liquid-if showSummaryPanel class='ll-down-up'
+    = send/advanced-summary account=account recipients=recipients parent=this on-prepare='preparePayment' on-reset='resetPayment'
+
+  = leaf-alert-area alerts=elementAlerts dark=true embedded=true
+
+  = leaf-accordion selected-idx='dst' type=accordion as |chord|
+
+
+    = leaf-accordion-panel idx='src' title=(t 'paysend.form.acc.sources')  simple-header=true parent=chord body=true
+      label: b = t 'paysend.sources.auto'
+      .pull-right = leaf-switcher checked=autoSource size='sm' theme='modern'
+      .clearfix
+      = unless autoSource
+        hr
+        = send/advanced-srcs account=account on-change='selectSources'
+
+
+
+    = leaf-accordion-panel idx='dst' title=(t 'paysend.form.acc.destinations')  simple-header=true parent=chord body=true
+      = if recipients
+        = send/advanced-listrecps parent=this account=account recipients=recipients on-delete='deleteRecipient'
+      = if showAdd
+        = send/advanced-recp on-add='addRecipient' account=account parent=this
+      = else if canAdd
+        .row
+          .col-xs-4
+          .col-xs-8
+             = leaf-button type='default' on-click='toggleAdd' icon="fa fa-plus" block=true tooltip=(t 'paysend.form.a.recpadd')
+
+
+
+    /= leaf-accordion-panel idx='rem' title=(t 'paysend.form.acc.remainder')  simple-header=true parent=chord body=true
+      label: b = t 'paysend.remainder.auto'
+      .pull-right = leaf-switcher checked=autoRemainder size='sm' theme='modern' on-change='modifyReminder'
+      .clearfix
+      /= unless autoRemainder
+        hr
+        = send/advanced-recp on-change=(action (mut manualReminder)) account=account getAmounts=false
+
+
+
+
+    = leaf-accordion-panel idx='opts' title=(t 'paysend.form.acc.options')   simple-header=true parent=chord body=true
+      label: b = t 'paysend.fees.auto'
+      .pull-right = leaf-switcher checked=autoFees size='sm' theme='modern'
+      .clearfix
+      hr
+      = if autoFees
+        .row
+          .form-group
+            .col-xs-4
+              label.control-label = t 'paysend.form.fees'
+            .col-xs-8.text-right
+              = send/fees-selector feesMult=feesMult onchange='feesChanged'
+      = else
+        = send/fees-input account=account value=feesPerByte feesData=feesData on-change=(action (mut feesPerByte))
+
+
+      .well.no-margin-b
+        .row
+          .form-group
+            .col-xs-8
+              label.control-label = t 'paysend.form.rbf'
+            .col-xs-4.text-right
+              p  = leaf-switcher checked=optRBF size='sm' theme='modern' disabled=(not coin.features.rbf)
+        .row
+          .form-group
+            .col-xs-8
+              label.control-label = t 'paysend.form.unc'
+            .col-xs-4.text-right
+              p = leaf-switcher checked=allowUnconfirmed size='sm' theme='modern'

@@ -1,0 +1,61 @@
+
+= if groupedTxo
+  table.table.table-striped
+    thead
+      tr
+        td
+        td
+        td
+        td
+        td.text-right = unit-id account=account
+        td
+      = if selectedTxo
+        tr.info
+          td
+          td
+          td: b Selected:
+          td
+          td: b = selectedTxo.length
+          td.text-right = format-unit selectedTotal account=account
+          td
+
+    tbody
+      = each groupedTxo as |addr|
+        tr
+          td
+            i.fa class="{{if addr.expanded 'fa-minus-square' 'fa-plus-square'}}" click="'toggleExpanded' addr"
+          td: = input type="checkbox" checked=addr.selected  change=(action actions.selectAddr addr)
+          td.break-words
+            p: b
+              span click="'toggleExpanded' addr"
+                = addr.value.address
+            = if addr.value.wif
+              .alert.alert-warning
+                span.label.label-warning: i.fa.fa-key
+                '
+                = addr.value.wif
+                .pull-right
+                  = leaf-button size='sm' outline='true' icon='fa fa-trash' on-click='trashKey' value=addr.value
+                .cleafix
+          td
+
+          td: b = addr.items.length
+          td.text-right: b = format-unit addr.amount account=account
+          td = live-moment-from-now addr.firstcd
+        = each addr.items as |txo|
+          tr class="{{if addr.expanded 'shown' 'hidden'}}"
+            td
+            td
+              = input type="checkbox" checked=txo.selected  change=(action actions.selectTxo txo.selected txo addr)
+            td = tx/link-to-explorer hash=txo.tx class='small break-words' account=account
+              = txo.tx
+              |/
+              = txo.n
+
+            td
+            td
+            td.text-right = format-unit txo.amount account=account
+            td = live-moment-from-now txo.cd
+= else
+  = leaf-note
+    | No unspents

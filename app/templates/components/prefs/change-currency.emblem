@@ -3,8 +3,3 @@
   p = t 'wallet.prefs.currency.caption'
   p = power-select options=currencies selected=currency searchField='text' onchange=(action 'changeCurrency') as |cur|
     b = cur.text
-
-  p = t 'wallet.prefs.exchange.caption'
-  p = power-select options=exchanges selected=exchange searchField='text' onchange=(action 'changeExchange') as |ex|
-    b = ex.text
-

@@ -5,9 +5,10 @@
     .panel-heading.light
       = if apiOps.isRunning
         .w-status.spinner.bounce-middle
-      = if error
+      /= if error
         .w-status.error
           = error
+        .clearfix
 
       = leaf-tooltip tooltip=(moment-format entry.updated)
         i.text-default = live-moment-from-now entry.updated
@@ -18,6 +19,8 @@
         .row
           .col-sm-3.col-xs-2
           .col-sm-8.col-xs-9.col-xs-offset-1
+            = if error
+              .alert.alert-error.alert-dark = error
             table.table.table-condensed
               tbody
                 = if c.isRotation
@@ -30,7 +33,7 @@
                       p
                         = t 'stream.ptx.created' creator=(co-signer c.cmo.accountPubId you=(t 'tx.you-s')) time=(moment-from-now c.cmo.cd)
                         '
-                        = link-to 'main.account.ptx.detail' c.account.num c.cmo.id
+                        = link-to 'main.account.ptx.detail' c.account.pubId c.cmo.id
                           =  t 'stream.ptx.details'
                       = if isRespent
                         p.text-warning =  t 'stream.ptx.respent'
@@ -48,25 +51,25 @@
                       = else
                         span.label = t 'stream.ptx.multiple'
                 tr
-                  td.lowercase: = cm.btcUnit
+                  td.lowercase: = unit-id account=tx.account
                   td.text-right.text-lg.text-semibold.text-default
-                    = format-btc tx.cmo.amount compact=true
+                    = format-unit tx.cmo.amount compact=true account=tx.account
                 tr
                   td
                   td.text-right.text-light-gray
-                    = to-currency tx.cmo.amount withUnit=true
+                    = to-currency tx.cmo.amount withUnit=true account=tx.account
                   //td = t 'stream.ptx.amount'
                   //td
-                    b = format-btc c.cmo.amount
+                    b = format-unit c.cmo.amount account=tx.account
                     '
                     | (
-                    = to-currency c.cmo.amount
+                    = to-currency c.cmo.amount account=tx.account
                     '
                     = cm.globalCurrency
                     |)
                 tr class="{{ if tx.cmo.originalPtx 'warning' }}"
                   td = t 'stream.ptx.fees'
-                  td.text-right.text-light-gray: b = format-btc tx.cmo.fees
+                  td.text-right.text-light-gray: b = format-unit tx.cmo.fees account=tx.account
 
         = if c.account.isMultisig
           .row.padding-sm-vr

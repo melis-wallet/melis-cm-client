@@ -24,7 +24,7 @@ module.exports = function(defaults) {
       // This is because of the function-name-duck-typing used in typeforce.
       //options: {mangle: false }
       options: {mangle:
-        { except:
+        { reserved:
           ['Array', 'BigInteger', 'Boolean', 'ECPair', 'Function', 'Number', 'Point', 'Script']
         }
       }

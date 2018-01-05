@@ -1,0 +1,19 @@
+= em-form model=this submitButton=false action='checkSignature' as |f|
+  = leaf-note type='default'
+    h4 = t 'sign.check.text'
+    hr
+    p = f.text autoresize=true property='text' rows=2
+
+  = leaf-note type='info'
+    = f.input property='address' label=(t 'sign.check.address')
+    = f.text autoresize=true property='signature' rows=2 label=(t 'sign.check.signature')
+
+  = if result
+    = if valid
+      .alert.alert-success.alert-dark
+        = t 'sign.check.valid'
+    = else
+      .alert.alert-warning.alert-dark
+        = t 'sign.check.invalid'
+  = if isValid
+    = leaf-button label=(t 'sign.check.check') on-click='doCheck' block=true

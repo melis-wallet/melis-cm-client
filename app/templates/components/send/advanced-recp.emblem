@@ -1,0 +1,82 @@
+
+
+= liquid-if abOpened class='ll-left-right'
+
+  = contact-picker [
+    searchable=true
+    scope='address'
+    coin=account.coin
+    return-btn='fa fa-arrow-left'
+    on-return='closeAb'
+    on-recipient-selected='addRecipientFromAb' ]
+
+= else
+  = em-form model=recipient submitButton=false action='submitRecipient' as |f|
+    .row
+      .col-xs-8
+        = if recipient.isAddress
+          = f.input property='value' label=(t 'paysend.form.recipient.label') placeholder=(t 'paysend.form.recipient.ph')  class='form-group required'
+        = else if recipient.isAccount
+          .form-group.required
+            label.control-label = t 'paysend.form.account.label'
+            = send/account-selector selected=recipient.value on-account-change=(action (mut recipient.value)) coin=account.coin
+        = else if recipient.isCm
+          .form-group.required
+            label.control-label = t 'paysend.form.pubid.label'
+            = send/pubid-alias-selector selected=recipient.value on-valid-value=(action (mut recipient.value))
+        = else
+          p unknown
+
+      .col-xs-4
+        .pull-right.xr-top-sp
+          = leaf-tooltip class='value' tooltip=(t 'paysend.form.type') tooltip-placement='left'
+            = send/destination-type dst-type=recipient.type size='sm' class='xr-bt-sp' on-type-change=(action (mut recipient.type))
+          '
+
+          = leaf-tooltip class='value' tooltip=(t 'paysend.form.scan') tooltip-placement='left'
+            = leaf-button size='sm' icon='fa fa-camera' outline=true on-click='openScanner' btype='button' type='primary' class='xr-bt-sp'
+          '
+          = leaf-tooltip class='value' tooltip=(t 'paysend.form.ab') tooltip-placement='left'
+            = leaf-button size='sm' icon='fa fa-list' outline=true on-click='openAb' btype='button' class='xr-bt-sp'
+          //= leaf-clipboard receiver=true  content=recipient.address size='sm' tooltip=(t 'paysend.form.clipboard') tooltip-placement='left'
+
+
+    = if getAmounts
+      .row
+        .col-sm-4.col-xs-8
+          = if recipient.entireBalance
+            label.control-label = t 'paysend.form.amount.label'
+            p.text-warning style='line-height: 35px;'
+              = if parent.autoSource
+                = if parent.hasNormalDests
+                  b = t 'paysend.form.entire-balance-r'
+                = else
+                  b = t 'paysend.form.entire-balance'
+              = else
+                = if parent.hasNormalDests
+                  b = t 'paysend.form.entire-sources-r'
+                = else
+                  b = t 'paysend.form.entire-sources'
+          = else
+            = f.input type='number' property='amount' label=(t 'paysend.form.amount.label')  placeholder=(t 'paysend.form.amount.ph') class='form-group required'
+        .col-sm-1.col-xs-4.xr-top-sp-f
+          = leaf-button size='sm' icon='fa fa-fire' outline=true on-click='toggleEntireBalance' active=recipient.entireBalance disabled=blockEntireBalance
+
+        .col-sm-3.col-xs-5 class="{{if recipient.entireBalance 'hidden'}}"
+          = f.select label=(t 'paysend.form.currency.label') content=currencies property='currency'
+        .col-sm-4.col-xs-7 class="{{if recipient.entireBalance 'hidden'}}"
+          = if recipient.currencyIsCrypto
+            = f.input property='amountInCurrFmt' label=currencySvc.currencySymbol disabled=true
+          = else
+            = f.input property='amountInCryptoUnit' label=(unit-id account=account) disabled=true
+
+    = misc/more-info prompt=(t 'paysend.form.more') class='no-padding-t'
+      = label-picker selection=recipient.labels label=(t 'paysend.form.labels.label') labelsSet='txLabels'
+      = f.input property='info'  label=(t 'paysend.form.info.label') placeholder=(t 'paysend.form.info.ph')
+
+  = liquid-if  recipient.isValid class='ll-down-up'
+    .row
+      .col-xs-4
+        = leaf-button type='default' on-click='close' icon="fa fa-trash" block=true tooltip=(t 'paysend.form.a.recpdisc')
+      .col-xs-8
+        = leaf-button type='primary' on-click='submitRecipient' icon="fa fa-check" block=true tooltip=(t 'paysend.form.a.recpconf')

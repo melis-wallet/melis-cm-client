@@ -31,8 +31,8 @@
         = t 'tx.discussion.has-approved'
 
 = if input
-  = em-form model=this submitButton=false action='enterMessage'
+  = em-form model=this submitButton=false action='enterMessage' as |f|
     = if prompt
-      = em-input property='newMessage' type='text' placeholder=prompt
+      = f.input property='newMessage' type='text' placeholder=prompt
     = else
-      = em-input property='newMessage' type='text' placeholder=(t 'tx.discussion.enter')
+      = f.input property='newMessage' type='text' placeholder=(t 'tx.discussion.enter')

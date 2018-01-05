@@ -40,7 +40,6 @@ QrCodeExpandable = Ember.Component.extend(
 
   actions:
     toggleExpand:  ->
-      console.log "click"
       if !@get('expanded')
         @set('expanded', true)
 

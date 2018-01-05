@@ -293,7 +293,8 @@ AAProvider = Ember.Service.extend(InviteMixin,
     )
 
   setup: ( ->
-    @set 'tfaDevices', Ember.A()
+    @set('tfaDevices', Ember.A())
+    @set('modalManager.exclusiveModals', false)
     if @get('cm.ready')
       @initalizeTfaConfig().then( =>
         @refreshTfaState()

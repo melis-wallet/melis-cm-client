@@ -14,13 +14,14 @@
 // create new
 = else
   = leaf-wizards-control selected-idx=step completed-steps=completed step-back=stepBack as |ctrl|
-    = leaf-wizard-step caption=(t 'account.wizard.t-type.caption') number=1 description=(t 'account.wizard.t-type.desc')  parent=ctrl idx=1
-    = leaf-wizard-step caption=(t 'account.wizard.t-server.caption') number=2 description=(t 'account.wizard.t-server.desc')  parent=ctrl idx=2
+    = leaf-wizard-step caption=(t 'account.wizard.t-coin.caption') number=1 description=(t 'account.wizard.t-coin.desc')  parent=ctrl idx=1
+    = leaf-wizard-step caption=(t 'account.wizard.t-type.caption') number=1 description=(t 'account.wizard.t-type.desc')  parent=ctrl idx=2
+    = leaf-wizard-step caption=(t 'account.wizard.t-server.caption') number=2 description=(t 'account.wizard.t-server.desc')  parent=ctrl idx=3
     = if isMulti
-      = leaf-wizard-step caption=(t 'account.wizard.t-cosigners.caption') number=3 description=(t 'account.wizard.t-cosigners.desc') parent=ctrl idx=3
-      = leaf-wizard-step caption=(t 'account.wizard.t-name.caption') number=4 description=(t 'account.wizard.t-name.desc') parent=ctrl idx=4
+      = leaf-wizard-step caption=(t 'account.wizard.t-cosigners.caption') number=3 description=(t 'account.wizard.t-cosigners.desc') parent=ctrl idx=4
+      = leaf-wizard-step caption=(t 'account.wizard.t-name.caption') number=4 description=(t 'account.wizard.t-name.desc') parent=ctrl idx=5
     = else
-      = leaf-wizard-step caption=(t 'account.wizard.t-name.caption') number=3 description=(t 'account.wizard.t-name.desc') parent=ctrl idx=3
+      = leaf-wizard-step caption=(t 'account.wizard.t-name.caption') number=3 description=(t 'account.wizard.t-name.desc') parent=ctrl idx=4
 
   // wizard is complete
   = if wizardComplete
@@ -74,6 +75,31 @@
         .row
           .col-xs-4
 
+            h4 = t 'account.wizard.coin.title'
+            p = t 'account.wizard.coin.caption'
+          .col-xs-8
+            = leaf-note type='info'
+              /= power-select renderInPlace=true options=availableCoins selected=selectedCoin searchEnabled=false onchange=(action 'selectCoin') as |c|
+                img.tb-coin-icon src="{{coin-img-path c.unit}}"
+                strong = t (concat "coins.unit." c.label)
+
+              ul.nav.nav-pills.nav-stacked
+                = each availableCoins as |c|
+                  li class="{{if (eq c.unit coin) 'active'}}"
+                    a href='#' click="action 'selectCoin' c"
+                      img.lst-coin-icon src="{{coin-img-path c.unit}}"
+                      strong.text-right = t (concat "coins.unit." c.label)
+
+            = if coin
+              = leaf-button type='primary' on-click='coinSelected' value=1 icon='fa fa-arrow-right' block=true
+            = else
+              = leaf-button block=true outline=true label=(t 'account.wizard.join.action') on-click='doJoinAcc'
+
+      ////
+      = leaf-navs-panel parent=content idx=2
+        .row
+          .col-xs-4
+
             h4 = t 'account.wizard.type.title'
             p = t 'account.wizard.type.caption'
           .col-xs-8
@@ -96,11 +122,9 @@
             = if type
               = leaf-button type='primary' on-click='typeSelected' value=1 icon='fa fa-arrow-right' block=true
 
-            = else
-              = leaf-button block=true outline=true label=(t 'account.wizard.join.action') on-click='doJoinAcc'
 
       ////
-      = leaf-navs-panel parent=content idx=2
+      = leaf-navs-panel parent=content idx=3
         .row
           .col-xs-4
             h4 = t 'account.wizard.server.title'
@@ -136,11 +160,11 @@
 
       = if isMulti
         ////
-        = leaf-navs-panel parent=content idx=3
+        = leaf-navs-panel parent=content idx=4
           = account/collect-cosigners accountType=accountType withServer=wantsServer on-done='doneCosigners'
 
         ////
-        = leaf-navs-panel parent=content idx=4
+        = leaf-navs-panel parent=content idx=5
           = partial 'components/account/new-account-summary'
 
           p.alert.alert-warning.alert-dark.animated.flash
@@ -150,8 +174,8 @@
             h4 = t 'account.wizard.name.title'
             p = t 'account.wizard.name.caption'
 
-          = em-form model=this submitButton=false action='doneNameSelect'
-            = em-input property='accountName' placeholder=(t 'account.wizard.advanced.name.ph')
+          = em-form model=this submitButton=false action='doneNameSelect' as |f|
+            = f.input property='accountName' placeholder=(t 'account.wizard.advanced.name.ph')
 
           = liquid-if isValid class='ll-down-up'
             = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneNameSelect'
@@ -159,15 +183,15 @@
 
       = else
         ////
-        = leaf-navs-panel parent=content idx=3
+        = leaf-navs-panel parent=content idx=4
           = partial 'components/account/new-account-summary'
 
           = leaf-note type='info'
             h4 = t 'account.wizard.name.title'
             p = t 'account.wizard.name.caption'
 
-          = em-form model=this submitButton=false action='doneNameSelect'
-            = em-input property='accountName' placeholder=(t 'account.wizard.advanced.name.ph')
+          = em-form model=this submitButton=false action='doneNameSelect' as |f|
+            = f.input property='accountName' placeholder=(t 'account.wizard.advanced.name.ph')
 
           = liquid-if isValid class='ll-down-up'
             = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneNameSelect'

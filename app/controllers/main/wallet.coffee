@@ -1,14 +1,13 @@
 `import Ember from 'ember'`
+`import { task, taskGroup } from 'ember-concurrency'`
+`import ModalAlerts from '../../mixins/modal-alerts'`
+`import { waitTime } from 'melis-cm-svcs/utils/delayed-runners'`
 
 
-UNITS =
-  mBTC: {id: 'mBTC', text: 'mBTC', divider: '0.001 btc'}
-  BTC: {id: 'BTC', text: 'BTC'}
-  bits: {id: 'bits', text: 'bits', divider: '0.000001 btc' }
-
-MainWalletController = Ember.Controller.extend(
+MainWalletController = Ember.Controller.extend(ModalAlerts,
 
   credentials: Ember.inject.service('cm-credentials')
+  coinsvc: Ember.inject.service('cm-coin')
   aa: Ember.inject.service('aa-provider')
   mm: Ember.inject.service('modals-manager')
 
@@ -20,20 +19,11 @@ MainWalletController = Ember.Controller.extend(
   account: Ember.computed.alias('cm.currentAccount')
   modalManager: Ember.inject.service('modals-manager')
 
+  apiOps: taskGroup().drop()
+
   credentialsBackup: false
+  credentialsBackupCk: false
   paring: false
-
-  btcUnits: (->
-    @get('cm.btcUnits').map( (e) ->
-      return UNITS[e]
-    )
-  ).property('cm.btcUnits.[]')
-
-
-  btcUnit: ( ->
-    @get('btcUnits').findBy('id', @get('cm.btcUnit'))
-  ).property('btcUnits', 'cm.btcUnit')
-
 
   openAccWizard: ( ->
     if @get('new-account')
@@ -43,6 +33,48 @@ MainWalletController = Ember.Controller.extend(
   ).observes('new-account').on('init')
 
   dangerEnabled: false
+
+
+  deleteAllDevices: task( ->
+    api = @get('cm.api')
+
+    op = (tfa) =>
+      api.devicesDeleteAll(@get('credentials.deviceId'))
+    try
+      ok = yield @showModalAlert(
+        type: 'warning'
+        title: 'wallet.devices.list.wdelete.title'
+        caption: 'wallet.devices.list.wdelete.caption'
+      )
+      return unless ok == 'ok'
+
+      res = yield @get('aa').tfaOrLocalPin(op)
+    catch e
+      @set 'error', e.msg
+      Ember.Logger.error "Dev delete error: ", e
+  ).group('apiOps')
+
+  deleteCredentials: task( ->
+    { cm, credentials } = @getProperties('cm', 'credentials')
+
+    try
+
+      ok = yield @showModalAlert(
+        type: 'warning'
+        title: 'wallet.maint.wdelete.title'
+        caption: 'wallet.maint.wdelete.caption'
+      )
+      return unless ok == 'ok'
+
+      yield cm.walletClose()
+      credentials.reset()
+
+      @get('cm').resetApp()
+    catch e
+      @alertDanger(e.msg, true)
+      Ember.Logger.error 'Error: ', e
+  ).group('apiOps')
+
 
   actions:
 
@@ -80,9 +112,18 @@ MainWalletController = Ember.Controller.extend(
       @set 'credentialsBackup', false
 
 
+
+    doCredBackupCk: ->
+      @set 'credentialsBackupCk', true
+      false
+
+    doneCredBackupCk: ->
+      @set 'credentialsBackupCk', false
+
+
     doneNewAccount: (acct) ->
       Ember.run.scheduleOnce 'afterRender', this, ->
-        @transitionToRoute('main.account.summary', Ember.get(acct, 'num'))
+        @transitionToRoute('main.account.summary', Ember.get(acct, 'pubId'))
 
 
     toggleDanger: ->
@@ -90,25 +131,11 @@ MainWalletController = Ember.Controller.extend(
       false
 
     deleteCredentials: ->
-      cm = @get('cm')
-      wallet = @get('currentWallet')
+      @get('deleteCredentials').perform()
 
-      cm.walletClose().then( (res) =>
-        @get('credentials').reset()
-        window.location.reload()
-      )
 
     deleteAllDevices: ->
-      api = @get('cm.api')
-
-      op = (tfa) =>
-        api.devicesDeleteAll(@get('credentials.deviceId'))
-
-      @get('aa').tfaOrLocalPin(op, "Delete All Devices").then(() ->
-        #
-      ).catch((err) ->
-        Ember.Logger.error 'Error deleting devices', err
-      )
+      @get('deleteAllDevices').perform()
 
 
 

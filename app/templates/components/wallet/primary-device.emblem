@@ -35,5 +35,5 @@
 p = leaf-note
   h4 = t 'wallet.devices.name.title'
   p = t 'wallet.devices.name.caption'
-  = leaf-editable-text value=creds.deviceName on-change='changeDeviceName' inputError=nameChangError allowBlank=false min-length=4 max-length=32
+  = leaf-editable-text value=creds.deviceName on-change='changeDeviceName' inputError=nameChangError allowBlank=false min-length=1 max-length=32
 

@@ -19,7 +19,7 @@
         = leaf-note type='success'
           h4 = t 'pair.import.success.title'
           p = t 'pair.import.success.caption'
-        = link-to 'main.account.summary' cm.currentAccount.num class='btn btn-primary btn-block'
+        = link-to 'main.account.summary' cm.currentAccount.pubId class='btn btn-primary btn-block'
           i.fa.fa-user
           = t 'enroll.btn.summary'
 
@@ -91,8 +91,8 @@
           .col-sm-8
 
             = leaf-note type='default'
-              = em-form model=this submitButton=false action='importFromData'
-                = em-text rows=4 property='importData' placeholder=(t 'pair.import.data.ph')
+              = em-form model=this submitButton=false action='importFromData' as |f|
+                = f.text rows=4 property='importData' placeholder=(t 'pair.import.data.ph')
             = leaf-button type='default' icon='fa fa-check' block=true on-click='importFromData'
 
     = leaf-navs-panel parent=content idx=4
@@ -117,8 +117,8 @@
           = if showPinForm
             .row
               .col-md-9
-                = em-form model=this submitButton=false action='doneInputPin'
-                  = em-input property='pin' type='password' placeholder=(t 'pair.import.pin.ph')
+                = em-form model=this submitButton=false action='doneInputPin' as |f|
+                  = f.input property='pin' type='password' placeholder=(t 'pair.import.pin.ph')
               .col-md-3
                 = liquid-if isValid class='ll-down-up'
                   = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneInputPin'

@@ -16,7 +16,7 @@
           p = t 'enroll.complete.caption'
 
         br
-        = link-to 'main.account.summary' cm.currentAccount.num class='btn btn-primary btn-block'
+        = link-to 'main.account.summary' cm.currentAccount.pubId class='btn btn-primary btn-block'
           i.fa.fa-user
           '
           = t 'enroll.btn.summary'

@@ -5,7 +5,6 @@ MainHistoryController = Ember.Controller.extend(
 
   media: Ember.inject.service('responsive-media')
 
-
   actions:
     toggleStar: (tx) ->
       if !Ember.isBlank(tx)
@@ -20,12 +19,9 @@ MainHistoryController = Ember.Controller.extend(
 
     selectTx: (tx) ->
       if tx
-        @set('activeModel', tx)
-        @transitionToRoute('main.account.history.detail', @get('cm.currentAccount.num'), tx)
+        @transitionToRoute('main.account.history.detail', @get('cm.currentAccount.pubId'), tx)
       else
-        @set('activeModel', null)
-        @transitionToRoute('main.account.history', @get('cm.currentAccount.num'))
-
+        @transitionToRoute('main.account.history', @get('cm.currentAccount.pubId'))
 )
 
 `export default MainHistoryController`

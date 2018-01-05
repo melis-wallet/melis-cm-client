@@ -64,7 +64,7 @@ MainMenu = Ember.Component.extend(SlyEnabled, RecognizerMixin,
 
   actions:
     logout: ->
-      window.location.reload()
+      @get('cm').resetApp()
 )
 
 `export default MainMenu`

@@ -1,22 +1,23 @@
-= link-to 'main.account.summary' account.num
-  span.menu-icon.accent class="{{account.color}}"
-    = account.identifier
-  span.mm-text
-      = format-text account.name len=20
-      = stream/stream-counter account=account property='urgent' vclass='label-warning'
-      '
-      = stream/stream-counter account=account property='newer' vclass='label-success animated tada'
+= liquid-bind account use='toDown' as |a|
+  = link-to 'main.account.summary' a.pubId
+    span.menu-icon.accent class="{{a.color}}"
+      = account-identifier account=a
+    span.mm-text
+        = format-text a.name len=20
+        = stream/stream-counter account=a property='urgent' vclass='label-warning'
+        '
+        = stream/stream-counter account=a property='newer' vclass='label-success animated tada'
 .mm-buttons
   = if account.isComplete
     .btn-group
-        = link-to 'main.account.view' account.num class='btn btn-primary btn-outline dark'
+        = link-to 'main.account.view' account.pubId class='btn btn-primary btn-outline dark'
           i.fa.fa-cog
-        = link-to 'main.account.history' account.num class='btn btn-primary btn-outline dark'
+        = link-to 'main.account.history' account.pubId class='btn btn-primary btn-outline dark'
           i.fa.fa-list
-    .label = format-btc account.amSummary compact=true
+    .label = format-unit account.amSummary compact=true account=account
   = else
     .btn-group
-      = link-to 'main.account.view' account.num class='btn btn-primary btn-outline dark'
+      = link-to 'main.account.view' account.pubId class='btn btn-primary btn-outline dark'
         i.fa.fa-cog
     .pull-right
       .text-xs.text-light-gray

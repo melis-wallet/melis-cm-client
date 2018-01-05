@@ -1,0 +1,25 @@
+
+ul.history-list
+  = each txsSorted as |tx|
+    li.history-item
+      = if tx.negative
+        .h-lbl style='opacity: 0.5;'
+          = common/block-height tx=tx account=cm.currentAccount
+      = else
+        .h-lbl
+          = common/block-height tx=tx account=cm.currentAccount
+      .h-amount
+        span.data
+          = format-unit tx.amount compact=true withUnit=true fullPrecision=true account=cm.currentAccount
+      .h-subject: a.expandable click="'selectTx' tx"
+        .span
+          = each tx.labels as |label|
+            .label.label-danger.label-tag = label
+          |&nbsp;&nbsp;
+          = if tx.meta.info
+            b = tx.meta.info
+          = else
+            span.break-words = tx.address
+      .h-date.expandable
+        = leaf-tooltip tooltip=(moment-format tx.cd) tooltip-position='left'
+          = live-moment-from-now tx.cd

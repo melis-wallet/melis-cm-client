@@ -45,32 +45,44 @@
                     = each rec.labels as |l|
                       span.label.m-sm = l
                     span.text-light-gray = format-text rec.meta.info len=15
-              td
+              td.text-right
                 = if paymentReady
-                  = if isEntireBalance
-                    = t 'paysend.form.entire-balance'
+                  = if rec.entireBalance
+                    = if hasNormalDests
+                      b.text-warning = t 'paysend.form.entire-balance-r'
+                    = else
+                      b.text-warning = t 'paysend.form.entire-balance'
                   = else
-                    = format-btc rec.fullAmount
+                    = format-unit rec.fullAmount account=cm.currentAccount
                 = else
                   = if rec.entireBalance
-                    = t 'paysend.form.entire-balance'
+                    = if hasNormalDests
+                      b.text-warning = t 'paysend.form.entire-balance-r'
+                    = else
+                      b.text-warning = t 'paysend.form.entire-balance'
                   = else
-                    = format-btc rec.fullAmount
-              td
+                    = format-unit rec.fullAmount account=cm.currentAccount
+              td.text-right
                 = if paymentReady
-                  span.text-light-gray = to-currency rec.fullAmount withUnit=true
+                  = unless rec.entireBalance
+                    span.text-light-gray = to-currency rec.fullAmount withUnit=true account=cm.currentAccount
                 = else
                   = leaf-button value=rec on-click='deleteRecipient' outline=true icon='fa fa-trash' size='xs'
           = if preparedTx
             tr.warning
-              td colspan=2 = t 'paysend.tx.info.fees'
-              td: span.animated.flash = format-btc fees
-              td: span.text-light-gray = to-currency fees withUnit=true
+              td colspan='2' = t 'paysend.tx.info.fees'
+              td.text-right: span.animated.flash = format-unit fees account=preparedTx.account
+              td.text-right: span.text-light-gray = to-currency fees withUnit=true account=preparedTx.account
           tr
-            td colspan=2: b = t 'paysend.tx.info.total' unit=cm.btcUnit
-            td: b
-              = if paymentReady
-                = format-btc preparedTx.cmo.amount
-              = else
-                = format-btc total
-            td = to-currency total withUnit=true
+            td colspan='2': b = t 'paysend.tx.info.total' unit=(unit-id account=preparedTx.account)
+            = if paymentReady
+              td.text-right
+                = if isEntirebalance
+                  b = format-unit preparedTx.cmo.amount account=cm.currentAccount
+                = else
+                  b.text-warning = format-unit preparedTx.cmo.amount account=preparedTx.account
+              td.text-right = to-currency preparedTx.cmo.amount withUnit=true account=preparedTx.account
+            = else
+              td.text-right: b
+                = format-unit total account=preparedTx.account
+              td.text-right = to-currency total withUnit=true account=preparedTx.account

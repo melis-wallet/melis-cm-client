@@ -16,18 +16,29 @@ EditAbEntry = Ember.Component.extend(
   cm: Ember.inject.service('cm-session')
   ab: Ember.inject.service('cm-addressbook')
   scanner: Ember.inject.service('scanner-provider')
+  coinsvc: Ember.inject.service('cm-coin')
 
   value: null
   edit: false
+
+  coin: Ember.computed.alias('value.coin')
 
   'new-address': null
 
   apiOps: taskGroup().drop()
 
   contactTypes: Ember.A([
-    {id: C.AB_TYPE_CM , label: 'Another Melis User'}
+    {id: C.AB_TYPE_MELIS , label: 'Another Melis User'}
     {id: C.AB_TYPE_ADDRESS, label: 'Generic Bitcoin Address'}
   ])
+
+
+  availableCoins: Ember.computed.alias('coinsvc.coins')
+
+  selectedCoin: ( ->
+    if c = @get('coin')
+      @get('availableCoins').findBy('unit', c)
+  ).property('coin', 'availableCoins')
 
 
   currentType: ( ->
@@ -60,11 +71,13 @@ EditAbEntry = Ember.Component.extend(
       api = @get('cm.api')
       try
         res = yield api.accountGetPublicInfo(name: alias)
+        console.error res
         @set('accountInfo', res)
         if @checkDupes(res.pubId)
           @set('value.pubId', null)
         else
           @set('value.pubId', res.pubId)
+          @set('coin', res.coin)
         res
       catch err
         if err.ex = 'CmInvalidAccountException'
@@ -84,10 +97,17 @@ EditAbEntry = Ember.Component.extend(
       @sendAction('on-save', @get('value'))
   )
 
+  valueChanged: ( -> @set('coin', @get('availableCoins.firstObject.unit')) if !@get('coin')).observes('value')
+
 
   actions:
+    selectCoin: (c) ->
+      if unit = Ember.get(c, 'unit')
+        @set('coin', unit)
+
     changeType: (type)->
       if type
+        console.error 'type', type
         @set('value.type', Ember.get(type, 'id'))
 
     lookupAlias: (deferred)->
@@ -108,6 +128,7 @@ EditAbEntry = Ember.Component.extend(
       address: initial
       alias: null
       labels: Ember.A()
+      coin: @get('availableCoins.firstObject.unit')
     )
 
 

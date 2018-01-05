@@ -102,8 +102,8 @@
             .h5.uppercase Test Mode
           .col-md-8
             = leaf-note type='default'
-              = em-form model=this submitButton=false action='importFromData'
-                = em-text rows=4 property='importData' placeholder=(t 'recover.import.data.ph')
+              = em-form model=this submitButton=false action='importFromData' as |f|
+                = f.text rows=4 property='importData' placeholder=(t 'recover.import.data.ph')
             = leaf-button type='default' icon='fa fa-check' block=true on-click='importFromData'
 
 
@@ -111,14 +111,25 @@
       .row
         .col-sm-4.hidden-xs.text-center
           i.fa.fa-unlock-alt.icon-side-lg.animated.fadeIn.delay-1s
+
         .col-sm-8
-          = leaf-note type='warning'
-            h4 = t 'recover.import.passphrase.title'
-            p = t 'recover.import.passphrase.caption'
+
+          = if apiOps.isRunning
+            .w-status.spinner.bounce-middle
+          = liquid-if validationFailed class='ll-down-up'
+            = leaf-note type='danger'
+              h4  = t 'wallet.import.w.wrong.title'
+              p  = t 'wallet.import.w.wrong.caption'
+              p.text-warning: b = t 'wallet.import.w.wrong.warn'
+
+          = else
+            = leaf-note type='warning'
+              h4 = t 'recover.import.passphrase.title'
+              p = t 'recover.import.passphrase.caption'
           .row
             .col-md-9
-              = em-form model=this submitButton=false action='doneInputPass'
-                = em-input property='passphrase' placeholder=(t 'recover.import.passphrase.ph')
+              = em-form model=this submitButton=false action='doneInputPass' as |f|
+                = f.input property='passphrase' placeholder=(t 'recover.import.passphrase.ph')
             .col-md-3
               = liquid-if isValid class='ll-down-up'
                 = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneInputPass'

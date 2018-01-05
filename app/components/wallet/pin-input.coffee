@@ -2,6 +2,7 @@
 `import PinInputMixin from '../../mixins/pin-input'`
 `import { validator, buildValidations } from 'ember-cp-validations'`
 `import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
+`import Fpa from 'melis-cm-client/mixins/fingerprint-auth'`
 `import { task, taskGroup } from 'ember-concurrency'`
 
 Validations = buildValidations(
@@ -11,7 +12,7 @@ Validations = buildValidations(
   ]
 )
 
-PinInput = Ember.Component.extend(Validations, ValidationsHelper,
+PinInput = Ember.Component.extend(Validations, ValidationsHelper, Fpa,
 
   cm: Ember.inject.service('cm-session')
   credentials: Ember.inject.service('cm-credentials')
@@ -36,7 +37,6 @@ PinInput = Ember.Component.extend(Validations, ValidationsHelper,
     (left == 1)
   ).property('credentials.attemptsLeft')
 
-
   noValidCreds: ( ->
     if !@get('credentials.validCredentials')
       @get('routing').transitionTo('wallet.no-creds')
@@ -51,11 +51,12 @@ PinInput = Ember.Component.extend(Validations, ValidationsHelper,
 
   setup: (->
     Ember.run.schedule 'afterRender', this, (->
-
       @.$('input#pin_input').focus()
     )
   ).on('didInsertElement')
 
+  onValidFpa: (pin) ->
+    @get('enterPIN').perform(pin)
 
   enterPIN: task( (pin) ->
     @set('pinError', null)

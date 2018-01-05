@@ -48,21 +48,21 @@
               tr
                 td
                 td.text-right.text-light-gray
-                  = format-btc tx.cmo.amount withUnit=true
+                  = format-unit tx.cmo.amount withUnit=true account=tx.account
 
             = else
               tr
-                td.lowercase: = cm.btcUnit
+                td.lowercase: = unit-id account=tx.account
                 td.text-right.text-xlg.text-semibold.text-default
-                  = format-btc tx.cmo.amount compact=true
+                  = format-unit tx.cmo.amount compact=true account=tx.account
               tr
                 td
                 td.text-right.text-light-gray
-                  = to-currency tx.cmo.amount withUnit=true
+                  = to-currency tx.cmo.amount withUnit=true account=tx.account
 
             tr
               td = t 'stream.ptx.fees'
-              td.text-right: b = format-btc tx.cmo.fees  withUnit=true
+              td.text-right: b = format-unit tx.cmo.fees withUnit=true account=tx.account
 
     = if tx.account.isMultisig
       .row.padding-sm-vr

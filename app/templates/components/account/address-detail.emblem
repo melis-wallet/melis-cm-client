@@ -22,7 +22,7 @@
               h4 = t 'newaddr.type.generic'
 
           tr
-            td.text-right colspan=2
+            td.text-right colspan='2'
               span.label = address.address
 
 
@@ -32,30 +32,30 @@
               td.text-right
                 = live-moment-from-now address.lastRequested
           /tr.bg-light-gray
-            td.lowercase = cm.btcUnit
+            td.lowercase = unit-id account=cm.currentAccount
             td: .pull-right
               = leaf-editable-number [
                 positive=true
                 allowBlank=true
                 size='lg'
-                value=(scale-btc address.meta.amount)
+                value=(scale-unit address.meta.amount account=cm.currentAccount)
                 on-change='changeAmount'
                 if-empty=(t 'newaddr.empty.amount')
                 inputClass='text-right text-bold']
                 = if address.meta.amount
-                  span.text-xlg.text-default.text-semibold = format-btc address.meta.amount
+                  span.text-xlg.text-default.text-semibold = format-unit address.meta.amount account=cm.currentAccount
                 = else
                   = t 'newaddr.empty.amount'
 
           = if address.meta.amount
             tr.bg-light-gray
-              td.lowercase = cm.btcUnit
-              td.text-right.text-lg.text-semibold.text-default = format-btc address.meta.amount compact=true
+              td.lowercase = unit-id account=cm.currentAccount
+              td.text-right.text-lg.text-semibold.text-default = format-unit address.meta.amount compact=true account=cm.currentAccount
 
           = if address.meta.amount
             tr
               td.lowercase = cm.globalCurrency
-              td.text-right = to-currency address.meta.amount
+              td.text-right = to-currency address.meta.amount account=cm.currentAccount
 
 
           tr style='height: 48px;'
@@ -76,14 +76,42 @@
                 span.label.label-warning = address.numTxs
               = else
                 = t 'newaddr.txs.none'
+          = if cm.currentAccount.canSignMessage
+            tr
+              td.text-right colspan='2'
+                = leaf-button icon='fa fa-pencil-square' outline=true on-click='signWithAddr'  class='xr-bt-sp'
+                '
+                = leaf-button outline='true' icon='fa fa-key' on-click='exportKey' class='xr-bt-sp'
+
+          = if wif
+            tr: td.break-words colspan='2'
+              .alert.alert-warning
+                span.label.label-warning: i.fa.fa-key
+                '
+                = wif
+                .pull-right
+                  = leaf-button size='sm' outline='true' icon='fa fa-trash' on-click='trashKey' value=addr.value
+                .clearfix
+                hr
+                = misc/qr-code-expandable  content=wif class='animated fadeIn'
 
 
   .row
-    .col-xs-6
-      = link-to 'main.account.address' cm.currentAccount.num class='btn btn-default btn-block' activeClass="a-cr"
-        i.fa.fa-arrow-left
-    .col-xs-3
     .col-xs-3
       = if isActive
         = leaf-button icon='fa fa-trash' on-click='releaseAddr' block=true
+    .col-xs-3
+    .col-xs-6
+      = link-to 'main.account.address' cm.currentAccount.pubId class='btn btn-default btn-block' activeClass="a-cr"
+        i.fa.fa-arrow-left
 
+
+= ember-wormhole to='modal-wormhole'
+  = leaf-modal id=signId as |mod|
+    = leaf-modal-header title=(t 'sign.message.title') modal=mod
+    = leaf-modal-body
+      = if mod.did-open
+        .delay-05s.animated.fadeIn
+          = account/sign-message address=address account=cm.currentAccount
+    = leaf-modal-footer modal=mod
+      = leaf-modal-button icon='fa fa-check' type='primary' label=(t 'sign.message.dismiss') modal=mod value='ok' block=true

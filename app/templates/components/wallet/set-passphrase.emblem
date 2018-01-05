@@ -1,6 +1,6 @@
-= em-form model=this submitButton=false action='submitNewPassPhrase'
-  = em-input property='phrase' type='password' label=(t 'wallet.passphrase.pass.label') placeholder=(t 'wallet.passphrase.pass.ph') cid='phrase_input'
-  = em-input property='phraseCheck' type='password' label=(t 'wallet.passphrase.check.label') placeholder=(t 'wallet.passphrase.check.ph') cid='phrase_check'
+= em-form model=this submitButton=false action='submitNewPassPhrase' as |f|
+  = f.input property='phrase' type='password' label=(t 'wallet.passphrase.pass.label') placeholder=(t 'wallet.passphrase.pass.ph') cid='phrase_input'
+  = f.input property='phraseCheck' type='password' label=(t 'wallet.passphrase.check.label') placeholder=(t 'wallet.passphrase.check.ph') cid='phrase_check'
 br
 = if hasBlock
   .row

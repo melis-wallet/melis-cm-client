@@ -26,14 +26,14 @@ ScannerProvider = Ember.Service.extend(
 
 
   actOnScan: (data) ->
-    num = @get('cm.currentAccount.num')
+    id = @get('cm.currentAccount.pubId')
     if (addr = @getAddressFromData(data))
-      @get("routing").transitionTo('main.account.ops.send', [num], {address: addr})
+      @get("routing").transitionTo('main.account.ops.send', [id], {address: addr})
 
     if data.scheme
       switch data.scheme.toLowerCase()
         when 'bitcoin'
-          @get("routing").transitionTo('main.account.ops.send', [num], {address: data.address})
+          @get("routing").transitionTo('main.account.ops.send', [id], {address: data.address})
         else
           # tbd
           Ember.Logger.error "Unknown scheme"

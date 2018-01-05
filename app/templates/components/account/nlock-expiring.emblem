@@ -24,7 +24,7 @@
       tbody
         tr.danger
           td = t 'view.nlock.transaction.fees'
-          td.text-right = format-btc preparedTx.cmo.fees withUnit=true
+          td.text-right = format-unit preparedTx.cmo.fees withUnit=true account=account
 
   .row
     .col-md-4
@@ -32,6 +32,9 @@
     .col-md-8
       = leaf-button icon='fa fa-check' type='warning' on-click='confirmRotation' block=true
 
+= else if delayRefresh.isRunning
+  .text-center
+    .spinner.bounce-middle
 = else if validUnspents
 
   table.table.table-striped
@@ -50,7 +53,7 @@
           td
             = estimate-block-time u.blockExpire relative=true
           td
-            = format-btc u.amount withUnit=true
+            = format-unit u.amount withUnit=true account=account
           td
             = input type='checkbox' checked=u.checked disabled=(not u.blockMature)
 

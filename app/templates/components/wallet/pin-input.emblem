@@ -2,7 +2,7 @@
 = if credentials.validCredentials
 
   = if inline
-    = em-form model=this submitButton=false action='enterPIN'
+    = em-form model=this submitButton=false action='enterPIN' as |f|
       .row
         .col-md-12
           = liquid-if pinError class='ll-down-up'
@@ -15,13 +15,13 @@
           p: b = t 'wallet.pin.label'
       .row
         .col-md-9
-          = em-input property='pin' type='password' placeholder=(t 'wallet.pin.ph') cid=inputId
+          = f.input property='pin' type='password' placeholder=(t 'wallet.pin.ph') cid=inputId
         .col-md-3
           = liquid-if isValid use='fade'
             = leaf-button type='primary' block=true icon='fa fa-check' on-click='enterPIN' id='enter-pin'
 
   = else
-    = em-form model=this submitButton=false action='enterPIN'
+    = em-form model=this submitButton=false action='enterPIN' as |f|
       = liquid-if pinError class='ll-down-up'
         = leaf-label type='danger'
           = pinError
@@ -29,7 +29,7 @@
         = leaf-label type=attemptsType class='animated shake'
           = t 'wallet.pin.left' count=credentials.attemptsLeft
       '
-      = em-input property='pin' type='password' label=(t 'wallet.pin.label') placeholder=(t 'wallet.pin.ph') cid=inputId
+      = f.input property='pin' type='password' label=(t 'wallet.pin.label') placeholder=(t 'wallet.pin.ph') cid=inputId
 
     br
     = if isValid

@@ -5,13 +5,16 @@ LinkToExplorer = Ember.Component.extend(
   tagName: 'span'
 
   cm: Ember.inject.service('cm-session')
-  txsvc: Ember.inject.service('cm-tx-infos')
+  coinsvc: Ember.inject.service('cm-coin')
+
+  account: null
 
   hash: null
 
   url: ( ->
-    @get('txsvc').urlToExplorer(@get('hash'))
-  ).property('hash', 'txsvc.explorers', 'txsvc.currentExplorer')
+    if account = @get('account')
+      @get('coinsvc').urlToExplorer(account, @get('hash'))
+  ).property('hash', 'account', 'accoint.coin.currentExplorer')
 
 )
 

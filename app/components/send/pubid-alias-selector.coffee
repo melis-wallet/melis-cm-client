@@ -28,6 +28,8 @@ CmSelector = Ember.Component.extend(Validations, ValidationsHelper,
   selected: null
   newValue: null
 
+  coin: null
+
   valuesChanged: (->
     @set('accountInfo', null)
   ).observes('newValue', 'selected')
@@ -38,7 +40,9 @@ CmSelector = Ember.Component.extend(Validations, ValidationsHelper,
       api = @get('cm.api')
       try
         res = yield api.accountGetPublicInfo(name: id)
-        @set('accountInfo', res)
+        Ember.Logger.debug('found:', res)
+        if !(coin = @get('coin')) || (Ember.get(res, 'coin') == coin)
+          @set('accountInfo', res)
 
       catch err
         if err.ex = 'CmInvalidAccountException'

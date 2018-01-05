@@ -67,6 +67,16 @@ export default {
   "label-picker": {
     "ph": "scegli le etichette di classificazione"
   },
+  "coins": {
+    "unit": {
+      "btc": "Bitcoin",
+      "bch": "Bitcoin Cash",
+      "tbtc": "Testnet Bitcoin",
+      "tbch": "Testnet Bitcoin Cash",
+      "rbtc": "Regtest Bitcoin",
+      "rbch": "Regtest Bitcoin Cash"
+    }
+  },
   "acct": {
     "types": {
       "plain": {
@@ -325,6 +335,11 @@ export default {
       }
     },
     "wizard": {
+      "t-coin": {
+        "title": "Coin",
+        "caption": "Coin",
+        "desc": "Scegli la coin"
+      },
       "t-single": {
         "title": "Conto Personale",
         "caption": "<b>Il conto è personale</b> Potrai compiere qualsiasi operazione sul conto autonomamente."
@@ -366,6 +381,10 @@ export default {
       "t-cosigners": {
         "caption": "Cofirmatari",
         "desc": "Seleziona lo schema e i firmatari"
+      },
+      "coin": {
+        "title": "Coin",
+        "caption": "<b>Su quale coin è basato questo account?</b><br/><br/>Account basati su coin diverse non sono interoperabili."
       },
       "error": "La creazione del conto è fallita",
       "error-explain": "Qualcosa non ha funzionato correttamente. Potrebbe essere un problema momentaneo riprova tra poco e se il problema persiste contatta il supporto.",
@@ -451,7 +470,7 @@ export default {
       },
       "period": "Periodo",
       "treshold": "Soglia ({{unit}})",
-      "lastModified": "Ultima modifica",
+      "lastModified": "Ultima modifica {{when}}",
       "daily": "Giornaliero",
       "weekly": "Settimanale",
       "monthly": "Mensile",
@@ -683,7 +702,8 @@ export default {
       "make-active": "Crea una richiesta di pagamento",
       "clip": "Copia negli appunti",
       "release": "Annulla questa richiesta",
-      "leave": "Ricorda e chiudi"
+      "leave": "Ricorda e chiudi",
+      "addr-list": "Lista Indirizzi"
     },
     "empty": {
       "info": "[ nessuna impostazione ]",
@@ -727,6 +747,7 @@ export default {
     },
     "gen-error": "Si è verificato un errore con il server durante l'operazione. Riprova più tardi.",
     "noresource-error": "Hai già troppe richieste di pagamento inutilizzate, annullane qualcuna, oppure contattaci se hai esigenza di superare questi limiti.",
+    "nocurrent": "Nessun indirizzo corrente",
     "type": {
       "generic": "Indirizzo generico",
       "request": "Richiesta di pagamento"
@@ -753,6 +774,15 @@ export default {
   },
   "paysend": {
     "tx-done": "Transazione completata con successo.",
+    "sources": {
+      "auto": "Selezione gli input automaticamente"
+    },
+    "remainder": {
+      "auto": "Gestisci automaticamente il resto"
+    },
+    "fees": {
+      "auto": "Imposta automaticamente le fees migliori"
+    },
     "funds": {
       "title": "Fondi non confermati",
       "caption": "Hai dei fondi non confermati questi non sono momentaneamente disponibili. Saranno a tua disposizione tra qualche minuto.",
@@ -814,10 +844,32 @@ export default {
       "title": "Invia denaro",
       "caption": "Inserisci l'importo e il destinatario del pagamento"
     },
+    "sum": {
+      "sources": "Inputs",
+      "dsts": "Destinazioni",
+      "remainder": "Resto (inc fees)",
+      "fees": "Fees"
+    },
     "form": {
+      "a": {
+        "confirm": "Conferma Transaczione",
+        "discard": "Cancella Transazione",
+        "recpconf": "Conferma Destinatario",
+        "recpdisc": "Annulla Destinatario",
+        "recpadd": "Aggiungi Destinatario"
+      },
+      "acc": {
+        "sources": "Inputs",
+        "destinations": "Destinazioni",
+        "remainder": "Resto",
+        "options": "Opzioni"
+      },
       "insuff-funds": "Fondi insufficienti.",
       "not-bitcoin": "Non è un indirizzo bitcoin.",
       "entire-balance": "Tutti i fondi",
+      "entire-balance-r": "Tutti i fondi restanti",
+      "entire-source": "Tutti gli input",
+      "entire-source-r": "Tutti gli input restanti",
       "more": "Aggiungi ulteriori informazioni",
       "scan": "Acquisisci un indirizzo",
       "ab": "Scegli un indirizzo dalla rubrica",
@@ -851,7 +903,13 @@ export default {
       },
       "unc": "Unconfirmed",
       "rbf": "RBF",
-      "fees": "Commissioni"
+      "fees": "Commissioni",
+      "feesperbyte": "Commissioni per byte: (satoshi)",
+      "fees-provider": "Ottenute da {{provider}}",
+      "feesrefresh": "Aggiorna",
+      "entire-sources": "Selected inputs",
+      "entire-sources-r": "Remaining inputs",
+      "feesrefresg": "refresh"
     }
   },
   "prefs": {
@@ -909,7 +967,7 @@ export default {
         "caption": "Direct your wallet to this barcode and scan the address it contains. Then make your payment to it."
       },
       "sign": {
-        "title": "Accedi at luo wallet",
+        "title": "Accedi at tuo wallet",
         "caption": "In questo dispositivo ci sono le tue credenziali Melis salvate. Puoi accedere ora ed effettuare rapidamente il pagamento."
       }
     },
@@ -952,8 +1010,7 @@ export default {
       "errors": {
         "media-error": "Si è verificato un errore accedendo alla videocamera. Puoi provare un un browser differente oppure con la nostra applicazione nativa.",
         "no-um": "<b>Questo browser o la piattaforma non supporta i meccanismi che usiamo per accedere alla videocamera.</b> Puoi provare un un browser differente oppure con la nostra applicazione nativa.",
-        "no-perms": "<b>Melis non ha potuto accedere alla videcamera per acquisire un'immagine.</b> Verifica di avere fornito i permessi necessari. Se così fosse potresti avere una videocamera o una piattaforma non compatibile",
-        "media-errors": "There was an error accessing the camera. You could either try a different browser or use our native application."
+        "no-perms": "<b>Melis non ha potuto accedere alla videcamera per acquisire un'immagine.</b> Verifica di avere fornito i permessi necessari. Se così fosse potresti avere una videocamera o una piattaforma non compatibile"
       },
       "accept": "ok",
       "dismiss": "Respinto"
@@ -965,6 +1022,7 @@ export default {
     "account": "Conto attivo",
     "to": "A:",
     "balance": "Bilancio:",
+    "available": "Disponibile:",
     "success": "Operazione completata con successo.",
     "error": {
       "addr": "Impossibile ottenere un indirizzo per il destinatario",
@@ -1069,7 +1127,7 @@ export default {
     "ph": {
       "started": "Il tuo conto è pronto!",
       "welcome": "Questa pagina contiene una lista delle attività del tuo conto. Scopri le altre sezioni nel menù di sinistra.",
-      "address": "Questo è l'indirizzo per ricevere i tuoi primi bitcoin:"
+      "address": "Questo è l'indirizzo per ricevere i tuoi primi coin:"
     },
     "tx": {
       "fees": "commissioni",
@@ -1081,7 +1139,8 @@ export default {
       "amount": "Importo: ",
       "to": "a: ",
       "received-ad": "All'indirizzo:",
-      "hash": "Hash",
+      "orig-currency": "(era {{amount}}{{unit}} - {{when}})",
+      "hash": "TxID",
       "a": {
         "ok": "Ok"
       }
@@ -1120,7 +1179,10 @@ export default {
     }
   },
   "ticker": {
-    "history": "ULTIME 24H"
+    "history": {
+      "d": "ULTIME 24H",
+      "m": "ULTIMI 30GG"
+    }
   },
   "tfa": {
     "recovery": {
@@ -1160,14 +1222,15 @@ export default {
       "incomplete": {
         "title": "Completa la procedura di enroll della autenticazione a due fattori",
         "caption": "Fornisci il codice per completare la procedura di creazione del dispositivo. Il meccanismo di autenticazione sarà attivo quando la procedura è terminata."
-      }
+      },
+      "expire": "Scadrà {{when}}"
     },
     "types": {
       "email": "Email",
       "sms": "SMS",
       "xmpp": "XMPP",
       "telegram": "Telegram",
-      "totp": "App di Autenticazione",
+      "rfc6238": "App di Autenticazione",
       "u2f": "U2F key",
       "regtest": "Regtest"
     },
@@ -1229,7 +1292,7 @@ export default {
         }
       }
     },
-    "totp": {
+    "rfc6238": {
       "title": "Applicazione Authenticator",
       "caption": "Abilita un dispositivo TOTP come Google Auth o Authy",
       "explain": "Scaansiona questo codice QR code con il tuo dispositivo e fornisci il codice qui di seguito:"
@@ -1273,6 +1336,7 @@ export default {
     "you": "Tu",
     "you-s": "te",
     "fees": {
+      "verylow": "Molto Basse",
       "low": "Basse",
       "normal": "Normali",
       "high": "Alte",
@@ -1291,13 +1355,14 @@ export default {
       "info": "Note",
       "labels": "Etichette",
       "amount": "Impoorto",
-      "hash": "Hash",
+      "hash": "TxID",
       "address": "All'indirizzo",
       "received-ad": "Sull'indirizzo",
       "ptx": {
         "sigs": "Firme",
         "cosigners-no": "{{count}} cofirmatari"
-      }
+      },
+      "orig-currency": "(originally {{amount}}{{unit}} - {{when}})"
     },
     "discussion": {
       "has-approved": "ha approvato questo pagamento.",
@@ -1354,6 +1419,11 @@ export default {
   "view": {
     "details": ": Dettagli.",
     "side": {
+      "nav": {
+        "history": "Storia",
+        "addresses": "Indirizzi",
+        "unspents": "Unspents"
+      },
       "wallet": {
         "title": "Dettagli del Wallet",
         "caption": "Qui puoi trovare i dettagli del tuo wallet"
@@ -1389,6 +1459,7 @@ export default {
     },
     "tabs": {
       "preferences": "Preferenze",
+      "coins": "Coins",
       "vitals": "Cofirmatari",
       "history": "Storia",
       "security": "Sicurezza",
@@ -1416,7 +1487,9 @@ export default {
         "retr": "C'è un file di recovery pronto",
         "time": "La durata delle informazioni di recovery è <b>{{days}} giorni</b>.",
         "disabled": "Le informazioni di recovery sono disattivate. <b>E' possibile che la cosa abbia conseguenze sulla capacità di recuperare i fondi nel caso il server diventasse irraggiungibile.</b>",
-        "nofile": "Non c'è un file di recovery pronto, fai refresh per scaricarne uno"
+        "nofile": "Non c'è un file di recovery pronto, fai refresh per scaricarne uno",
+        "info": "Queste sono le informazioni per recuperare il tuo account.",
+        "nomail": "Su questa piattaforma i file di recovery sono inviati tramite mail. E' necessario configurare una applicazione email."
       },
       "unspents": {
         "title": "Transazioni non spese in scadenza",
@@ -1456,9 +1529,11 @@ export default {
       "title": "Prefenze conto",
       "type": "tipo",
       "account": {
-        "num": "Numero di conti:",
+        "num": "Numero del conto:",
         "name": "Nome:",
-        "created": "Creato:"
+        "created": "Creato:",
+        "color": "Color:",
+        "identifier": "Identificatore:"
       },
       "profile": {
         "title": "Profilo pubblico",
@@ -1513,9 +1588,9 @@ export default {
         "license": "Licenza",
         "review": "Rivedi la licenza"
       },
-      "btcunit": {
-        "title": "Unità Bitcoin",
-        "caption": "Scegli l'unità bitcoin preferita"
+      "coinunit": {
+        "title": "Unità Coin",
+        "caption": "Scegli l'unità coin preferita"
       },
       "currency": {
         "title": "Valuta",
@@ -1523,7 +1598,8 @@ export default {
         "pholder": "Valuta globale"
       },
       "exchange": {
-        "caption": "E l'exchange da cui prendere il valore"
+        "title": "Exchange di riferimento",
+        "caption": "L'exchange da cui prendere il valore della coin"
       },
       "locale": {
         "title": "Lingua",
@@ -1595,6 +1671,10 @@ export default {
           "caption": "Se didassoci un dispositivo non sarai più in grado di utilizzarlo per accedere al tuo wallet. Dovrai ripristinare un backup oppure associarlo di nuovo."
         }
       },
+      "delete": {
+        "title": "Scollega dispositivi",
+        "caption": "Puoi scollegare tutti gli altri dispositivi dall'account Melis. Saranno recessarie le parole mnemoniche, oppure un backup per ricollegarli."
+      },
       "pair": {
         "title": "Collega un nuovo dispositivo",
         "caption": "Puoi permettere a diversi dispositivi di accedere al tuo wallet. Collegare un dispositivo è semplice come fare una fotografia.",
@@ -1608,6 +1688,11 @@ export default {
         "title": "Backup delle credenziali",
         "caption": "Utilizza questa procedura guidata per fare il backup delle tue credenziali così potrai accedere al tuo wallet ovunque oltre a recuperare l'accesso al tuo wallet se questo dispositivo smetterà di funzionare.",
         "btn": "Fai il backup ora"
+      },
+      "backupck": {
+        "title": "Verifica backup",
+        "caption": "Verifica se un backup cartaceo o una lista di mnemonic sono funzionanti.",
+        "btn": "Verifica"
       },
       "new": {
         "title": "Nuovo conto",
@@ -1631,6 +1716,10 @@ export default {
         "title": "Cancella le credenziali",
         "caption": "Cancella le credenziali conservate su questo dispositivo. Dovrai utilizzare i tuoi mnemonics per accedere di nuovo al wallet.",
         "btn": "CANCELLA"
+      },
+      "wdelete": {
+        "title": "CANCELLA LE CREDENZIALI",
+        "caption": "L'operazione cancellerà tutte le credenziali dal dispositivo. Sarà necessario utilizzare un altro dispositivo, oppure un backup per accedere ai fondi. <b>Sei davvero sicuro?</b>"
       }
     },
     "signed": {
@@ -1672,6 +1761,12 @@ export default {
       "about": {
         "title": "About",
         "caption": "Preferenze ed impostazioni per l'applicazione Melis"
+      },
+      "backup": {
+        "title": "Backup delle credenziali",
+        "never": "mai",
+        "confirmed": "Eseguito:",
+        "checked": "Verificato:"
       }
     },
     "passphrase": {
@@ -1759,7 +1854,7 @@ export default {
           "title": "Si è verificato un errore importando il wallet",
           "caption": ""
         },
-        "summary": "Il tuo nuovo conto"
+        "summary": "Il tuo wallet"
       }
     },
     "backup": {
@@ -1910,7 +2005,7 @@ export default {
   "info": {
     "backup": {
       "title": "Scheda Backup",
-      "caption": "Questa scheda backup viene utilizzata per ripristinare l'accesso al tuo wallet in caso il tuo dispositivo venga perso o nel caso le credenziali dentro al dispositivo siano cancellate. Questo foglio contiene tutte le informazioni necessarie ad accedere al tuo wallet ed ai tuoi fondi. <b>Se hai scelto di criptare il backup serà necessaria anche la passphrase per sbloccare le informazioni contenute nel backip.</b> Se smarrisci il backup o dimentichi la passphrase perderai l'accesso ai fondi contenuti nel wallet. Non c'è alcun altro modo di recuperarli.",
+      "caption": "Questa scheda backup viene utilizzata per ripristinare l'accesso al tuo wallet in caso il tuo dispositivo venga perso o nel caso le credenziali dentro al dispositivo siano cancellate. Questo foglio contiene tutte le informazioni necessarie ad accedere al tuo wallet ed ai tuoi fondi. <b>Se hai scelto di criptare il backup serà necessaria anche la passphrase per sbloccare le informazioni contenute nel backup.</b> Se smarrisci il backup o dimentichi la passphrase perderai l'accesso ai fondi contenuti nel wallet. Non c'è alcun altro modo di recuperarli.",
       "warn": "mantieni questo foglio segreto",
       "instructions": "Chiunque abbia accesso a questa scheda puo accedere al tuo wallet trasferire i tuoi fondi e impersonarti nei conti a firma multipla.",
       "additional": "Puoi recuperare questo backup mediante la procedura con la fotocamera scandendo il QR code o digitando le parole mnemoniche nel box in fondo",
@@ -1929,5 +2024,35 @@ export default {
     "title": "Impossibile connettersi alla rete Melis",
     "caption": "Non è stato possibile connettersi alla rete melis. potrebbe essere down oppure irraggiungibile.",
     "button": "Recovery mode"
+  },
+  "sign": {
+    "message": {
+      "title": "Firma con indirizzo",
+      "noaddr": "Nessun indirizzo disponibile",
+      "text": "Testo da firmare:",
+      "with": "Con l'indirizzo:",
+      "sign": "Firma",
+      "dismiss": "Chiudi",
+      "findaddr": {
+        "title": "Indirizzo per firma",
+        "caption": "Puoi usare uno dei tuoi indirizzi per firmare un messaggio."
+      }
+    },
+    "check": {
+      "title": "Controllo Firma",
+      "dismiss": "Chiudi",
+      "valid": "La firma è valida.",
+      "invalid": "La firma<b>non</b> è valida.",
+      "text": "Testo firmato:",
+      "address": "Indirizzo",
+      "signature": "Firma",
+      "check": "Verifica firma",
+      "button": "Verifica firma"
+    }
+  },
+  "cm": {
+    "ex": {
+      "spendableLimitReached": "Il limite {{type}} per {{hours}} ore verrebbe superato: {{alreadySpent}} già spesi, {{amountToSpend}} richiesti. Il limite è: {{limit}} (satoshis)"
+    }
   }
 };

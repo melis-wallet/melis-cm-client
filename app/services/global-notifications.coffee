@@ -12,7 +12,7 @@ GlobalNotifications = Ember.Service.extend(
   cordovaPlatform: Ember.inject.service('ember-cordova/platform')
   toasts: Ember.inject.service('leaf-toasts')
   stream: Ember.inject.service('cm-stream')
-  currency: Ember.inject.service('cm-currency')
+  coinsvc: Ember.inject.service('cm-coin')
   device: Ember.inject.service('device-support')
   i18n: Ember.inject.service()
   routing: Ember.inject.service('-routing')
@@ -62,7 +62,7 @@ GlobalNotifications = Ember.Service.extend(
         )
 
   switchAccountOnPush: (acc) ->
-    if n = Ember.get(acc, 'num')
+    if n = Ember.get(acc, 'pubId')
       Ember.Logger.debug "[Notif] Transition to account on push: ", n
       @get("routing").transitionTo('main.account.summary', [n])
 
@@ -168,7 +168,7 @@ GlobalNotifications = Ember.Service.extend(
       when 'tx'
         if (Ember.get(entry, 'notifiable') == 'new') && !Ember.get(entry, 'notified')
           Ember.set(entry, 'notified', true)
-          amount = @get('currency').formatBtc(Math.abs(Ember.get(entry, 'content.cmo.amount')))
+          amount = @get('coinsvc').formatUnit(acct, Math.abs(Ember.get(entry, 'content.cmo.amount')))
           unit =  @get('cm.btcUnit')
 
           body =
@@ -189,7 +189,7 @@ GlobalNotifications = Ember.Service.extend(
           Ember.set(entry, 'notified', true)
 
           source = acct.cosignerName(Ember.get(entry, 'content.cmo.accountPubId'), you: @get('i18n').t('tx.you'))
-          amount = @get('currency').formatBtc(Ember.get(entry, 'content.cmo.amount'))
+          amount = @get('coinsvc').formatUnit(acct, Ember.get(entry, 'content.cmo.amount'))
           unit =  @get('cm.btcUnit')
 
           body = @get('i18n').t('notif.ptx.proposed', source: source, amount: amount, unit: unit)

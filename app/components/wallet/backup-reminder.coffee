@@ -33,7 +33,7 @@ BackupReminder = Ember.Component.extend(
       @set 'showBackupChecker', false
 
     validBackupCheck: ->
-      @set 'creds.backupChecked', moment().unix()
+      @get('cm').updateBackupState(backupChecked: (moment().unix() * 1000))
 
 )
 

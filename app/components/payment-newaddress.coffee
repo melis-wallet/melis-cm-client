@@ -6,7 +6,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
 
   service: Ember.inject.service('cm-address-provider')
   cm: Ember.inject.service('cm-session')
-  currencySvc: Ember.inject.service('cm-currency')
+  coinsvc: Ember.inject.service('cm-coin')
 
   currentAddress: Ember.computed.alias('service.current.validAddress')
   activeAddress: Ember.computed.alias('service.current.activeAddress')
@@ -77,7 +77,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
       @get('makeCurrentActive').perform('New Special address')
 
     changeAmount: (amount) ->
-      amount = @get('currencySvc').parseBtc(amount)
+      amount = @get('coinsvc').parseUnit(@get('cm.currentAccount'), amount)
       addr = @get('currentAddress')
       @get('updateAddress').perform(addr, amount: amount)
 

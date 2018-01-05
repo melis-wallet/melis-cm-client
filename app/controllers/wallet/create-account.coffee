@@ -6,7 +6,7 @@ CreateAccountController = Ember.Controller.extend(
   actions:
     wizardComplete: (account)->
       if account
-        @transitionToRoute('main.account.summary', Ember.get(account, 'num'))
+        @transitionToRoute('main.account.summary', Ember.get(account, 'pubId'))
       else
          @transitionToRoute('index')
 

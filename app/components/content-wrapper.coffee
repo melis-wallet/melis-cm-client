@@ -11,16 +11,10 @@ ContentWrapper = Ember.Component.extend(RecognizerMixin,
 
   recognizers: 'swipe'
 
-
-
-
-
   swipeRight: ->
-    console.error "swipe"
     @set('expanded', true)
 
   swipeLeft: ->
-    console.error "swipe"
 
     @set('expanded', false)
 )

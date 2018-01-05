@@ -4,6 +4,7 @@ var glob = require('glob')
 const fs = require('fs-extra')
 const path = require('path')
 
+const writeOptions = {encoding: 'utf-8'}
 var sourceFolder = "i18n/"
 var emberI18RootFolder = "app/locales/"
 var baseFileName = 'melis'
@@ -53,7 +54,7 @@ function writeJsonFromYaml(yaml, lang) {
   if (!fs.existsSync(langDir))
     fs.mkdirSync(langDir)
   var langFile = langDir + "/" + outfile
-  fs.writeFileSync(langFile, "export default " + JSON.stringify(yaml, null, 2) + ";\n")
+  fs.writeFileSync(langFile, "export default " + JSON.stringify(yaml, null, 2) + ";\n", writeOptions)
   console.log("Created " + langFile)
   //console.log("export default " + JSON.stringify(yaml[locale], null, 2) + "\n")
 }

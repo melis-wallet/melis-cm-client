@@ -17,6 +17,16 @@ ImportWizard = Ember.Component.extend(AsWizard, BackButton,
 
   apiOps: taskGroup().drop()
 
+  importFailed: null
+  importFailedCreds: null
+
+  importMnemonic: null
+  importPassphrase: null
+
+  disableInput: ( ->
+    @get('apiOps.isRunning')
+  ).property('importMnemonic', 'apiOps.isRunning')
+
   closeWallet: task( ->
     return unless @get('cm.currentWallet')
 
@@ -30,17 +40,41 @@ ImportWizard = Ember.Component.extend(AsWizard, BackButton,
   importWallet: task((pin) ->
     mnemonic = @get('importMnemonic')?.toLowerCase()
     passphrase = @get('importPassphrase')
+    @setProperties
+      importFailedCreds: null
+      importFailed: null
 
     yield @get('closeWallet').perform()
 
     try
       wallet = yield @get('cm').importWallet(pin, mnemonic, passphrase)
-      @set('credentials.backupConfirmed', true)
     catch err
       if err.ex == 'CmLoginWrongSignatureException'
         @set('importFailedCreds', err.msg)
       else
         @set('importFailed', err.msg)
+
+  ).group('apiOps')
+
+  validateCredentials: task( (mnemonic, passphrase) ->
+
+    mnemonic = mnemonic?.toLowerCase()
+    @setProperties
+      importFailed: null
+      validationFailed: null
+    try
+      yield @get('cm').validateCredentials(mnemonic, passphrase)
+      @markCompleted(2, 3)
+      @setProperties
+        importMnemonic: mnemonic
+        importPassphrase: passphrase
+    catch err
+      Ember.Logger.error('[import]', err)
+      if err.ex == 'CmLoginWrongSignatureException'
+        @set('validationFailed', err.msg)
+      else
+        @set('importFailed', err.msg)
+      false
 
   ).group('apiOps')
 
@@ -54,10 +88,9 @@ ImportWizard = Ember.Component.extend(AsWizard, BackButton,
       @markCompleted(1, 2)
 
     doneImportMnemo: (mnemonic, passphrase)->
-      @markCompleted(2, 3)
-      @setProperties
-        importMnemonic: mnemonic
-        importPassphrase: passphrase
+      console.error("hello")
+      @get('validateCredentials').perform(mnemonic, passphrase)
+
 
     doneSetPIN: (pin)->
       @markCompleted(3)
@@ -66,8 +99,12 @@ ImportWizard = Ember.Component.extend(AsWizard, BackButton,
     resetImport: ->
       @clearCompleted()
       @setProperties
+        importMnemonic: null
         importPassphrase: null
         step: 2
+        importFailedCreds: null
+        importFailed: null
+        validationFailed: null
 
 )
 

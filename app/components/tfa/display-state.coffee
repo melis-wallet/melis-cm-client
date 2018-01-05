@@ -1,6 +1,9 @@
 `import Ember from 'ember'`
 `import { task, taskGroup } from 'ember-concurrency'`
 
+SUPPORTED_DRIVERS=['email', 'telegram', 'rfc6238', 'xmpp', 'regtest']
+
+
 DisplayState = Ember.Component.extend(
 
 
@@ -13,6 +16,11 @@ DisplayState = Ember.Component.extend(
 
   incompleteDevices: Ember.computed.filterBy('devices', 'verified', false)
   completeDevices: Ember.computed.filterBy('devices', 'verified', true)
+
+  activeDrivers: ( ->
+    @get('drivers')?.filter((d) -> SUPPORTED_DRIVERS.includes(Ember.get(d, 'name')))
+  ).property('drivers')
+
 
   currentError: null
   showEnroll: false
@@ -42,7 +50,6 @@ DisplayState = Ember.Component.extend(
     @set('showEnroll', false)
     yield @get('aa').refreshTfaState()
   )
-
 
   enrollFinish: task( (device, token)->
     @set 'currentError', null

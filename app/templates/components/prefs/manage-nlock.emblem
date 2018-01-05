@@ -23,10 +23,14 @@
 
 
 = if account.needsRecovery
+
   = if recoveryInfo
     = leaf-note type='info'
       h4 = t 'view.nlock.recovery.title'
       p = t 'view.nlock.recovery.caption'
+      = unless (or device.hasDownload device.hasMail)
+        p = leaf-alert type='warning' dark=true dismiss=false
+          = t 'view.nlock.recovery.nomail'
       p: b = t 'view.nlock.recovery.retr'
       table.table.table-striped
         tbody
@@ -35,7 +39,7 @@
               .label
                 = live-moment-from-now recoveryInfo.ts
             td.text-right
-              = misc/download-property data=recoveryInfo filename=(concat account.uniqueId filenameBase) btnClass='btn-sm btn-outline'
+              = misc/download-property data=recoveryInfo filename=(concat account.uniqueId filenameBase) btnClass='btn-sm btn-outline' additionalInfo=(t 'view.nlock.recovery.info')
               '
               = leaf-button icon='fa fa-refresh' on-click='getRecovery' type='sm' outline=true
 
@@ -52,4 +56,3 @@
 
   = if account.hasServer
     = account/nlock-expiring unspents=unspents account=account
-

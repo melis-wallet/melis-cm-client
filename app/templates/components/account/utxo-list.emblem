@@ -1,0 +1,71 @@
+= leaf-panel
+  .panel-body
+
+    = if groupedTxo
+      table.table.table-striped
+        thead
+          tr
+            td
+            td
+            td
+            td
+            td.text-right = unit-id account=account
+            td
+
+        tbody
+          = each groupedTxo as |addr|
+            tr
+              td
+                i.fa class="{{if addr.expanded 'fa-minus-square' 'fa-plus-square'}}" click="'toggleExpanded' addr"
+              td.break-words
+                p: b
+                  span click="'toggleExpanded' addr"
+                    = addr.value.address
+              td
+              td: b = addr.items.length
+              td.text-right: b = format-unit addr.amount account=account
+              td = live-moment-from-now addr.firstcd
+              td
+                = if account.canSignMessage
+                  = leaf-button size='sm' outline='true' icon='fa fa-pencil' on-click='signWithAddr' value=addr.value.address class='xr-bt-sp'
+                  '
+                  = leaf-button size='sm' outline='true' icon='fa fa-key' on-click='exportKey' value=addr.value class='xr-bt-sp'
+            = if addr.value.wif
+              tr: td.break-words colspan='7'
+                .alert.alert-warning
+                  span.label.label-warning: i.fa.fa-key
+                  '
+                  = addr.value.wif
+                  .pull-right
+                    = leaf-button size='sm' outline='true' icon='fa fa-trash' on-click='trashKey' value=addr.value
+                  .clearfix
+                  hr
+                  = misc/qr-code-expandable  content=addr.value.wif class='animated fadeIn'
+            = each addr.items as |txo|
+              tr class="{{if addr.expanded 'shown' 'hidden'}}"
+                td
+                td = tx/link-to-explorer hash=txo.tx class='small break-words' account=account
+                  = txo.tx
+                  |/
+                  = txo.n
+
+                td
+                td
+                td.text-right = format-unit txo.amount account=account
+                td = live-moment-from-now txo.cd
+                td
+    = else
+      = leaf-note
+        | No unspents
+
+
+
+= ember-wormhole to='modal-wormhole'
+  = leaf-modal id=signId as |mod|
+    = leaf-modal-header title=(t 'sign.message.title') modal=mod
+    = leaf-modal-body
+      = if mod.did-open
+        .delay-05s.animated.fadeIn
+          = account/sign-message addressText=activeAddr account=account
+    = leaf-modal-footer modal=mod
+      = leaf-modal-button icon='fa fa-check' type='primary' label=(t 'sign.message.dismiss') modal=mod value='ok' block=true

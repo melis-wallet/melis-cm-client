@@ -1,0 +1,32 @@
+= liquid-if value use='toDown'
+
+  .stat-panel class="{{ if compact 'compact' }}" click='toggleGraph'
+    .stat-cell.bg-danger.valign-middle.no-padding-b
+      img.tk-coin-icon src="{{coin-img-path unit.unit}}"
+      .pull-right
+        = if compact
+          span.text-md
+            = liquid-bind value use='toDown' as |value|
+              span.text-sm.text-slim.text-lowercase
+                = currencySvc.currencySymbol
+                |/
+                = unit.tsym
+              strong = format-money value
+          br
+
+        = else
+          span.text-xlg
+            = liquid-bind value use='toDown' as |value|
+              span.text-lg.text-slim.text-lowercase
+                = currencySvc.currencySymbol
+                |/
+                = unit.tsym
+              strong = format-money value
+
+    = unless compact
+      .stat-row
+        .stat-cell.bg-danger.valign-middle.no-padding-t
+          = liquid-if history class='ll-down-up'
+            .text-xs style='margin-bottom: 5px;'
+              = t (concat 'ticker.history.' unit.activeHist)
+            = misc/spark-line values=history

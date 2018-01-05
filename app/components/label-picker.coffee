@@ -43,13 +43,7 @@ LabelPicker = Ember.Component.extend(
     setNewLabel: (text) ->
       @get('newLabels').pushObject(text)
 
-    gotFocus: (select) ->
-      console.error "gotFocus"
-
-
     lostFocus: (select) ->
-      console.error "lostfocus"
-      return
       selection = @get('selection')
       waitIdle().then( => @sendAction('on-finish', @get('selection')))
 

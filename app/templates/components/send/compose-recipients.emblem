@@ -4,7 +4,7 @@
       .col-xs-2
         = leaf-button icon='fa fa-trash' on-click='cancelPayment'
       .col-xs-4
-        = leaf-button icon='fa fa-user-plus' on-click='submitRecipient' disabled=(not currentRecipient.isValid) block=true
+        = leaf-button icon='fa fa-user-plus' on-click='submitRecipient' disabled=(not canAddRecipient) block=true
 
       .col-xs-6
         = leaf-button type='primary' on-click='submitRecipientComplete' block=true tagName='d'
@@ -15,31 +15,31 @@
           = else
             i.fa.fa-check
 
-
 = liquid-if abOpened class='ll-left-right'
 
   = contact-picker [
     searchable=true
     scope='address'
+    coin=cm.currentAccount.coin
     return-btn='fa fa-arrow-left'
     on-return='closeAb'
     on-recipient-selected='addRecipientFromAb' ]
 
 = else
-  = em-form model=currentRecipient submitButton=false action='submitRecipient'
+  = em-form model=currentRecipient submitButton=false action='submitRecipient' as |f|
     .panel-body
       .row
         .col-xs-8
           = if currentRecipient.isAddress
-            = em-input property='value' label=(t 'paysend.form.recipient.label') placeholder=(t 'paysend.form.recipient.ph')  class='form-group required'
+            = f.input property='value' label=(t 'paysend.form.recipient.label') placeholder=(t 'paysend.form.recipient.ph')  class='form-group required'
           = else if currentRecipient.isAccount
             .form-group.required
               label.control-label = t 'paysend.form.account.label'
-              = send/account-selector exclude=cm.currentAccount selected=currentRecipient.value on-account-change=(action (mut currentRecipient.value))
+              = send/account-selector exclude=cm.currentAccount selected=currentRecipient.value coin=cm.currentAccount.coin on-account-change=(action (mut currentRecipient.value))
           = else if currentRecipient.isCm
             .form-group.required
               label.control-label = t 'paysend.form.pubid.label'
-              = send/pubid-alias-selector selected=currentRecipient.value on-valid-value=(action (mut currentRecipient.value))
+              = send/pubid-alias-selector selected=currentRecipient.value  coin=cm.currentAccount.coin on-valid-value=(action (mut currentRecipient.value))
           = else
             p unknown
 
@@ -62,19 +62,22 @@
           = if currentRecipient.entireBalance
             label.control-label = t 'paysend.form.amount.label'
             p.text-warning style='line-height: 35px;'
-              b = t 'paysend.form.entire-balance'
+              = if hasNormalDests
+                b = t 'paysend.form.entire-balance-r'
+              = else
+                b = t 'paysend.form.entire-balance'
           = else
-            = em-input type='number' property='amount' label=(t 'paysend.form.amount.label')  placeholder=(t 'paysend.form.amount.ph') class='form-group required'
+            = f.input type='number' property='amount' label=(t 'paysend.form.amount.label')  placeholder=(t 'paysend.form.amount.ph') class='form-group required'
         .col-sm-1.col-xs-4.xr-top-sp-f
-          = leaf-button size='sm' icon='fa fa-fire' outline=true on-click='toggleEntireBalance' active=currentRecipient.entireBalance disabled=blockEntireBalance
+          = leaf-button size='sm' icon='fa fa-fire' outline=true on-click='toggleEntireBalance' active=currentRecipient.entireBalance disabled=(not canToggleEntireBalance)
 
         .col-sm-3.col-xs-5 class="{{if currentRecipient.entireBalance 'hidden'}}"
-          = em-select label=(t 'paysend.form.currency.label') content=currencies property='currency'
+          = f.select label=(t 'paysend.form.currency.label') content=currencies property='currency'
         .col-sm-4.col-xs-7 class="{{if currentRecipient.entireBalance 'hidden'}}"
-          = if currentRecipient.currencyIsBtc
-            = em-input property='amountInCurrFmt' label=currencySvc.currencySymbol disabled=true
+          = if currentRecipient.currencyIsCrypto
+            = f.input property='amountInCurrFmt' label=currencySvc.currencySymbol disabled=true
           = else
-            = em-input property='amountInBtcFmt' label=cm.btcUnit disabled=true
+            = f.input property='amountInCryptoUnit' label=(unit-id account=cm.currentAccount) disabled=true
 
 
       /.row
@@ -89,7 +92,7 @@
         .col-xs-12
           = misc/more-info prompt=(t 'paysend.form.more') class='no-padding-t'
             = label-picker selection=currentRecipient.labels label=(t 'paysend.form.labels.label') labelsSet='txLabels'
-            = em-input property='info'  label=(t 'paysend.form.info.label') placeholder=(t 'paysend.form.info.ph')
+            = f.input property='info'  label=(t 'paysend.form.info.label') placeholder=(t 'paysend.form.info.ph')
             .well.no-margin-b
               .row.hidden-sm.hidden-xs
                 .col-xs-6
@@ -99,7 +102,7 @@
                       .col-xs-8
                         label.control-label = t 'paysend.form.rbf'
                       .col-xs-4.text-right
-                        p  = leaf-switcher checked=optRBF size='sm' theme='modern'
+                        p  = leaf-switcher checked=optRBF size='sm' theme='modern' disabled=(not coin.features.rbf)
                   .row
                     .form-group
                       .col-xs-8
@@ -108,15 +111,16 @@
                         p = leaf-switcher checked=allowUnconfirmed size='sm' theme='modern'
 
                 .col-xs-6
-                  label.control-label = t 'paysend.form.fees'
-                  = send/fees-selector feesMult=feesMult onchange=(action (mut feesMult))
+                  = if coin.features.rbf
+                    label.control-label = t 'paysend.form.fees'
+                    = send/fees-selector feesMult=feesMult onchange=(action (mut feesMult))
               .hidden-md.hidden-lg
                 .row
                   .form-group
                     .col-xs-8
                       label.control-label = t 'paysend.form.rbf'
                     .col-xs-4.text-right
-                      p  = leaf-switcher checked=optRBF size='sm' theme='modern'
+                      p  = leaf-switcher checked=optRBF size='sm' theme='modern' disabled=(not coin.features.rbf)
                 .row
                   .form-group
                     .col-xs-8
@@ -124,17 +128,18 @@
                     .col-xs-4.text-right
                       p = leaf-switcher checked=allowUnconfirmed size='sm' theme='modern'
                 .row
-                  .form-group
-                    .col-xs-4
-                      label.control-label = t 'paysend.form.fees'
-                    .col-xs-8.text-right
-                      = send/fees-selector feesMult=feesMult onchange=(action (mut feesMult))
+                  = if coin.features.rbf
+                    .form-group
+                      .col-xs-4
+                        label.control-label = t 'paysend.form.fees'
+                      .col-xs-8.text-right
+                        = send/fees-selector feesMult=feesMult onchange=(action (mut feesMult))
 
     = liquid-if (and (not hasRecipients) currentRecipient.isValid) class='ll-down-up'
       .panel-footer
         .row
           .col-xs-4
-            = leaf-button type='default' on-click='submitRecipient' icon="fa fa-user-plus" block=true disabled=currentRecipient.entireBalance
+            = leaf-button type='default' on-click='submitRecipient' icon="fa fa-user-plus" block=true disabled=(not canAddRecipient)
           /.col-xs-12
           .col-xs-8
             = leaf-button type='primary' on-click='submitRecipientComplete' icon="fa fa-check" block=true disabled=busy

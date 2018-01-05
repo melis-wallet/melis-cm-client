@@ -18,7 +18,6 @@ NoserverRecovery = Ember.Component.extend(
 
   setup: (->
     @set('entries', @getEntries())
-    console.error "netri", @get('entries')
   ).on('init')
 )
 

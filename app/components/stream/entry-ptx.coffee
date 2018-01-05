@@ -6,6 +6,7 @@
 StreamPtx = StreamEntry.extend(InViewportMixin,
 
   ptxsvc: Ember.inject.service('cm-ptxs')
+  i18n: Ember.inject.service()
 
   classNames: ['stream-entry', 'row', 'animated', 'zoomIn', 'quick']
   #classNameBindings: [ 'viewportEntered:zoomIn' ]
@@ -32,7 +33,7 @@ StreamPtx = StreamEntry.extend(InViewportMixin,
     try
       yield @get('ptxsvc').ptxSign(tx)
     catch error
-      @set 'error', Ember.getWithDefault(error, 'msg', error)
+      @set 'error', @get('i18n').t_ex(error)
   ).group('apiOps')
 
   cancelTx: task((tx) ->

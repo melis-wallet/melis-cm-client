@@ -4,7 +4,7 @@ MainAccountSendRoute = Ember.Route.extend(
 
   beforeModel: (transition) ->
     if !@get('cm.currentAccount.isComplete')
-      @transitionTo('main.account.summary', @get('cm.currentAccount.num'))
+      @transitionTo('main.account.summary', @get('cm.currentAccount.pubId'))
 
 )
 

@@ -6,7 +6,6 @@ MainPtxController = Ember.Controller.extend(
 
   actions:
     setActivePtx: (ptx) ->
-      console.log "ptx. ", ptx
       @set 'activePtx', ptx
       @transitionToRoute('main.account.ptx.detail', @get('currentAccount'), ptx)
 

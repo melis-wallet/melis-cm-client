@@ -12,8 +12,7 @@
             |:
             '
             = m.payload.plaintext
-      = if
-        hr
+
 
     = else if (eq view 'compact')
       = liquid-bind lastMessage use='toLeft' as |m|
@@ -57,8 +56,8 @@
     .handle
 
 = if input
-  = em-form model=this submitButton=false action='enterMessage'
+  = em-form model=this submitButton=false action='enterMessage' as |f|
     = if prompt
-      = em-input property='newMessage' type='text' placeholder=prompt cid='message_input'
+      = f.input property='newMessage' type='text' placeholder=prompt cid='message_input'
     = else
-      = em-input property='newMessage' type='text' placeholder=(t 'tx.discussion.enter') cid='message_input'
+      = f.input property='newMessage' type='text' placeholder=(t 'tx.discussion.enter') cid='message_input'

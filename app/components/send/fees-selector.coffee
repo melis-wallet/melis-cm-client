@@ -6,6 +6,7 @@ FeesSelector = Ember.Component.extend(
   greaterThan: 0
 
   allFeesOptions: [
+    {label: 'tx.fees.verylow', value: 0.5}
     {label: 'tx.fees.low', value: 0.75}
     {label: 'tx.fees.normal', value: 1.0}
     {label: 'tx.fees.high', value: 1.5}
@@ -33,7 +34,7 @@ FeesSelector = Ember.Component.extend(
     setFees: (option) ->
       if (v = Ember.get(option, 'value'))
         @set('feesMult', v)
-        @sendAction('onchange', v)
+        @sendAction('onchange', v, @get('allFeesOptions').findBy('value', v))
 
 )
 

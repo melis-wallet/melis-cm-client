@@ -3,7 +3,7 @@
     = if exportedGeneratorQR
       .row
         .col-md-1
-          p.hidden-print = link-to 'main.account.summary' cm.currentAccount.num class='btn btn-outline'
+          p.hidden-print = link-to 'main.account.summary' cm.currentAccount.pubId class='btn btn-outline'
             i.fa.fa-chevron-left
         .col-md-5
         .col-md-6

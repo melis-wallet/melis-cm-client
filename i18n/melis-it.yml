@@ -55,11 +55,20 @@ it:
     alert:
       title: 'Attenzione'
       caption: 'L''operazione che stai effettuando ha delle conseguenze che richeidono una perticlare attenzione.'
+
   actions:
     receive: 'Ricevi'
     send: 'Invia'
   label-picker:
     ph: 'scegli le etichette di classificazione'
+  coins:
+    unit:
+      btc: "Bitcoin"
+      bch: "Bitcoin Cash"
+      tbtc: "Testnet Bitcoin"
+      tbch: "Testnet Bitcoin Cash"
+      rbtc: "Regtest Bitcoin"
+      rbch: "Regtest Bitcoin Cash"
   acct:
     types:
       plain:
@@ -257,6 +266,10 @@ it:
         title: 'URL per i pagamenti pubblici'
         caption: 'Ricevi pagamenti o donazioni da qualsiasi altro utente Melis o chiunque abbia un wallet bitcoin'
     wizard:
+      t-coin:
+        title: 'Coin'
+        caption: 'Coin'
+        desc: 'Scegli la coin'
       t-single:
         title: 'Conto Personale'
         caption: '<b>Il conto è personale</b> Potrai compiere qualsiasi operazione sul conto autonomamente.'
@@ -289,6 +302,9 @@ it:
       t-cosigners:
         caption: 'Cofirmatari'
         desc: 'Seleziona lo schema e i firmatari'
+      coin:
+        title: 'Coin'
+        caption: '<b>Su quale coin è basato questo account?</b><br/><br/>Account basati su coin diverse non sono interoperabili.'
       error: 'La creazione del conto è fallita'
       error-explain: 'Qualcosa non ha funzionato correttamente. Potrebbe essere un problema momentaneo riprova tra poco e se il problema persiste contatta il supporto.'
       locked: 'Il server è bloccato'
@@ -354,7 +370,7 @@ it:
         caption: 'Non puoi superare in alcun modo gli importi indicati nell''hard limit. Puoi modificare il limite impostato ma un cambiamento di un limite mensile ad esempio avrà bisogno di un mese per diventare attivo.'
       period: 'Periodo'
       treshold: 'Soglia ({{unit}})'
-      lastModified: 'Ultima modifica'
+      lastModified: 'Ultima modifica {{when}}'
       daily: 'Giornaliero'
       weekly: 'Settimanale'
       monthly: 'Mensile'
@@ -532,6 +548,7 @@ it:
       clip: 'Copia negli appunti'
       release: 'Annulla questa richiesta'
       leave: 'Ricorda e chiudi'
+      addr-list: 'Lista Indirizzi'
     empty:
       info: '[ nessuna impostazione ]'
       amount: '[ richiedi una somma specifica ]'
@@ -564,6 +581,7 @@ it:
         ph: 'Inserisci un importo da richiedere in questo indirizzo...'
     gen-error: 'Si è verificato un errore con il server durante l''operazione. Riprova più tardi.'
     'noresource-error': "Hai già troppe richieste di pagamento inutilizzate, annullane qualcuna, oppure contattaci se hai esigenza di superare questi limiti."
+    'nocurrent': "Nessun indirizzo corrente"
     type:
       generic: 'Indirizzo generico'
       request: 'Richiesta di pagamento'
@@ -583,6 +601,12 @@ it:
       has-joined: "<b>{{subject}}</b> ha aderito con successo al conto ''<span class='text-warning'>{{account}}</span>' {{time}}"
   paysend:
     tx-done: 'Transazione completata con successo.'
+    sources:
+      auto: 'Selezione gli input automaticamente'
+    remainder:
+      auto: 'Gestisci automaticamente il resto'
+    fees:
+      auto: 'Imposta automaticamente le fees migliori'
     funds:
       title: 'Fondi non confermati'
       caption: 'Hai dei fondi non confermati questi non sono momentaneamente disponibili. Saranno a tua disposizione tra qualche minuto.'
@@ -631,10 +655,29 @@ it:
     head:
       title: 'Invia denaro'
       caption: 'Inserisci l''importo e il destinatario del pagamento'
+    sum:
+      sources: 'Inputs'
+      dsts: 'Destinazioni'
+      remainder: 'Resto (inc fees)'
+      fees: 'Fees'
     form:
+      a:
+        confirm: 'Conferma Transaczione'
+        discard: 'Cancella Transazione'
+        recpconf: 'Conferma Destinatario'
+        recpdisc: 'Annulla Destinatario'
+        recpadd: 'Aggiungi Destinatario'
+      acc:
+        sources: 'Inputs'
+        destinations: 'Destinazioni'
+        remainder: 'Resto'
+        options: 'Opzioni'
       insuff-funds: 'Fondi insufficienti.'
       not-bitcoin: 'Non è un indirizzo bitcoin.'
       entire-balance: 'Tutti i fondi'
+      entire-balance-r: 'Tutti i fondi restanti'
+      entire-source: 'Tutti gli input'
+      entire-source-r: 'Tutti gli input restanti'
       more: 'Aggiungi ulteriori informazioni'
       scan: 'Acquisisci un indirizzo'
       ab: 'Scegli un indirizzo dalla rubrica'
@@ -662,6 +705,9 @@ it:
       unc: 'Unconfirmed'
       rbf: 'RBF'
       fees: 'Commissioni'
+      feesperbyte: 'Commissioni per byte: (satoshi)'
+      'fees-provider': 'Ottenute da {{provider}}'
+      feesrefresh: 'Aggiorna'
 
   prefs:
     alias:
@@ -708,7 +754,7 @@ it:
         title: 'Acquisisci questo codice'
         caption: 'Direct your wallet to this barcode and scan the address it contains. Then make your payment to it.'
       sign:
-        title: 'Accedi at luo wallet'
+        title: 'Accedi at tuo wallet'
         caption: 'In questo dispositivo ci sono le tue credenziali Melis salvate. Puoi accedere ora ed effettuare rapidamente il pagamento.'
     join:
       app: 'ADERISCI'
@@ -749,6 +795,7 @@ it:
     account: 'Conto attivo'
     to: 'A:'
     balance: 'Bilancio:'
+    available: 'Disponibile:'
     success: 'Operazione completata con successo.'
     error:
       addr: 'Impossibile ottenere un indirizzo per il destinatario'
@@ -827,7 +874,7 @@ it:
     ph:
       started: 'Il tuo conto è pronto!'
       welcome: 'Questa pagina contiene una lista delle attività del tuo conto. Scopri le altre sezioni nel menù di sinistra.'
-      address: 'Questo è l''indirizzo per ricevere i tuoi primi bitcoin:'
+      address: 'Questo è l''indirizzo per ricevere i tuoi primi coin:'
     tx:
       fees: 'commissioni'
       bump: 'Alza le commissioni'
@@ -838,7 +885,8 @@ it:
       amount: 'Importo: '
       to: 'a: '
       'received-ad': "All'indirizzo:"
-      hash: 'Hash'
+      'orig-currency': '(era {{amount}}{{unit}} - {{when}})'
+      hash: 'TxID'
       a:
         ok: 'Ok'
     ptx:
@@ -869,7 +917,9 @@ it:
       a:
         cancel: 'Annulla questa richiesta.'
   ticker:
-    history: 'ULTIME 24H'
+    history:
+      d: 'ULTIME 24H'
+      m: 'ULTIMI 30GG'
   tfa:
     recovery:
       action: 'Aiuto, ho perso tutti i miei dispositivi!'
@@ -902,12 +952,13 @@ it:
       incomplete:
         title: 'Completa la procedura di enroll della autenticazione a due fattori'
         caption: 'Fornisci il codice per completare la procedura di creazione del dispositivo. Il meccanismo di autenticazione sarà attivo quando la procedura è terminata.'
+      expire: 'Scadrà {{when}}'
     types:
       email: 'Email'
       sms: 'SMS'
       xmpp: 'XMPP'
       telegram: 'Telegram'
-      totp: 'App di Autenticazione'
+      rfc6238: 'App di Autenticazione'
       u2f: 'U2F key'
       regtest: 'Regtest'
     token:
@@ -953,7 +1004,7 @@ it:
         address:
           label: 'Indirizzo XMPP'
           ph: 'Inserisci un indirizzo XMPP'
-    totp:
+    rfc6238:
       title: 'Applicazione Authenticator'
       caption: 'Abilita un dispositivo TOTP come Google Auth o Authy'
       explain: 'Scaansiona questo codice QR code con il tuo dispositivo e fornisci il codice qui di seguito:'
@@ -986,6 +1037,7 @@ it:
     you: 'Tu'
     'you-s': 'te'
     fees:
+      verylow: 'Molto Basse'
       low: 'Basse'
       normal: 'Normali'
       high: 'Alte'
@@ -1002,7 +1054,7 @@ it:
       info: 'Note'
       labels: 'Etichette'
       amount: 'Impoorto'
-      hash: 'Hash'
+      hash: 'TxID'
       address: "All'indirizzo"
       'received-ad': "Sull'indirizzo"
       ptx:
@@ -1052,6 +1104,10 @@ it:
   view:
     details: ': Dettagli.'
     side:
+      nav:
+        history: 'Storia'
+        addresses: 'Indirizzi'
+        unspents: 'Unspents'
       wallet:
         title: 'Dettagli del Wallet'
         caption: 'Qui puoi trovare i dettagli del tuo wallet'
@@ -1080,6 +1136,7 @@ it:
         fees: "Le commissioni per i pagamenti da questo conto sono approssimatamente <span class='label'>{{fees}}x</span> rispetto ad un conto ad unica firma"
     tabs:
       preferences: 'Preferenze'
+      coins: 'Coins'
       vitals: 'Cofirmatari'
       history: 'Storia'
       security: 'Sicurezza'
@@ -1105,6 +1162,8 @@ it:
         time: 'La durata delle informazioni di recovery è <b>{{days}} giorni</b>.'
         disabled: "Le informazioni di recovery sono disattivate. <b>E' possibile che la cosa abbia conseguenze sulla capacità di recuperare i fondi nel caso il server diventasse irraggiungibile.</b>"
         nofile: "Non c'è un file di recovery pronto, fai refresh per scaricarne uno"
+        info: 'Queste sono le informazioni per recuperare il tuo account.'
+        nomail: "Su questa piattaforma i file di recovery sono inviati tramite mail. E' necessario configurare una applicazione email."
       unspents:
         title: 'Transazioni non spese in scadenza'
         caption: "Le transazioni vanno rinnovate prima della scadenza, in maniera da mantenere la sicurezza garantitta dalla firma del server"
@@ -1136,9 +1195,11 @@ it:
       title: 'Prefenze conto'
       type: 'tipo'
       account:
-        num: 'Numero di conti:'
+        num: 'Numero del conto:'
         name: 'Nome:'
         created: 'Creato:'
+        color: 'Color:'
+        identifier: 'Identificatore:'
       profile:
         title: 'Profilo pubblico'
         caption: 'Queste informazioni sono pubbliche. Sono visibili nella pagina del tuo profilo e vengono mostrate agli utenti Melis quando effettuano una ricerca.'
@@ -1181,15 +1242,16 @@ it:
         network: 'Rete'
         license: 'Licenza'
         review: 'Rivedi la licenza'
-      btcunit:
-        title: 'Unità Bitcoin'
-        caption: 'Scegli l''unità bitcoin preferita'
+      coinunit:
+        title: 'Unità Coin'
+        caption: 'Scegli l''unità coin preferita'
       currency:
         title: 'Valuta'
         caption: 'Scegli la tua valuta preferita'
         pholder: 'Valuta globale'
       exchange:
-        caption: "E l'exchange da cui prendere il valore"
+        title: 'Exchange di riferimento'
+        caption: "L'exchange da cui prendere il valore della coin"
       locale:
         title: "Lingua"
         caption: "Seleziona la lingua preferita"
@@ -1245,6 +1307,9 @@ it:
         wdelete:
           title: 'Disassocia un dispositivo attenzione'
           caption: 'Se didassoci un dispositivo non sarai più in grado di utilizzarlo per accedere al tuo wallet. Dovrai ripristinare un backup oppure associarlo di nuovo.'
+      delete:
+        title: 'Scollega dispositivi'
+        caption: "Puoi scollegare tutti gli altri dispositivi dall'account Melis. Saranno recessarie le parole mnemoniche, oppure un backup per ricollegarli."
       pair:
         title: 'Collega un nuovo dispositivo'
         caption: 'Puoi permettere a diversi dispositivi di accedere al tuo wallet. Collegare un dispositivo è semplice come fare una fotografia.'
@@ -1256,6 +1321,10 @@ it:
         title: 'Backup delle credenziali'
         caption: 'Utilizza questa procedura guidata per fare il backup delle tue credenziali così potrai accedere al tuo wallet ovunque oltre a recuperare l''accesso al tuo wallet se questo dispositivo smetterà di funzionare.'
         btn: 'Fai il backup ora'
+      backupck:
+        'title': 'Verifica backup'
+        'caption': 'Verifica se un backup cartaceo o una lista di mnemonic sono funzionanti.'
+        'btn': 'Verifica'
       new:
         title: 'Nuovo conto'
         caption: 'Crea un nuovo conto. Puoi scegliere diversi tipi di conto singolo utente o multiutente con o senza la firma del server.'
@@ -1274,6 +1343,9 @@ it:
         title: 'Cancella le credenziali'
         caption: 'Cancella le credenziali conservate su questo dispositivo. Dovrai utilizzare i tuoi mnemonics per accedere di nuovo al wallet.'
         btn: 'CANCELLA'
+      wdelete:
+        title: 'CANCELLA LE CREDENZIALI'
+        caption: "L'operazione cancellerà tutte le credenziali dal dispositivo. Sarà necessario utilizzare un altro dispositivo, oppure un backup per accedere ai fondi. <b>Sei davvero sicuro?</b>"
     signed:
       noacct:
         title: 'Non hai ancora conti'
@@ -1305,6 +1377,11 @@ it:
       about:
         title: 'About'
         caption: 'Preferenze ed impostazioni per l''applicazione Melis'
+      backup:
+        'title': 'Backup delle credenziali'
+        'never': 'mai'
+        'confirmed': 'Eseguito:'
+        'checked': 'Verificato:'
     passphrase:
       pass:
         label: 'Inserisci una passphrase'
@@ -1369,7 +1446,7 @@ it:
         failed:
           title: 'Si è verificato un errore importando il wallet'
           caption: ''
-        summary: 'Il tuo nuovo conto'
+        summary: 'Il tuo wallet'
     backup:
       ok: 'Il backup dei mnemonics è stato completato'
       missing: 'Il backup dei mnemonics non è stato completato!'
@@ -1480,7 +1557,7 @@ it:
   info:
     backup:
       title: 'Scheda Backup'
-      caption: 'Questa scheda backup viene utilizzata per ripristinare l''accesso al tuo wallet in caso il tuo dispositivo venga perso o nel caso le credenziali dentro al dispositivo siano cancellate. Questo foglio contiene tutte le informazioni necessarie ad accedere al tuo wallet ed ai tuoi fondi. <b>Se hai scelto di criptare il backup serà necessaria anche la passphrase per sbloccare le informazioni contenute nel backip.</b> Se smarrisci il backup o dimentichi la passphrase perderai l''accesso ai fondi contenuti nel wallet. Non c''è alcun altro modo di recuperarli.'
+      caption: 'Questa scheda backup viene utilizzata per ripristinare l''accesso al tuo wallet in caso il tuo dispositivo venga perso o nel caso le credenziali dentro al dispositivo siano cancellate. Questo foglio contiene tutte le informazioni necessarie ad accedere al tuo wallet ed ai tuoi fondi. <b>Se hai scelto di criptare il backup serà necessaria anche la passphrase per sbloccare le informazioni contenute nel backup.</b> Se smarrisci il backup o dimentichi la passphrase perderai l''accesso ai fondi contenuti nel wallet. Non c''è alcun altro modo di recuperarli.'
       warn: 'mantieni questo foglio segreto'
       instructions: 'Chiunque abbia accesso a questa scheda puo accedere al tuo wallet trasferire i tuoi fondi e impersonarti nei conti a firma multipla.'
       additional: 'Puoi recuperare questo backup mediante la procedura con la fotocamera scandendo il QR code o digitando le parole mnemoniche nel box in fondo'
@@ -1498,3 +1575,30 @@ it:
     title: 'Impossibile connettersi alla rete Melis'
     caption: 'Non è stato possibile connettersi alla rete melis. potrebbe essere down oppure irraggiungibile.'
     button: 'Recovery mode'
+
+  sign:
+    message:
+      title: 'Firma con indirizzo'
+      noaddr: 'Nessun indirizzo disponibile'
+      text: 'Testo da firmare:'
+      with: "Con l'indirizzo:"
+      sign: 'Firma'
+      dismiss: 'Chiudi'
+      findaddr:
+        title: 'Indirizzo per firma'
+        caption: 'Puoi usare uno dei tuoi indirizzi per firmare un messaggio.'
+    check:
+      title: 'Controllo Firma'
+      dismiss: 'Chiudi'
+      valid: 'La firma è valida.'
+      invalid: 'La firma<b>non</b> è valida.'
+      text: 'Testo firmato:'
+      address: 'Indirizzo'
+      signature: 'Firma'
+      check: 'Verifica firma'
+      button: 'Verifica firma'
+
+
+  cm:
+    ex:
+      spendableLimitReached: "Il limite {{type}} per {{hours}} ore verrebbe superato: {{alreadySpent}} già spesi, {{amountToSpend}} richiesti. Il limite è: {{limit}} (satoshis)"

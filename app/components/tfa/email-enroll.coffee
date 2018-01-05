@@ -41,7 +41,7 @@ EmailEnroll = Ember.Component.extend(Validations, ValidationsHelper,
       try
         res = yield @get('aa').tfaAuth(op, "Add Email TFA")
         @set('btnstate', 'resolved')
-        @sendAction('on-new-enroll')
+        @sendAction('on-new-complete-enroll')
       catch error
         if error.ex == 'CmInvalidMailException'
           @set  'enrollError', @get('i18n').t('tfa.email.invalid')

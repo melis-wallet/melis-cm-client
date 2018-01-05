@@ -16,7 +16,7 @@ ChangeLimits = Ember.Component.extend(
 
   cm: Ember.inject.service('cm-session')
   aa: Ember.inject.service('aa-provider')
-  currencySvc: Ember.inject.service('cm-currency')
+  coinsvc: Ember.inject.service('cm-coin')
 
   error: null
 
@@ -27,6 +27,8 @@ ChangeLimits = Ember.Component.extend(
   allHardLimits: Ember.computed.filterBy('spendableLimits', 'isHard', true)
 
   allLimits: TIMELIMITS
+
+  account: null
 
   parseLimits: (list) ->
     l = { daily: {}, weekly: {}, monthly: {} }
@@ -58,7 +60,7 @@ ChangeLimits = Ember.Component.extend(
 
   accountChanged: ( ->
     @get('refreshLimits').perform()
-  ).observes('cm.currentAccount').on('init')
+  ).observes('account').on('init')
 
 
   updateLimit: (limit) ->
@@ -90,7 +92,7 @@ ChangeLimits = Ember.Component.extend(
     api = @get('cm.api')
     @set 'limits', @get('baseLimits')
 
-    if account = @get('cm.currentAccount.cmo')
+    if account = @get('account.cmo')
       try
         data = yield api.accountGetLimits(account)
         console.log "--------------- limits"
@@ -110,9 +112,9 @@ ChangeLimits = Ember.Component.extend(
     if Ember.isBlank(value)
       value = C.LIMIT_NONE
     else
-      value = @get('currencySvc').parseBtc(value)
+      value = @get('coinsvc').parseUnit(@get('account'), value)
 
-    account = @get('cm.currentAccount.cmo')
+    account = @get('account.cmo')
 
     op = (tfa) ->
       value = -1 if Ember.isBlank(value)
@@ -120,8 +122,8 @@ ChangeLimits = Ember.Component.extend(
 
     try
       res = yield @get('aa').tfaOrLocalPin(op)
-      if l = Ember.get(res, 'newLimit')
-        if l.dateExecutable then @updateChange(l) else @updateLimit(l)
+      if l = Ember.get(res, 'limitChangeRequest')
+        if (l.dateExecutable && (l.dateExecutable > (l.dateRequested + 60000))) then @updateChange(l) else @updateLimit(l)
     catch error
       @set 'error', error
       Ember.Logger.error 'Error changing limit: ', error
