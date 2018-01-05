@@ -1,7 +1,6 @@
 {
   "name": "melis-cm-client",
   "dependencies": {
-    "ember": "2.12.1",
     "animate.css": "^3.5.2",
     "bootstrap-sass-official": "~3.3.6",
     "font-awesome": "^4.7.0",
@@ -16,8 +15,8 @@
     "smooth-scroll": "cferdinandi/smooth-scroll#^9.1.1",
     "clipboard": "^1.6.1",
     "notify.js": "^2.0.3",
-    "hammer.js": "2.0.6",
+    "hammer.js": "2.0.8",
     "hammer-time": "1.1.0",
-    "taggle": "^1.11.2"
+    "taggle": "^1.12.0"
   }
 }
