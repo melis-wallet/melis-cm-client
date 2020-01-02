@@ -1,17 +1,17 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-EnrollController = Ember.Controller.extend(
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
+EnrollController = Controller.extend(
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
 
 
-  connected: Ember.computed.alias('cm.connected')
-  disconnected: Ember.computed.alias('cm.disconnected')
-  connectFailed: Ember.computed.alias('cm.connectFailed')
-
+  connected: alias('cm.connected')
+  disconnected: alias('cm.disconnected')
+  connectFailed: alias('cm.connectFailed')
 
   enrollRunning: false
-
 
   actions:
     startEnroll: ->
@@ -21,7 +21,6 @@ EnrollController = Ember.Controller.extend(
     doneEnroll: ->
       @set 'enrollRunning', false
       false
-
-
 )
-`export default EnrollController`
+
+export default EnrollController

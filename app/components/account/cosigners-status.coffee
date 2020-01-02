@@ -1,12 +1,14 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-CosignersStatus = Ember.Component.extend(
+CosignersStatus = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  acctInfo: Ember.inject.service('cm-account-info')
+  cm: service('cm-session')
+  acctInfo: service('cm-account-info')
 
-  account: Ember.computed.alias('cm.currentAccount')
-  cosigners: Ember.computed.alias('cm.currentAccount.info.cosigners')
+  account: alias('cm.currentAccount')
+  cosigners: alias('cm.currentAccount.info.cosigners')
 )
-`export default CosignersStatus`
+
+export default CosignersStatus

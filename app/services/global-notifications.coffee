@@ -1,28 +1,33 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
+import Service, { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { get, set } from '@ember/object'
+
+import CMCore from 'npm:melis-api-js'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 N = window.Notify.default
 NOTIF_ICON = 'images/melis-icon.png'
 
 C = CMCore.C
 
-GlobalNotifications = Ember.Service.extend(
+GlobalNotifications = Service.extend(
 
-  cm: Ember.inject.service('cm-session')
-  cordovaPlatform: Ember.inject.service('ember-cordova/platform')
-  toasts: Ember.inject.service('leaf-toasts')
-  stream: Ember.inject.service('cm-stream')
-  coinsvc: Ember.inject.service('cm-coin')
-  device: Ember.inject.service('device-support')
-  i18n: Ember.inject.service()
-  routing: Ember.inject.service('-routing')
+  cm: service('cm-session')
+  cordovaPlatform: service('ember-cordova/platform')
+  toasts: service('leaf-toasts')
+  stream: service('cm-stream')
+  coinsvc: service('cm-coin')
+  device: service('device-support')
+  i18n: service()
+  routing: service('-routing')
 
-  isMobile: Ember.computed.alias('device.isMobile')
-  hasPush: Ember.computed.alias('isMobile')
+  isMobile: alias('device.isMobile')
+  hasPush: alias('isMobile')
 
-  nativeEnabled: Ember.computed.alias('cm.walletstate.nnenable')
-  toastEnabled: Ember.computed.alias('cm.walletstate.ianenable')
-  pushEnabled: Ember.computed.alias('cm.walletstate.pushenabled')
+  nativeEnabled: alias('cm.walletstate.nnenable')
+  toastEnabled: alias('cm.walletstate.ianenable')
+  pushEnabled: alias('cm.walletstate.pushenabled')
 
 
 
@@ -49,21 +54,21 @@ GlobalNotifications = Ember.Service.extend(
 
   handlePush: (data) ->
     #console.error "PUSH: ", data
-    if notif = Ember.get(data, 'cmNotif')
+    if notif = get(data, 'cmNotif')
       try
         n = JSON.parse(notif)
       catch error
-        Ember.Logger.error '* unable to deserialize push notification:', error
+        Logger.error '* unable to deserialize push notification:', error
 
-      if pubid = Ember.get(n, 'params.accountPubId')
+      if pubid = get(n, 'params.accountPubId')
         @get('cm.accounts').some( (acc) =>
           if acc.get('cmo.pubId') == pubid || acc.get('cmo.masterPubId') == pubid
             @switchAccountOnPush(acc)
         )
 
   switchAccountOnPush: (acc) ->
-    if n = Ember.get(acc, 'pubId')
-      Ember.Logger.debug "[Notif] Transition to account on push: ", n
+    if n = get(acc, 'pubId')
+      Logger.debug "[Notif] Transition to account on push: ", n
       @get("routing").transitionTo('main.account.summary', [n])
 
 
@@ -75,12 +80,12 @@ GlobalNotifications = Ember.Service.extend(
       if data.wasTapped
         @handlePush(data)
       else
-        Ember.Logger.debug('[NOTIF]', data)
+        Logger.debug('[NOTIF]', data)
 
     FCMPlugin.onNotification(onMessage, (->
-      Ember.Logger.debug('[NOTIF] Registered CB')
+      Logger.debug('[NOTIF] Registered CB')
     ),( ->
-      Ember.Logger.error('[NOTIF] Failed registering CB')
+      Logger.error('[NOTIF] Failed registering CB')
     ))
 
 
@@ -92,10 +97,10 @@ GlobalNotifications = Ember.Service.extend(
     if @get('pushEnabled')
       FCMPlugin.getToken( ((token) =>
         if token
-          Ember.Logger.debug('[NOTIF] Got FCM token: ', token)
+          Logger.debug('[NOTIF] Got FCM token: ', token)
           @get('cm.api').addPushTokenGoogle(token)
 
-        ), ( -> Ember.Logger.error('[NOTIF] Error getting FCM token.'))
+        ), ( -> Logger.error('[NOTIF] Error getting FCM token.'))
       )
     else
       @get('cm.api').addPushTokenGoogle(null)
@@ -108,7 +113,6 @@ GlobalNotifications = Ember.Service.extend(
 
     if @get('nativeEnabled')
       @checkNativePermission()
-
   ).observes('nativeEnabled').on('init')
 
 
@@ -158,87 +162,107 @@ GlobalNotifications = Ember.Service.extend(
 
   streamEntry: (entry) ->
 
-    acct = Ember.get(entry, 'account')
-    return if (acct && Ember.get(acct, 'invisible'))
+    acct = get(entry, 'account')
+    return if (acct && get(acct, 'invisible'))
 
     # ignore wallet events for now
-    return unless acct
+    if acct
 
-    switch Ember.get(entry, 'subclass')
-      when 'tx'
-        if (Ember.get(entry, 'notifiable') == 'new') && !Ember.get(entry, 'notified')
-          Ember.set(entry, 'notified', true)
-          amount = @get('coinsvc').formatUnit(acct, Math.abs(Ember.get(entry, 'content.cmo.amount')))
-          unit =  @get('cm.btcUnit')
+      switch get(entry, 'subclass')
+        when 'tx'
+          if (get(entry, 'notifiable') == 'new') && !get(entry, 'notified')
+            set(entry, 'notified', true)
+            amount = @get('coinsvc').formatUnit(acct, Math.abs(get(entry, 'content.cmo.amount')))
+            unit =  acct.get('subunit.symbol')
 
-          body =
-            if Ember.get(entry, 'content.negative')
-              @get('i18n').t('notif.tx.sent', amount: amount, unit: unit)
-            else
-              @get('i18n').t('notif.tx.received', amount: amount, unit: unit)
+            body =
+              if get(entry, 'content.negative')
+                @get('i18n').t('notif.tx.sent', amount: amount, unit: unit)
+              else
+                @get('i18n').t('notif.tx.received', amount: amount, unit: unit)
+
+            @showNotification(
+              get(entry, 'account.name')
+              severity: 'success'
+              body: body
+            )
+
+        when 'ptx'
+          return if get(entry, 'content.isLocal')
+          if get(entry, 'content.isVerified') && !get(entry, 'notified')
+            set(entry, 'notified', true)
+
+            source = acct.cosignerName(get(entry, 'content.cmo.accountPubId'), you: @get('i18n').t('tx.you'))
+            amount = @get('coinsvc').formatUnit(acct, get(entry, 'content.cmo.amount'))
+            unit = acct.get('subunit.symbol')
+
+            body = @get('i18n').t('notif.ptx.proposed', source: source, amount: amount, unit: unit)
+
+            severity =
+              if get(entry, 'content.accountIsOwner')
+                'success'
+              else
+                'warning'
+
+            @showNotification(
+              get(entry, 'account.name')
+              severity: 'success'
+              body: body
+            )
+
+        when 'txm'
+          msg = get(entry, 'content')
+          from = get(msg, 'fromAlias') || acct.cosignerName(get(msg, 'fromPubId'))
+
+          switch get(msg, 'type')
+            when C.CHAT_MSG_TYPE_SIG
+              body =  @get('i18n').t('notif.ptx.has-approved', source: from)
+            when C.CHAT_MSG_TYPE_MSG
+              body =  @get('i18n').t('notif.ptx.has-contributed', source: from)
 
           @showNotification(
-            Ember.get(entry, 'account.name')
+            get(entry, 'account.name')
             severity: 'success'
             body: body
           )
 
-      when 'ptx'
-        return if Ember.get(entry, 'content.isLocal')
-        if Ember.get(entry, 'content.isVerified') && !Ember.get(entry, 'notified')
-          Ember.set(entry, 'notified', true)
+        when 'evt'
 
-          source = acct.cosignerName(Ember.get(entry, 'content.cmo.accountPubId'), you: @get('i18n').t('tx.you'))
-          amount = @get('coinsvc').formatUnit(acct, Ember.get(entry, 'content.cmo.amount'))
-          unit =  @get('cm.btcUnit')
-
-          body = @get('i18n').t('notif.ptx.proposed', source: source, amount: amount, unit: unit)
-
-          severity =
-            if Ember.get(entry, 'content.accountIsOwner')
-              'success'
-            else
-              'warning'
+          event = get(entry, 'content')
+          acctN = get(entry, 'account.name')
+          switch get(event, 'type')
+            when 'joined'
+              code = get(event, 'cmo.activationCode')
+              body = @get('i18n').t('notif.evt.has-joined', subject: code.name, account: acctN)
+            #when C.EVENT_JOIN_REQUEST
+              # not implemented
 
           @showNotification(
-            Ember.get(entry, 'account.name')
+            get(entry, 'account.name')
             severity: 'success'
             body: body
           )
+    else
+      switch get(entry, 'subclass')
 
-      when 'txm'
-        msg = Ember.get(entry, 'content')
-        from = Ember.get(msg, 'fromAlias') || acct.cosignerName(Ember.get(msg, 'fromPubId'))
+        # events
+        when 'evt'
+          event = get(entry, 'content')
+          switch get(event, 'type')
 
-        switch Ember.get(msg, 'type')
-          when C.CHAT_MSG_TYPE_SIG
-            body =  @get('i18n').t('notif.ptx.has-approved', source: from)
-          when C.CHAT_MSG_TYPE_MSG
-            body =  @get('i18n').t('notif.ptx.has-contributed', source: from)
+            when 'publicMsg'
+              text = get(event, 'cmo.text')
+              body = @get('i18n').t('notif.evt.wall', text: text)
 
-        @showNotification(
-          Ember.get(entry, 'account.name')
-          severity: 'success'
-          body: body
-        )
-
-      when 'evt'
-
-        event = Ember.get(entry, 'content')
-        acctN = Ember.get(entry, 'account.name')
-        switch Ember.get(event, 'type')
-          when 'joined'
-            code = Ember.get(event, 'cmo.activationCode')
-            body = @get('i18n').t('notif.evt.has-joined', subject: code, account: acctN)
-          #when C.EVENT_JOIN_REQUEST
-            # not implemented
+              @showNotification(
+                @get('i18n').t('notif.evt.wall-title').toString()
+                severity: 'warning'
+                body: body
+              )
 
 
-        @showNotification(
-          Ember.get(entry, 'account.name')
-          severity: 'success'
-          body: body
-        )
+
+
 
   toastNotification: (title, data) ->
     return unless @get('toastEnabled')
@@ -270,8 +294,6 @@ GlobalNotifications = Ember.Service.extend(
   teardown: (->
     @get('stream').off('notifiable-entry', this, @streamEntry)
   ).on('willDestroy')
-
-
 )
 
-`export default GlobalNotifications`
+export default GlobalNotifications

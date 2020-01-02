@@ -1,8 +1,6 @@
-`import Ember from 'ember'`
+import Mixin from '@ember/object/mixin'
 
-
-LinkAction = Ember.Mixin.create(
-
+LinkAction = Mixin.create(
 
   init: ->
     @._super(arguments...)
@@ -15,19 +13,15 @@ LinkAction = Ember.Mixin.create(
     if @get('before-action')
       @_detachActionEvent()
 
-
   _sendBeforeAction: ->
     @sendAction('before-action')
 
-
   _attachActionEvent: ->
     @on(@get('eventName'), this, @_sendBeforeAction)
-
-
 
   _detachActionEvent: ->
     @off(@get('eventName'), this, @_sendBeforeAction)
 
 )
 
-`export default LinkAction`
+export default LinkAction

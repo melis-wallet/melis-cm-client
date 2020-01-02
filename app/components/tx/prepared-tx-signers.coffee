@@ -1,10 +1,13 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { alias } from '@ember/object/computed'
+import { A } from '@ember/array'
+import { get, set } from '@ember/object'
+import { copy } from 'ember-copy'
 
-PreparedTxSigners = Ember.Component.extend(
+PreparedTxSigners = Component.extend(
 
-
-  cosigners: Ember.computed.alias('account.info.cosigners')
-  signers: Ember.A()
+  cosigners: alias('account.info.cosigners')
+  signers: A()
 
   signatures: null
 
@@ -15,18 +18,18 @@ PreparedTxSigners = Ember.Component.extend(
     if signers
       signers.forEach( (s) =>
 
-        found = signatures.findBy('pubId', Ember.get(s, 'accountPubId'))
+        found = signatures.findBy('pubId', get(s, 'accountPubId'))
         if found
-          Ember.set(found, 'signed', Ember.get(s, 'sigDate'))
+          set(found, 'signed', get(s, 'sigDate'))
       )
   ).observes('signers.[]')
 
 
   setup: ( ->
     if (cosigners = @get('cosigners'))
-      @set 'signatures', @get('cosigners').copy(true)
+      @set 'signatures', copy(@get('cosigners'), true)
       @signersUpdate()
   ).observes('account', 'signers', 'cosigners').on('init')
 )
 
-`export default PreparedTxSigners`
+export default PreparedTxSigners

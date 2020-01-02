@@ -1,15 +1,24 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import groupBy from '../../utils/group-by'`
-`import TreeNode from '../../utils/treenode'`
-`import CMCore from 'npm:melis-api-js'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, filterBy, mapBy, sum } from '@ember/object/computed'
+import { task, taskGroup } from 'ember-concurrency'
+import { A } from '@ember/array'
+import { get, set, setProperties } from '@ember/object'
+import { isPresent, isEmpty } from '@ember/utils'
+
+import groupBy from '../../utils/group-by'
+import TreeNode from '../../utils/treenode'
+import CMCore from 'npm:melis-api-js'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 C = CMCore.C
 
-AdvancedSrcs = Ember.Component.extend(
+AdvancedSrcs = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  txsvc: Ember.inject.service('cm-tx-infos')
+  cm: service('cm-session')
+  txsvc: service('cm-tx-infos')
 
 
   account: null
@@ -20,26 +29,26 @@ AdvancedSrcs = Ember.Component.extend(
   ops: taskGroup().drop()
 
   groupedTxo: ( ->
-    groups = Ember.A()
+    groups = A()
     items = @get('txo')
-    return if Ember.isEmpty(items)
+    return if isEmpty(items)
 
     items.forEach((item) ->
-      value = Ember.get(item, 'aa')
-      group = groups.find((item) -> Ember.get(item, 'value.address') == Ember.get(value, 'address'))
+      value = get(item, 'aa')
+      group = groups.find((item) -> get(item, 'value.address') == get(value, 'address'))
 
-      if Ember.isPresent(group)
-        amount = Ember.get(group, 'amount') + Ember.get(item, 'amount')
-        firstcd = Ember.get(group, 'firstcd')
-        itemcd = Ember.get(item, 'cd')
+      if isPresent(group)
+        amount = get(group, 'amount') + get(item, 'amount')
+        firstcd = get(group, 'firstcd')
+        itemcd = get(item, 'cd')
         firstcd = itemcd if (itemcd < firstcd)
-        Ember.setProperties(group,
+        setProperties(group,
           amount: amount
           firstcd: firstcd
         )
-        Ember.get(group, 'items').push(item)
+        get(group, 'items').push(item)
       else
-        group = { amount: Ember.get(item, 'amount'), firstcd: Ember.get(item, 'cd'), value: value, items: [item] }
+        group = { amount: get(item, 'amount'), firstcd: get(item, 'cd'), value: value, items: [item] }
         groups.push(group)
 
     )
@@ -47,9 +56,9 @@ AdvancedSrcs = Ember.Component.extend(
   ).property('txo.@each.aa')
 
 
-  selectedTxo: Ember.computed.filterBy('txo', 'selected', true)
-  selectedAmounts: Ember.computed.mapBy('selectedTxo', 'amount')
-  selectedTotal: Ember.computed.sum('selectedAmounts')
+  selectedTxo: filterBy('txo', 'selected', true)
+  selectedAmounts: mapBy('selectedTxo', 'amount')
+  selectedTotal: sum('selectedAmounts')
 
 
   selectionChanged: (->
@@ -62,11 +71,11 @@ AdvancedSrcs = Ember.Component.extend(
 
     try
       res = yield @get('cm.api').getUnspents(account.get('cmo'), sortField: 'creationDate', sortDir: C.DIR_DESCENDING)
-      if list = Ember.get(res, 'list')
+      if list = get(res, 'list')
         @set('txo', list)
-        @set('hasNext', Ember.get(res, 'hasNext'))
+        @set('hasNext', get(res, 'hasNext'))
     catch error
-      Ember.Logger.error(error)
+      Logger.error(error)
   )
 
 
@@ -79,16 +88,16 @@ AdvancedSrcs = Ember.Component.extend(
 
   actions:
     toggleExpanded: (addr) ->
-      Ember.set(addr, 'expanded', !Ember.get(addr, 'expanded'))
+      set(addr, 'expanded', !get(addr, 'expanded'))
 
     selectTxo: (selected, txo, addr) ->
-      Ember.set(txo, 'selected', !selected)
-      Ember.set(addr, 'selected', Ember.get(addr, 'items')?.isEvery('selected', true))
+      set(txo, 'selected', !selected)
+      set(addr, 'selected', get(addr, 'items')?.isEvery('selected', true))
 
     selectAddr: (addr) ->
-      s = Ember.get(addr, 'selected')
-      Ember.set(addr, 'selected', !s)
-      Ember.get(addr, 'items')?.forEach((i) -> Ember.set(i, 'selected', !s))
+      s = get(addr, 'selected')
+      set(addr, 'selected', !s)
+      get(addr, 'items')?.forEach((i) -> set(i, 'selected', !s))
 )
 
-`export default AdvancedSrcs`
+export default AdvancedSrcs

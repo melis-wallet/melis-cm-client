@@ -2,18 +2,22 @@
   = if cm.walletOpenFailed
       = t 'generic.loginfailed'
   = else if cm.ready
-    .stream-cnt.row
+    = misc/smooth-scroller class='stream-cnt row' as |scroll|
 
-      = stream/dashboard-box class='col-sm-4'
+      = stream/dashboard-box [
+        class='col-sm-4' scroller=scroll
+        onmoveto=(action 'scrollTo' target=scroll)
+        onresetposition=(action 'resetScroll' target=scroll)
+      ]
       .col-sm-8
-        = each coinsvc.coins as |c|
+        = each coinsvc.activeCoins as |c|
           = coin-ticker coin=c.tsym
-    .row
-      .col-sm-4
-        = each accounts as |acct|
-          = account-dash-summary account=acct
-      .col-sm-8
-        = stream/wallet-view
+      .row
+        .col-sm-4
+          = each accounts as |acct|
+            = account-dash-summary account=acct
+        .col-sm-8
+          = stream/wallet-view onmoveto=(action 'scrollTo' target=scroll)
 
   = else
     | Not Ready

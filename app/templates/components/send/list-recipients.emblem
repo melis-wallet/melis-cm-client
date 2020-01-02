@@ -10,7 +10,7 @@
           = each recipients as |rec|
             tr
               = if rec.isAddress
-                td: span.label.label-info: i.fa.fa-btc
+                td: span.label.label-info: i.fa.fa-barcode
 
                 td.break-words
                   p = rec.value

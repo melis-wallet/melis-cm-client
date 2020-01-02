@@ -1,13 +1,10 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
 
-MainAccountAddressIxdRoute = Ember.Route.extend(
-
+MainAccountAddressIxdRoute = Route.extend(
 
   model: ->
     @modelFor('main.account.address')
 
-  #actions:
-
 )
 
-`export default MainAccountAddressIxdRoute`
+export default MainAccountAddressIxdRoute

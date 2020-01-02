@@ -1,10 +1,10 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
 
-MainAccountViewRoute = Ember.Route.extend(
+MainAccountViewRoute = Route.extend(
   setupController: (controller) ->
      controller.set('dangerEnabled', false)
 
 )
 
 
-`export default MainAccountViewRoute`
+export default MainAccountViewRoute

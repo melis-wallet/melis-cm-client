@@ -28,9 +28,9 @@
 
   .row
     .col-md-4
-      = leaf-button icon='fa fa-trash' type='default' on-click='cancelRotation' block=true
+      = leaf-button icon='fa fa-trash' type='default' on-click='cancelRotation' block=true disabled=apiOps.isRunning
     .col-md-8
-      = leaf-button icon='fa fa-check' type='warning' on-click='confirmRotation' block=true
+      = leaf-button icon='fa fa-check' type='warning' on-click='confirmRotation' block=true disabled=apiOps.isRunning
 
 = else if delayRefresh.isRunning
   .text-center
@@ -59,12 +59,12 @@
 
   .row
     .col-md-4
-      p = leaf-button icon='fa fa-refresh' on-click='refresh' block=true outline=true
+      p = leaf-button icon='fa fa-refresh' on-click='refresh' block=true outline=true disabled=apiOps.isRunning
     .col-md-8
       = if checkedUnspents
-        p = leaf-button label=(t 'view.nlock.rotate.some' count=activeUnspents.length) on-click='rotateAll' value=activeUnspents outline=true block=true type='warning'
+        p = leaf-button label=(t 'view.nlock.rotate.some' count=activeUnspents.length) on-click='rotateAll' value=activeUnspents outline=true block=true type='warning' disabled=apiOps.isRunning
       = else
-        p = leaf-button label=(t 'view.nlock.rotate.all') on-click='rotateAll' value=activeUnspents outline=true block=true type='warning'
+        p = leaf-button label=(t 'view.nlock.rotate.all') on-click='rotateAll' value=activeUnspents outline=true block=true type='warning' disabled=apiOps.isRunning
 
 = else
 

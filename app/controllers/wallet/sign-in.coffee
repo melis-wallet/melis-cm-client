@@ -1,15 +1,17 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { empty, alias } from '@ember/object/computed'
 
-SignInController = Ember.Controller.extend(
-  cm: Ember.inject.service('cm-session')
+SignInController = Controller.extend(
+  cm: service('cm-session')
 
-  ready: Ember.computed.alias('cm.ready')
-  connected: Ember.computed.alias('cm.connected')
-  disconnected: Ember.computed.alias('cm.disconnected')
-  connectFailed: Ember.computed.alias('cm.connectFailed')
+  ready: alias('cm.ready')
+  connected: alias('cm.connected')
+  disconnected: alias('cm.disconnected')
+  connectFailed: alias('cm.connectFailed')
 
-
-  noAccounts: Ember.computed.empty('cm.accounts')
+  noAccounts: empty('cm.accounts')
 
 )
-`export default SignInController`
+
+export default SignInController

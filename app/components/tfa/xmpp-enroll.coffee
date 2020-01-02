@@ -1,7 +1,12 @@
-`import Ember from 'ember'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 Validations = buildValidations(
   xmppAddress: [
@@ -11,11 +16,11 @@ Validations = buildValidations(
   ]
 )
 
-XmppEnroll = Ember.Component.extend(Validations, ValidationsHelper,
+XmppEnroll = Component.extend(Validations, ValidationsHelper,
 
 
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
+  cm: service('cm-session')
+  aa: service('aa-provider')
 
   enrollError: null
   xmppAddress: null
@@ -47,7 +52,7 @@ XmppEnroll = Ember.Component.extend(Validations, ValidationsHelper,
           @set  'enrollError', @get('i18n').t('tfa.xmpp.invalid')
         else
           @set 'enrollError', error.msg
-        Ember.Logger.error "error enrolling xmpp: ", error
+        Logger.error "error enrolling xmpp: ", error
         @set('btnstate', 'rejected')
 
       @set 'busy', false
@@ -64,4 +69,4 @@ XmppEnroll = Ember.Component.extend(Validations, ValidationsHelper,
 
 )
 
-`export default XmppEnroll`
+export default XmppEnroll

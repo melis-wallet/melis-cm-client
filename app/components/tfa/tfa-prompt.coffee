@@ -1,12 +1,18 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-TFAPrompt = Ember.Component.extend(
+import { task, taskGroup } from 'ember-concurrency'
 
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
+import Logger from 'melis-cm-svcs/utils/logger'
 
-  validDevices: Ember.computed.alias('aa.tfaValidDevices')
+
+TFAPrompt = Component.extend(
+
+  cm: service('cm-session')
+  aa: service('aa-provider')
+
+  validDevices: alias('aa.tfaValidDevices')
   activeDevice: null
 
   infoText: null
@@ -27,7 +33,7 @@ TFAPrompt = Ember.Component.extend(
         @set('infoText', @get('i18n').t('tfa.actions.token-sent'))
         @set('activeDevice', device)
       catch error
-        console.error "TF Auth Error: ", error
+        Logger.error "TF Auth Error: ", error
         @set('infoText', @get('i18n').t('tfa.actions.error'))
   ).group('apiOps')
 
@@ -42,4 +48,4 @@ TFAPrompt = Ember.Component.extend(
       @get('sendToken').perform(device)
 )
 
-`export default TFAPrompt`
+export default TFAPrompt

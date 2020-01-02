@@ -1,13 +1,12 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
 
-ResizableBackground = Ember.Component.extend(
+ResizableBackground = Component.extend(
   image: null
   overlay: false
 
   setup: (->
      @.$().backstretch(@get('image'))
   ).on('didInsertElement')
-
 )
 
-`export default ResizableBackground`
+export default ResizableBackground

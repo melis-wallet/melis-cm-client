@@ -1,7 +1,13 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+
+import { task, taskGroup } from 'ember-concurrency'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 Validations = buildValidations(
   signature: [
@@ -14,14 +20,14 @@ Validations = buildValidations(
   ]
   address: [
     validator('presence', presence: true)
-    validator('bitcoin-address')
+    validator('coin-address', coin: alias('model.account.coin', ), allowURI: true)
   ]
 
 )
 
-CheckSignature = Ember.Component.extend(Validations, ValidationsHelper,
+CheckSignature = Component.extend(Validations, ValidationsHelper,
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   account: null
 
@@ -41,14 +47,15 @@ CheckSignature = Ember.Component.extend(Validations, ValidationsHelper,
 
       if text && address && signature
         try
-          valid = @get('cm.api').verifyBitcoinMessageSignature(address, signature, text.trim())
+          console.error("check", {coin: @get('account.coin'), address: address, sign: signature, text: text.trim()})
+          valid = @get('cm.api').verifyMessageSignature(@get('account.coin'), address, signature, text.trim())
           @setProperties
             result: true
             valid: valid
 
         catch error
-          Ember.Logger.error "Error: ", error
-
+          Logger.error "Error: ", error
 )
 
-`export default CheckSignature`
+export default CheckSignature
+

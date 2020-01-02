@@ -1,5 +1,5 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
 
-MainAccountHistoryRoute = Ember.Route.extend()
+MainAccountHistoryRoute = Route.extend()
 
-`export default MainAccountHistoryRoute`
+export default MainAccountHistoryRoute

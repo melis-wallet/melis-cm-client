@@ -1,18 +1,23 @@
-`import Ember from 'ember'`
-`import randomBytes from 'npm:randombytes'`
-`import otplib from 'npm:otplib'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+
+import randomBytes from 'npm:randombytes'
+import otplib from 'npm:otplib'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 APP_ID = 'Melis'
 APP_ISSUER = 'CM'
 
-otp = otplib.default
+otp = otplib
 
-TotpEnroll = Ember.Component.extend(
+TotpEnroll = Component.extend(
 
 
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
+  cm: service('cm-session')
+  aa: service('aa-provider')
 
   currentDevice: null
   currentSecret: null
@@ -53,7 +58,7 @@ TotpEnroll = Ember.Component.extend(
       @sendAction('on-new-enroll', res.device)
 
     catch error
-      Ember.Logger.error "error enrolling totp: ", error
+      Logger.error "error enrolling totp: ", error
       @set 'enrollError', error.msg
   )
 
@@ -66,7 +71,7 @@ TotpEnroll = Ember.Component.extend(
       res = yield api.tfaEnrollFinish(name: device.name, value: device.value, code: token)
       @sendAction('on-new-complete-enroll', res.device)
     catch error
-      Ember.Logger.error "Error doing enroll finish: ", error
+      Logger.error "Error doing enroll finish: ", error
       @set 'enrollError', error.msg
 
   ).group('apiOps')
@@ -91,4 +96,4 @@ TotpEnroll = Ember.Component.extend(
 
 )
 
-`export default TotpEnroll`
+export default TotpEnroll

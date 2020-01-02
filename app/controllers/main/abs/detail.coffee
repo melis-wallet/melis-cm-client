@@ -1,20 +1,23 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Controller from '@ember/controller'
+import { get, set } from '@ember/object'
+import { task, taskGroup } from 'ember-concurrency'
 
-AbsController = Ember.Controller.extend(
+import Logger from 'melis-cm-svcs/utils/logger'
+
+AbsController = Controller.extend(
 
   accountInfo: null
 
   lazyfetchInfo: task( ->
     @set('accountInfo', null)
 
-    if (entry = @get('model')) && Ember.get(entry, 'isCm') && (val = Ember.get(entry, 'val'))
+    if (entry = @get('model')) && get(entry, 'isCm') && (val = get(entry, 'val'))
       api = @get('cm.api')
       try
         res = yield api.accountGetPublicInfo(name: val)
         @set('accountInfo', res)
       catch error
-        Ember.Logger.error error
+        Logger.error error
   )
 
   modelChanged: ( ->
@@ -23,4 +26,4 @@ AbsController = Ember.Controller.extend(
 
 )
 
-`export default AbsController`
+export default AbsController

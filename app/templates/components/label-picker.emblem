@@ -10,6 +10,6 @@
   selected=selection
   onchange=(action (mut selection))
   onkeydown=(action "createOnEnter")
-  onblur=(action 'lostFocus')
+  onclose=(action 'lostFocus')
   ] as |label|
   = label

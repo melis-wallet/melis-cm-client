@@ -1,6 +1,7 @@
 
 .camera {
   position: relative;
+  background-color: #ccc;
 
   .grid {
     border: 1px solid rgba(1,1,1, 0.30);
@@ -13,7 +14,16 @@
     visibility: hidden;
   }
 
-
+  .controls {
+    padding: 5px;
+    height: 40px;
+    background-color: #aaa;
+    opacity: 0.7;
+    position: absolute;
+    bottom: 0px;
+    z-index: 10;
+    width: 100%;
+  }
 
   &.working {
     > .grid {

@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import { task } from 'ember-concurrency'`
-`import { waitTime } from 'melis-cm-svcs/utils/delayed-runners'`
+import Component from '@ember/component'
+
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import { task } from 'ember-concurrency'
+import { waitTime } from 'melis-cm-svcs/utils/delayed-runners'
 
 DEVICES_WITH_TOKEN = ['email', 'xmpp', 'sms', 'telegram']
 SEND_GUARD = 10000
@@ -16,7 +17,7 @@ Validations = buildValidations(
 )
 
 
-EnterToken = Ember.Component.extend(Validations, ValidationsHelper,
+EnterToken = Component.extend(Validations, ValidationsHelper,
 
   device: null
   token: null
@@ -53,4 +54,4 @@ EnterToken = Ember.Component.extend(Validations, ValidationsHelper,
 
 )
 
-`export default EnterToken`
+export default EnterToken

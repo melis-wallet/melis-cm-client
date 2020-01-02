@@ -1,10 +1,12 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { scheduleOnce } from '@ember/runloop'
 
 
-QrCodeExpandable = Ember.Component.extend(
+QrCodeExpandable = Component.extend(
 
-  mm: Ember.inject.service('modals-manager')
-  resp: Ember.inject.service('responsive-media')
+  mm: service('modals-manager')
+  resp: service('responsive-media')
 
   classNames: ['expandable']
 
@@ -43,7 +45,7 @@ QrCodeExpandable = Ember.Component.extend(
       if !@get('expanded')
         @set('expanded', true)
 
-        Ember.run.scheduleOnce('afterRender', this, ->
+        scheduleOnce('afterRender', this, ->
           @get('mm').showModal(@get('codeId')).then((res) ->
 
           ).catch((err) ->
@@ -51,9 +53,7 @@ QrCodeExpandable = Ember.Component.extend(
           ).finally( =>
             @set('expanded', false)
           )
-
         )
-
 )
 
-`export default QrCodeExpandable`
+export default QrCodeExpandable

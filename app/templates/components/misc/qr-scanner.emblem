@@ -13,12 +13,17 @@
       .grid
     .overlay
       = leaf-label type='success' content=lastFound class='animated bounceIn'
-  canvas id='qr-canvas'
 
-  = if showControls
-    .panel-footer
-      if scanning
-        = leaf-button icon='fa fa-stop' on-click='stopScan' block=true
-      else
-        = leaf-button icon='fa fa-play' on-click='startScan' type='primary' block=true
 
+    = if showControls
+      .controls
+        = if showMediaControls
+          = if scanning
+            = leaf-button icon='fa fa-stop' on-click=(action 'stopScan') outline=true
+          else
+            = leaf-button icon='fa fa-play' on-click=(action 'startScan') outline=true
+        .pull-right
+          .btn-group
+            = leaf-button icon='fa fa-exchange' on-click=(action 'flipSource') outline=true
+            = leaf-button icon='fa fa-video-camera' on-click=(action 'nextSource') outline=true
+        .clearfix

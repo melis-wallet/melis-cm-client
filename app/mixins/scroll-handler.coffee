@@ -1,7 +1,8 @@
-`import Ember from 'ember'`
+import Mixin from '@ember/object/mixin'
+import { scheduleOnce, debounce } from '@ember/runloop'
+import $ from 'jquery'
 
-
-ScrollHandler = Ember.Mixin.create(
+ScrollHandler = Mixin.create(
 
   scrollTimeout:      100
   boundingClientRect: 0
@@ -15,7 +16,7 @@ ScrollHandler = Ember.Mixin.create(
     @trigger('didScroll', boundingClientRect)
 
   _setup: ( ->
-    Ember.run.scheduleOnce('afterRender', this, ->
+    scheduleOnce('afterRender', this, ->
       @_updateBoundingClientRect()
       @set('windowHeight', window.innerHeight || document.documentElement.clientHeight)
       @set('windowWidth', window.innerWidth || document.documentElement.clientWidth)
@@ -23,20 +24,19 @@ ScrollHandler = Ember.Mixin.create(
   ).on('didInsertElement')
 
   _scrollHandler: ->
-    Ember.run.debounce(this, '_updateBoundingClientRect', this.get('scrollTimeout'))
+    debounce(this, '_updateBoundingClientRect', this.get('scrollTimeout'))
 
   _bindScroll: (->
     scrollHandler = @_scrollHandler.bind(this)
-    Ember.$(document).on('touchmove.scrollable', scrollHandler)
-    Ember.$(window).on('scroll.scrollable', scrollHandler)
+    $(document).on('touchmove.scrollable', scrollHandler)
+    $(window).on('scroll.scrollable', scrollHandler)
   ).on('didInsertElement')
 
 
   _unbinScroll: (->
-    Ember.$(window).off('.scrollable')
-    Ember.$(document).off('.scrollable')
+    $(window).off('.scrollable')
+    $(document).off('.scrollable')
   ).on('willDestroyElement')
-
 )
 
-`export default ScrollHandler`
+export default ScrollHandler

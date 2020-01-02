@@ -61,8 +61,32 @@
               = input type='checkbox' name='skip_account' checked=skipAccount
               span.lbl = t 'enroll.tabspanel.pin.skip'
 
-
     = leaf-navs-panel parent=content idx=3
+      .row
+        .col-xs-4
+
+          h4 = t 'enroll.tabspanel.coin.title'
+          p = t 'enroll.tabspanel.coin.caption'
+          p.text-info = t 'enroll.tabspanel.coin.notice'
+
+        .col-xs-8
+          = leaf-note type='info'
+            /= power-select renderInPlace=true options=availableCoins selected=selectedCoin searchEnabled=false onchange=(action 'selectCoin') as |c|
+              img.tb-coin-icon src="{{coin-img-path c.unit}}"
+              strong = t (concat "coins.unit." c.label)
+
+            ul.nav.nav-pills.nav-stacked
+              = each availableCoins as |c|
+                li class="{{if (eq c.unit coin) 'active'}}"
+                  a href='#' click="action 'selectCoin' c"
+                    img.lst-coin-icon src="{{coin-img-path c.unit}}"
+                    strong.text-right = t (concat "coins.unit." c.label)
+
+
+          = if coin
+            = leaf-button type='primary' on-click='coinSelected' value=1 icon='fa fa-arrow-right' block=true
+
+    /= leaf-navs-panel parent=content idx=4
       = leaf-note type='default'
         h4 = t 'enroll.tabspanel.type.title'
         p = t 'enroll.tabspanel.type.caption'

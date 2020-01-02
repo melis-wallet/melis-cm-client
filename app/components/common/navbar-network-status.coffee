@@ -1,15 +1,18 @@
-`import Ember from 'ember'`
-`import TooltipSupport from 'ember-leaf-core/mixins/leaf-tooltip-support'`
-`import { translationMacro as t } from "ember-i18n"`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { schedule } from '@ember/runloop'
+
+import TooltipSupport from 'ember-leaf-core/mixins/leaf-tooltip-support'
+import { translationMacro as t } from "ember-i18n"
 
 I18N_PREFIX = 'netstatus.state'
 
-NavbarNetworkStatus = Ember.Component.extend(TooltipSupport,
+NavbarNetworkStatus = Component.extend(TooltipSupport,
   tagName: 'li'
   classNames: ['nav-icon-btn']
   classNameBindings: ['connClass']
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
 
   inserted: false
@@ -76,7 +79,7 @@ NavbarNetworkStatus = Ember.Component.extend(TooltipSupport,
   do: (->
     # after render
     if @get('inserted')
-      Ember.run.schedule('afterRender', this, @_displayPopover)
+      schedule('afterRender', this, @_displayPopover)
   ).observes('current')
 
   _displayPopover: ->
@@ -91,4 +94,4 @@ NavbarNetworkStatus = Ember.Component.extend(TooltipSupport,
 
 )
 
-`export default NavbarNetworkStatus`
+export default NavbarNetworkStatus

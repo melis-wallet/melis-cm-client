@@ -1,16 +1,21 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+
+import CMCore from 'npm:melis-api-js'
 
 C = CMCore.C
-StreamTxm = Ember.Component.extend(
 
-  cm: Ember.inject.service('cm-session')
+
+StreamTxm = Component.extend(
+
+  cm: service('cm-session')
   entry: null
 
   classNames: ['stream-entry', 'row','animated', 'fadeIn', 'quick']
 
-  msg: Ember.computed.alias('entry.content')
-  ptx: Ember.computed.alias('entry.ptx')
+  msg: alias('entry.content')
+  ptx: alias('entry.ptx')
 
   isSignature: ( ->
     @get('msg.type') == C.CHAT_MSG_TYPE_SIG
@@ -34,5 +39,4 @@ StreamTxm = Ember.Component.extend(
 
 )
 
-
-`export default StreamTxm`
+export default StreamTxm

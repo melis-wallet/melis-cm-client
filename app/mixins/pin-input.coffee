@@ -1,7 +1,6 @@
-`import Ember from 'ember'`
+import Mixin from '@ember/object/mixin'
 
-
-PinInput = Ember.Mixin.create(
+PinInput = Mixin.create(
 
   tryLastAttempt: false
 
@@ -14,8 +13,6 @@ PinInput = Ember.Mixin.create(
     left = @get('credentials.attemptsLeft')
     (left == 1)
   ).property('credentials.attemptsLeft')
-
-
 )
 
-`export default PinInput`
+export default PinInput

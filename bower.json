@@ -1,22 +1,20 @@
 {
   "name": "melis-cm-client",
   "dependencies": {
-    "animate.css": "^3.5.2",
-    "bootstrap-sass-official": "~3.3.6",
-    "font-awesome": "^4.7.0",
+    "animate.css": "^3.7.0",
     "jquery.sparkline.build": "~2.1.3",
     "qrcode-decoder-js": "*",
-    "moment": "^2.17.0",
-    "moment-timezone": "^0.5.9",
+    "moment": "^2.22.2",
+    "moment-timezone": "^0.5.17",
     "sly": "wmlele/sly#scroll-fix",
-    "dom-ruler": "0.2.5",
+    "dom-ruler": "0.2.6",
     "qrcode.js": "qrcode-js#*",
     "blob-polyfill": "^1.0.20150320",
-    "smooth-scroll": "cferdinandi/smooth-scroll#^9.1.1",
-    "clipboard": "^1.6.1",
-    "notify.js": "^2.0.3",
+    "smooth-scroll": "cferdinandi/smooth-scroll#12.1.5",
+    "clipboard": "^1.7.1",
+    "notify.js": "alexgibson/notify.js#^2.0.3",
     "hammer.js": "2.0.8",
     "hammer-time": "1.1.0",
-    "taggle": "^1.12.0"
+    "taggle": "^1.14.0"
   }
 }

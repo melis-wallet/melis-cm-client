@@ -1,25 +1,39 @@
-`import Ember from 'ember'`
-`import Alertable from 'ember-leaf-core/mixins/leaf-alertable'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, equal } from '@ember/object/computed'
+import { isEmpty } from '@ember/utils'
+import { scheduleOnce } from '@ember/runloop'
+
+import Alertable from 'ember-leaf-core/mixins/leaf-alertable'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 PLACEHOLDER = 'newaddr.active.default-ph'
 
-PaymentNewaddress = Ember.Component.extend(Alertable,
+PaymentNewaddress = Component.extend(Alertable,
 
-  service: Ember.inject.service('cm-address-provider')
-  cm: Ember.inject.service('cm-session')
-  i18n: Ember.inject.service()
+  service: service('cm-address-provider')
+  cm: service('cm-session')
+  i18n: service()
 
-  currentAddress: Ember.computed.alias('service.current.currentAddress')
-  code: Ember.computed.alias('service.current.currentAddress.addressURL')
+  currentAddress: alias('service.current.currentAddress')
+  code: alias('currentAddress.addressURL')
+  format: alias('currentAddress.format')
 
-  activeAddress: Ember.computed.alias('service.current.activeAddress')
+  isStandard: equal('format', 'standard')
+
+  activeAddress: alias('service.current.activeAddress')
+
+  showToggle: alias('currentAddress.coin.features.altaddrs')
 
   error: null
   noResources: false
 
   keepMini: false
   showCode: true
+
 
   apiOps: taskGroup().drop()
 
@@ -36,7 +50,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
       @set('activeAddress', addr)
       @sendAction('on-select-active', addr)
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
       if error.ex == 'CmNoResourcesException'
         @set 'noResources', true
       else
@@ -48,7 +62,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
     try
       yield @get('service').getCurrentAddress()
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
       if error.ex == 'CmNoResourcesException'
         @set 'noResources', true
       else
@@ -69,6 +83,12 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
   #
   #
   actions:
+    toggleFormat: ->
+      if @get('isStandard')
+        @set('format', 'legacy')
+      else
+        @set('format', 'standard')
+
     toggleMini: ->
       @toggleProperty('keepMini')
 
@@ -81,4 +101,5 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
 
 
 )
-`export default PaymentNewaddress`
+
+export default PaymentNewaddress

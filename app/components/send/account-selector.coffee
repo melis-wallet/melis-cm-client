@@ -1,26 +1,27 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { filter } from "@ember/object/computed"
+import { get } from '@ember/object'
 
+AccountSelector = Component.extend(
 
-AccountSelector = Ember.Component.extend(
-
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
   exclude: null
 
   # same coin as this account
   coin: null
 
 
-  accounts: Ember.computed.filter('cm.accounts', ((acc, idx) ->
-    return false if (pubId = @get('exclude.pubId')) && (Ember.get(acc, 'pubId') == pubId)
+  accounts: filter('cm.accounts', ((acc, idx) ->
+    return false if (pubId = @get('exclude.pubId')) && (get(acc, 'pubId') == pubId)
 
     if (coin = @get('coin'))
-      Ember.get(acc, 'coin') == coin
+      get(acc, 'coin') == coin
     else
       true
   ))
 
   selected: null
-
 
   actions:
     changedAccount: (account) ->
@@ -28,6 +29,6 @@ AccountSelector = Ember.Component.extend(
 
 )
 
-`export default AccountSelector`
+export default AccountSelector
 
 

@@ -19,9 +19,9 @@
           p = t 'cnfail.caption'
           br
           br
-          br
+          p.animated.fadeIn.delay-1s = leaf-button icon='fa fa-refresh' outline=true type='warning' block=true on-click='retryConnect'
           hr
-          p = link-to 'info.noserver' class='btn btn-warning btn-block btn-outline'
+          p.animated.fadeIn.delay-5s = link-to 'info.noserver' class='btn btn-warning btn-block btn-outline'
             = t 'cnfail.button'
 
   = else

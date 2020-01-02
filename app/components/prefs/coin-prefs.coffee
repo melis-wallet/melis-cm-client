@@ -1,26 +1,29 @@
-import Ember from 'ember'
-import { task, taskGroup } from 'ember-concurrency'
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { isEmpty } from '@ember/utils'
+import { get } from '@ember/object'
 
 EX_NAMES =
   fallback: '- Average'
   rock: 'The Rock Trading'
   localbtc: 'Local Bitcoins'
 
-CoinPrefs = Ember.Component.extend(
+CoinPrefs = Component.extend(
 
 
-  cm: Ember.inject.service('cm-session')
-  coinsvc: Ember.inject.service('cm-coin')
+  cm: service('cm-session')
+  coinsvc: service('cm-coin')
   coin: null
 
-  subunits: Ember.computed.alias('coin.subunits')
-  subunit: Ember.computed.alias('coin.subunit')
+  subunits: alias('coin.subunits')
+  subunit: alias('coin.subunit')
 
-  explorers: Ember.computed.alias('coin.explorers')
-  currentExplorer: Ember.computed.alias('coin.currentExplorer')
+  explorers: alias('coin.explorers')
+  currentExplorer: alias('coin.currentExplorer')
 
   exchanges: ( ->
-    if !Ember.isEmpty((exs = @get('coin.knownExchanges')))
+    if !isEmpty((exs = @get('coin.knownExchanges')))
       exs.map( (e) ->
         return {id: e, text: (EX_NAMES[e] || (e && e[0].toUpperCase() + e.slice(1)))}
       )
@@ -33,15 +36,15 @@ CoinPrefs = Ember.Component.extend(
 
   actions:
     changeUnit: (sub) ->
-      @get('coinsvc').storePrefSubunit(@get('coin.unit'), Ember.get(sub, 'id'))
+      @get('coinsvc').storePrefSubunit(@get('coin.unit'), get(sub, 'id'))
 
     changeExchange: (ex) ->
-      if (id = Ember.get(ex, 'id'))
+      if (id = get(ex, 'id'))
         @get('coinsvc').storeCoinPref(@get('coin.unit'), 'exchange', id)
 
 
     changeExplorer: (ex) ->
-      if (id = Ember.get(ex, 'id'))
+      if (id = get(ex, 'id'))
         @get('coinsvc').storeCoinPref(@get('coin.unit'), 'explorer', id)
 )
 

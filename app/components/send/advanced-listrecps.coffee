@@ -1,8 +1,10 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-AdvancedListRecps = Ember.Component.extend(
+AdvancedListRecps = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   parent: null
   recipients: null
@@ -10,10 +12,10 @@ AdvancedListRecps = Ember.Component.extend(
   account: null
 
   preparedTx: null
-  paymentReady: Ember.computed.alias('parent.paymentReady')
+  paymentReady: alias('parent.paymentReady')
 
-  total: Ember.computed.alias('parent.totalAmount')
-  isEntireBalance: Ember.computed.alias('parent.isEntireBalance')
+  total: alias('parent.totalAmount')
+  isEntireBalance: alias('parent.isEntireBalance')
 
 
   actions:
@@ -22,4 +24,4 @@ AdvancedListRecps = Ember.Component.extend(
 
 )
 
-`export default AdvancedListRecps`
+export default AdvancedListRecps

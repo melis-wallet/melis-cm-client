@@ -1,28 +1,39 @@
-`import Ember from 'ember'`
-`import { parseURI } from '../utils/uris'`
+import Service, { inject as service } from '@ember/service'
+import { isBlank } from '@ember/utils'
+import RSVP from 'rsvp'
+
+import { parseURI } from '../utils/uris'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
-ScannerProvider = Ember.Service.extend(
+ScannerProvider = Service.extend(
 
-  cm: Ember.inject.service('cm-session')
-  modalManager: Ember.inject.service('modals-manager')
+  cm: service('cm-session')
+  modalManager: service('modals-manager')
+  coinsvc: service('cm-coin')
 
-  cordovaPlatform: Ember.inject.service('ember-cordova/platform')
-  device: Ember.inject.service('device-support')
-  routing: Ember.inject.service('-routing')
+  cordovaPlatform: service('ember-cordova/platform')
+  device: service('device-support')
+  routing: service('-routing')
 
   modalId: 'scanner-modal'
   modalOpen: false
 
 
-  getAddressFromData: (data) ->
+  getAddressFromData: (data, coin) ->
     addr =
-      if Ember.isBlank(data.scheme)
+      if isBlank(data.scheme)
         data.data
-      else if data.scheme.toLowerCase() == 'bitcoin'
+      else if @get('coinsvc.validSchemes').includes(data.scheme.toLowerCase())
         data.address
 
-    return addr if @get('cm.api').validateAddress(addr)
+    if coin
+      return addr if @get('coinsvc').validateAddress(addr, coin)
+    else
+
+      # TODO
+      return addr
 
 
   actOnScan: (data) ->
@@ -36,7 +47,7 @@ ScannerProvider = Ember.Service.extend(
           @get("routing").transitionTo('main.account.ops.send', [id], {address: data.address})
         else
           # tbd
-          Ember.Logger.error "Unknown scheme"
+          Logger.error "Unknown scheme"
 
   startGenericScanner: (opts) ->
     @independentScan(opts).then( (r) => @actOnScan(r) )
@@ -45,39 +56,39 @@ ScannerProvider = Ember.Service.extend(
   independentScan: (opts) ->
     if @get('device.isMobile')
       return @nativeScan().then((r) ->
-        Ember.Logger.debug('NATIVE scanner succeded: ', r)
+        Logger.debug('NATIVE scanner succeded: ', r)
         return r
       )
 
     else
       return @acquireCode().then((r) =>
-        Ember.Logger.debug('JS scanner succeded: ', r)
+        Logger.debug('JS scanner succeded: ', r)
         return r
       )
 
 
   nativeScan: ->
-    pending = Ember.RSVP.defer()
+    pending = RSVP.defer()
     cordova.plugins.barcodeScanner.scan(
       ((data) =>
-        Ember.Logger.debug "Scanner success: ", data
+        Logger.debug "Scanner success: ", data
         try
           res = parseURI(data.text)
         catch e
-          Ember.Logger.error "Error in acquisition: ", e
+          Logger.error "Error in acquisition: ", e
         pending.resolve(res)
       ), ( (e) =>
         pending.reject.e
-        Ember.Logger.error "Native scanner: ", e
+        Logger.error "Native scanner: ", e
       )
     )
     return pending.promise
 
   acquireCode: ->
     if request = @get('pendingRequest')
-      Ember.RSVP.reject('Already acquiring')
+      RSVP.reject('Already acquiring')
     else
-      pending = Ember.RSVP.defer()
+      pending = RSVP.defer()
       @set('pendingRequest', pending)
       @get('modalManager').showModal(@get('modalId')).then((res)->
 
@@ -97,7 +108,7 @@ ScannerProvider = Ember.Service.extend(
       request.reject(why)
 
   successAcquire: (data) ->
-    Ember.Logger.debug "Scanner data: ", data
+    Logger.debug "Scanner data: ", data
 
     @get('modalManager').hideModal(@get('modalId'), 'success')
     if request = @get('pendingRequest')
@@ -106,9 +117,9 @@ ScannerProvider = Ember.Service.extend(
       try
         res = parseURI(data)
       catch e
-        Ember.Logger.error "Error in acquisition: ", e
+        Logger.error "Error in acquisition: ", e
       request.resolve(res)
 
 )
 
-`export default ScannerProvider`
+export default ScannerProvider

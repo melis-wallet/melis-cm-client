@@ -1,16 +1,21 @@
-`import Ember from 'ember'`
-`import Configuration from 'melis-cm-svcs/utils/configuration'`
-`import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'`
-`import BackButton from '../../mixins/backbutton-support'`
-`import CMCore from 'npm:melis-api-js'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+
+import Configuration from 'melis-cm-svcs/utils/configuration'
+import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
+import BackButton from '../../mixins/backbutton-support'
+import CMCore from 'npm:melis-api-js'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 C = CMCore.C
 
-ImportWizard = Ember.Component.extend(AsWizard, BackButton,
 
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
+ImportWizard = Component.extend(AsWizard, BackButton,
+
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
 
   step: 1
   completeOn: 3
@@ -30,11 +35,11 @@ ImportWizard = Ember.Component.extend(AsWizard, BackButton,
   closeWallet: task( ->
     return unless @get('cm.currentWallet')
 
-    Ember.Logger.warn "Wallet is already open during enroll"
+    Logger.warn "Wallet is already open during enroll"
     try
       yield @get('cm').walletClose()
     catch err
-      Ember.Logger.error "failed closing wallet: ", err
+      Logger.error "failed closing wallet: ", err
   )
 
   importWallet: task((pin) ->
@@ -69,7 +74,7 @@ ImportWizard = Ember.Component.extend(AsWizard, BackButton,
         importMnemonic: mnemonic
         importPassphrase: passphrase
     catch err
-      Ember.Logger.error('[import]', err)
+      Logger.error('[import]', err)
       if err.ex == 'CmLoginWrongSignatureException'
         @set('validationFailed', err.msg)
       else
@@ -88,7 +93,6 @@ ImportWizard = Ember.Component.extend(AsWizard, BackButton,
       @markCompleted(1, 2)
 
     doneImportMnemo: (mnemonic, passphrase)->
-      console.error("hello")
       @get('validateCredentials').perform(mnemonic, passphrase)
 
 
@@ -108,5 +112,4 @@ ImportWizard = Ember.Component.extend(AsWizard, BackButton,
 
 )
 
-
-`export default ImportWizard`
+export default ImportWizard

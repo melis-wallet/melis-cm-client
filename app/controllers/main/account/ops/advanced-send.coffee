@@ -1,10 +1,6 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
 
 
-AdvancedSendController = Ember.Controller.extend(
+AdvancedSendController = Controller.extend()
 
-
-
-)
-
-`export default AdvancedSendController`
+export default AdvancedSendController

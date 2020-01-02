@@ -1,14 +1,19 @@
-`import Ember from 'ember'`
-`import StyleBindings from 'ember-leaf-core/mixins/leaf-style-bindings'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { scheduleOnce } from '@ember/runloop'
+import $ from 'jquery'
 
-MainNavbar = Ember.Component.extend(
+import StyleBindings from 'ember-leaf-core/mixins/leaf-style-bindings'
+
+MainNavbar = Component.extend(
 
   classNames: ['navbar', 'navbar-inverse']
   ariaRole: 'navigation'
 
-  appState: Ember.inject.service('app-state')
+  appState: service('app-state')
 
-  menu_expanded: Ember.computed.alias('appState.menuExpanded')
+  menu_expanded: alias('appState.menuExpanded')
 
 
   logo: 'Leaf'
@@ -27,24 +32,25 @@ MainNavbar = Ember.Component.extend(
 
 
   toggleFixBar: (->
-    Ember.run.scheduleOnce 'afterRender', this, @_toggleFixBar
+    scheduleOnce 'afterRender', this, @_toggleFixBar
   ).observes('appState.navbarFixed').on('willInsertElement')
 
 
   _toggleFixBar: ->
     if @get('appState.navbarFixed')
-      Ember.$('body').addClass('main-navbar-fixed')
+      $('body').addClass('main-navbar-fixed')
     else
-      Ember.$('body').removeClass('main-navbar-fixed')
+      $('body').removeClass('main-navbar-fixed')
 
 
   closeCollapsible: (->
-     Ember.run.scheduleOnce 'afterRender', this, @_closeCollapsible
+     scheduleOnce 'afterRender', this, @_closeCollapsible
   )
 
   _closeCollapsible:->
-    @.$('#main-navbar-collapse').collapse('hide')
+    # noop since the collapse is empty now
+    #@.$('#main-navbar-collapse').collapse('hide')
 
 )
 
-`export default MainNavbar`
+export default MainNavbar

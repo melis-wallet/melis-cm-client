@@ -6,7 +6,7 @@
 
 
     = power-select options=contactTypes selected=currentType searchEnabled=false onchange=(action 'changeType') as |type|
-      b = type.label
+      b = t type.label
 
   = f.input property='name' label=(t 'ab.form.name.label') placeholder=(t 'ab.form.name.ph') class='form-group required'
 
@@ -66,7 +66,7 @@
       .col-xs-2
         = leaf-button type='default' icon='fa fa-camera' outline=true  type='sm' on-click='scanAddress' class="xr-top-sp-f"
 
-  = label-picker selection=value.labels label=(t 'ab.form.labels.label') labelsSet='abLabels'
+  = label-picker selection=(unbound value.labels) label=(t 'ab.form.labels.label') on-finish='updateLabels'
 
   = liquid-if value.isValid class='ll-down-up'
     = leaf-button type='primary' icon='fa fa-magic' block=true on-click='submitEntry'

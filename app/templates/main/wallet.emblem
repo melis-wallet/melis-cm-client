@@ -15,11 +15,12 @@
         .profile-content
           = leaf-tabs-control-slide selected-idx=tab as |control|
             = leaf-tab parent=control idx='preferences' title=(t 'view.tabs.preferences') icon='fa fa-cog'
-            = leaf-tab parent=control idx='coins' title=(t 'view.tabs.coins') icon='fa fa-bitcoin'
+            = leaf-tab parent=control idx='coins' title=(t 'view.tabs.coins') icon='fa fa-database'
             = leaf-tab parent=control idx='security' title=(t 'view.tabs.security') icon='fa fa-key'
             = leaf-tab parent=control idx='devices' title=(t 'view.tabs.devices') icon='fa fa-mobile'
             = leaf-tab parent=control idx='accounts' title=(t 'view.tabs.accounts') icon='fa fa-folder-open'
             = leaf-tab parent=control idx='maintenance' title=(t 'view.tabs.maintenance') icon='fa fa-cog'
+            /= leaf-tab parent=control idx='foo' title=(t 'view.tabs.maintenance') icon='fa fa-cog'
 
           = leaf-navs-content  bordered=true class='panel-padding' selected-idx=tab as |content|
 

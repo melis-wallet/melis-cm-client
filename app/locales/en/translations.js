@@ -42,8 +42,8 @@ export default {
   },
   "validations": {
     "insfunds": "Insufficient Funds.",
-    "notbitcoin": "Not a bitcoin address",
-    "not-bitcoin": "Not a bitcoin address",
+    "notbitcoin": "Not a coin address",
+    "not-coin": "Not a valid coin address",
     "not-pubid": "Not a Melis public id",
     "duplicate-alias": "This alias is aready taken",
     "not-mnemonic": "Not a valid mnemonic"
@@ -68,12 +68,26 @@ export default {
   },
   "coins": {
     "unit": {
+      "nocoin": "No Coin",
+      "allcoins": "All Coins",
       "btc": "Bitcoin",
       "bch": "Bitcoin Cash",
+      "ltc": "Litecoin",
+      "grs": "Groestlcoin",
+      "bsv": "Satoshi Vision",
+      "doge": "Doge",
       "tbtc": "Testnet Bitcoin",
       "tbch": "Testnet Bitcoin Cash",
+      "tltc": "Testnet Litecoin",
+      "tgrs": "Testnet Groestlcoin",
+      "tbsv": "Testnet Satoshi Vision",
+      "tdog": "Testnet Doge",
       "rbtc": "Regtest Bitcoin",
-      "rbch": "Regtest Bitcoin Cash"
+      "rbch": "Regtest Bitcoin Cash",
+      "rltc": "Regtest Litecoin",
+      "rgrs": "Regtest Groestlcoin",
+      "rbsv": "Regtest Satoshi Vision",
+      "rdog": "Regtest Doge"
     }
   },
   "acct": {
@@ -158,7 +172,7 @@ export default {
   "ab": {
     "empty": {
       "title": "Address book is empty",
-      "caption": "Use the addressbook to keep track of other Melis users or bitcoin addresses"
+      "caption": "Use the addressbook to keep track of other Melis users or simple addresses"
     },
     "nomatch": {
       "title": "No matches for your search",
@@ -166,7 +180,7 @@ export default {
     },
     "types": {
       "cm": "Another Melis User",
-      "address": "Generic Bitcoin Address"
+      "address": "Generic Coin Address"
     },
     "table": {
       "pubid": "Public Identity:",
@@ -176,11 +190,12 @@ export default {
     },
     "form": {
       "type": {
-        "label": "Type of contact"
+        "label": "Type of contact",
+        "coin": "Coin"
       },
       "name": {
         "label": "Name",
-        "ph": "Enter a name to idetify this contact..."
+        "ph": "Enter a name to identify this contact..."
       },
       "alias": {
         "label": "Alias or Public Identity",
@@ -188,10 +203,14 @@ export default {
       },
       "address": {
         "label": "Address",
-        "ph": "Enter a bitcoin address for this contact..."
+        "ph": "Enter an address for this contact..."
       },
       "labels": {
         "label": "Labels"
+      },
+      "t": {
+        "melis": "Another Melis User",
+        "addr": "Generic Address"
       }
     },
     "state": {
@@ -205,6 +224,7 @@ export default {
   },
   "account": {
     "secure": "secure",
+    "lite": "lite",
     "defaults": {
       "name": "My first account"
     },
@@ -226,6 +246,10 @@ export default {
     "maint": {
       "title": "Maintenance operations",
       "caption": "Advanced operations to perform on your account",
+      "lite": {
+        "title": "Lite account",
+        "caption": "This is a lite account, some changes and options are not available for lite accounts, or might be only available from your lite client"
+      },
       "hide": {
         "title": "Hide this account",
         "caption": "Hidden accounts disappear from your menu on <b>this</b> device but keep operating normally. You can re-enable them at any time."
@@ -257,6 +281,11 @@ export default {
           "title": "Remove account",
           "caption": "Removing an account will rendere it unaccessible. <b>Are you sure you want to remove it?</b>"
         }
+      },
+      "xpub": {
+        "title": "Export account T/XPUB",
+        "caption": "",
+        "clip": "copy to clipboard"
       }
     },
     "cosigners": {
@@ -300,7 +329,8 @@ export default {
         "joined": "joined",
         "clip": "Copy join code to clipboard",
         "incomplete": "Waiting for co-signers to join",
-        "delete": "Delete this account"
+        "delete": "Delete this account",
+        "lite": "Lite Account"
       },
       "join": {
         "code": {
@@ -329,7 +359,7 @@ export default {
       },
       "payto": {
         "title": "Public payment URL",
-        "caption": "Receive payments or donations from any other Melis user or anyone with a bitcoin wallet"
+        "caption": "Receive payments or donations from any other Melis user or anyone with a cryptocurrency wallet"
       }
     },
     "wizard": {
@@ -344,7 +374,7 @@ export default {
       },
       "t-multi": {
         "title": "Multi Signature Account",
-        "caption": "<b>An advanced Bitcoin account that is shared with other users.</b> Shared accounts require a predefined number of signatures from your co-signers before important operations can be authorized. <i>You will define who and how many your co-signers are in a moment.</i>"
+        "caption": "<b>An advanced account shared with other users.</b> Shared accounts require a predefined number of signatures from your co-signers before important operations can be authorized. <i>You will define who and how many your co-signers are in a moment.</i>"
       },
       "server": {
         "title": "Does your account need server side protection?",
@@ -535,7 +565,7 @@ export default {
       },
       "mnemo": {
         "title": "Mnemonics",
-        "caption": "Enter the mnemonics from your backup. If your backup is encrypted you will be asked the passphrase to decrypt it."
+        "caption": "Enter the mnemonics from your backup (and press enter). If your backup is encrypted you will be asked the passphrase to decrypt it."
       },
       "or-qr": {
         "title": "Or scan your backup card",
@@ -594,6 +624,11 @@ export default {
       }
     },
     "tabspanel": {
+      "coin": {
+        "title": "Starting coin",
+        "caption": "Choose the <b>coin</b> your initial account will be based on",
+        "notice": "You can create additional accounts for the same or a different coin later."
+      },
       "backup": {
         "title": "This device already has the credentials for a wallet on it",
         "caption": "If you enroll a new wallet you will lose your credentials on this device. If you ever need to access this wallet you will have to use a backup. Make sure you have a backup.",
@@ -623,19 +658,19 @@ export default {
     },
     "success": {
       "title": "Enroll Complete",
-      "caption": "You may now access your wallet but it's advised to make a one-time backup as the first step. You may also decide to make a backup later but make sure you do a backup before you start moving bitcoins.",
-      "warning": "If you forget your PIN or lose your credentials and you do not have a backup you will lose your bitcoins.",
+      "caption": "You may now access your wallet but it's advised to make a one-time backup as the first step. You may also decide to make a backup later but make sure you do it as you receive valuable assets on your accounts.",
+      "warning": "If you forget your PIN or lose your credentials and you do not have a backup you will lose your assets.",
       "backup": "Backup Your Wallet",
       "skip": "Skip backup and continue"
     },
     "walletok": {
       "title": "Your wallet has been created",
-      "caption": "You chose not to create an account as part of the enroll. You now need to create your first Bitcoin account.",
+      "caption": "You chose not to create an account as part of the enroll. You now need to create your first account.",
       "createacct": "Create a new account"
     },
     "complete": {
       "title": "Warning: be careful",
-      "caption": "Bitcoins are of inherently a cryptographically secured currency. if your credentials are lost/stolen there might be no ways to recover your assets. <b>Exercise the due diligence, make back-ups and store them in a safe place.</b>"
+      "caption": "The security of cryptocurrencies is inherently related to your credentials. if your credentials are lost/stolen there might be no ways to recover your assets. <b>Exercise the due diligence, make back-ups and store them in a safe place.</b>"
     }
   },
   "dash": {
@@ -696,6 +731,7 @@ export default {
   },
   "newaddr": {
     "a": {
+      "alternate": "Alternate format",
       "renew": "Get a new address",
       "make-active": "Create a payment request",
       "clip": "Copy to clipboard",
@@ -724,7 +760,7 @@ export default {
       "title": "Payment Request",
       "caption": "This address will be put aside for a specific request of payment. When the payment will be made the informations inserted here will be associated to the payment record.",
       "type": {
-        "bitcoin": "Bitcoin address",
+        "bitcoin": "coin address",
         "melis": "Melis URL"
       },
       "default-ph": "Payment request"
@@ -752,7 +788,15 @@ export default {
     },
     "txs": {
       "label": "Transactions",
-      "none": "None received"
+      "none": "None received",
+      "chain": "Chain",
+      "hdindex": "HD Index",
+      "table": {
+        "txs": "TXs",
+        "amount": "amount",
+        "address": "address",
+        "date": "date"
+      }
     }
   },
   "notif": {
@@ -767,19 +811,22 @@ export default {
       "has-contributed": "{{source}} has contributed to a pending transaction"
     },
     "evt": {
-      "has-joined": "<b>{{subject}}</b> has successfully joined the account '<span class='text-warning'>{{account}}</span>' {{time}}"
+      "has-joined": "<b>{{subject}}</b> has successfully joined the account '<span class='text-warning'>{{account}}</span>' {{time}}",
+      "wall": "{{text}}",
+      "wall-title": "Notification from service"
     }
   },
   "paysend": {
     "tx-done": "Transaction completed successfully",
+    "tx-success": "Transaction successfully submitted",
     "sources": {
-      "auto": "Select best source inputs"
+      "auto": "Automatic selection of inputs"
     },
     "remainder": {
       "auto": "Automatically handle the remainder"
     },
     "fees": {
-      "auto": "Select the best applicable fees"
+      "auto": "Automatic selection of fees"
     },
     "funds": {
       "title": "Unconfirmed Funds",
@@ -789,7 +836,7 @@ export default {
     },
     "no-coins": {
       "title": "You have no coins",
-      "caption": "This account does not have a balance. So you can not send any bitcoin until you have some"
+      "caption": "This account does not have a balance. So you can not send any coins until you have some"
     },
     "prompts": {
       "prepare": "Prepare payment.",
@@ -863,7 +910,7 @@ export default {
         "options": "Options"
       },
       "insuff-funds": "Insufficient funds.",
-      "not-bitcoin": "Not a bitcoin adddress.",
+      "not-bitcoin": "Not a coin adddress.",
       "entire-balance": "Entire balance",
       "entire-balance-r": "Remaining balance",
       "entire-sources": "Selected inputs",
@@ -902,9 +949,10 @@ export default {
       "unc": "Allow unconfirmed funds",
       "rbf": "RBF",
       "fees": "Fees",
-      "feesperbyte": "Fees per byte: (satoshi)",
+      "feesperbyte": "Fees per byte: (satoshi, {{unit}})",
       "fees-provider": "Retrieved from {{provider}}",
-      "feesrefresg": "refresh"
+      "feesrefresg": "refresh",
+      "feesnr": "Can't determine fees"
     }
   },
   "prefs": {
@@ -944,7 +992,7 @@ export default {
     },
     "payto": {
       "app": "PAY TO",
-      "caption": "Send Bitcoins<br>Easy<br>to any Melis account",
+      "caption": "Send coins<br>Easy<br>to any Melis account",
       "total": "Total ({{unit}}):",
       "showcode": "Show the payment address",
       "error": {
@@ -963,12 +1011,15 @@ export default {
       },
       "sign": {
         "title": "Open your wallet",
-        "caption": "This device ha saved Melis credentials. You can unlock them and quickly pay from your accounts."
+        "caption": "This device has saved Melis credentials. You can unlock them and quickly pay from your accounts."
+      },
+      "curr": {
+        "enter": "Enter a value in fiat currency"
       }
     },
     "join": {
       "app": "JOIN",
-      "caption": "Send Bitcoins<br>Easy<br>to any Melis account",
+      "caption": "Send coins<br>Easy<br>to any Melis account",
       "explain": {
         "title": "You have been asked to join a shared account",
         "caption": "Access your wallet to automatically create a new multiuser account with the user that gave you this join code"
@@ -990,7 +1041,7 @@ export default {
     },
     "profile": {
       "app": "PROFILE",
-      "caption": "Send Bitcoins<br>Easy<br>to any Melis account",
+      "caption": "Send coins<br>Easy<br>to any Melis account",
       "no-profile": "this account exists but has released no public profile data."
     },
     "error": {
@@ -1008,12 +1059,25 @@ export default {
         "no-perms": "<b>Melis could not access the camera to acquire images.</b> Please check you have given the appropriate permissions. Otherwise you may not have a supported camera or your platform is not supported."
       },
       "accept": "ok",
-      "dismiss": "Dismiss"
+      "dismiss": "Dismiss",
+      "scan": "Scan",
+      "upload": "Upload"
+    }
+  },
+  "qrupload": {
+    "action": {
+      "drag": "Drag an image of a QR Code here to acquire it",
+      "valid": "Drop the image here",
+      "invalid": "Unsupported image format"
+    },
+    "btn": {
+      "cancel": "Discard the address",
+      "ok": "Confirm address"
     }
   },
   "quicksend": {
     "title": "Pay from your accounts",
-    "caption": "You can quickly pah here from one of your accounts.",
+    "caption": "You can quickly pay here from one of your accounts.",
     "account": "Active account",
     "to": "To:",
     "balance": "Balance:",
@@ -1088,9 +1152,14 @@ export default {
         "one": "There is a <b>new event</b>.",
         "other": "There are <b>{{count}} new events</b>."
       },
-      "show": "Show."
+      "show": "Show.",
+      "outdated": {
+        "title": "There might be a newer version",
+        "caption": "An updated version of this application might be out. According to your platform you might want to check for updates, or head to the website."
+      }
     },
     "evt": {
+      "wall": "Notification from service",
       "has-joined": "<b>{{subject}}</b> has successfully joined the account '<span class='text-warning'>{{account}}</span>' {{time}}",
       "tfad": {
         "title": "Two Factors recovery requested!",
@@ -1195,7 +1264,8 @@ export default {
     "actions": {
       "token-sent": "Token Sent.",
       "enable": "Enable",
-      "enroll": "Enroll"
+      "enroll": "Enroll",
+      "error": "There was an error."
     },
     "devices": {
       "email": "Email",
@@ -1306,7 +1376,11 @@ export default {
       "wrong": "Wrong PIN",
       "left": "{{count}} attempts left",
       "ph": "Enter your PIN",
-      "last-attempt": "Last Attempt!"
+      "last-attempt": "Last Attempt!",
+      "nocreds": {
+        "title": "No credentials on this device",
+        "caption": "For security reason this device has been invalidated and credentials removed."
+      }
     }
   },
   "toasts": {
@@ -1495,7 +1569,7 @@ export default {
       },
       "transaction": {
         "title": "Confirm the transaction",
-        "caption": "Rotating unspents incurs in network fees as it is a normal bitcoin transaction:",
+        "caption": "Rotating unspents incurs in network fees as it is a normal transaction:",
         "fees": "Fees:",
         "error": "An error occurred when performing the requested operation"
       },
@@ -1517,6 +1591,10 @@ export default {
         "3mo": "3 months",
         "6mo": "6 months",
         "disabled": "disabled"
+      },
+      "url": {
+        "title": "Recovery application",
+        "caption": "In case this application becomes unavailable, you can recovery your funds with the (static) app at these addresses"
       }
     },
     "prefs": {
@@ -1719,7 +1797,7 @@ export default {
     "signed": {
       "noacct": {
         "title": "You have no accounts yet",
-        "caption": "You need to create your first account to start receiving bitcoins"
+        "caption": "You need to create your first account to start receiving coins"
       },
       "create": "Create your first account",
       "success": {
@@ -1848,6 +1926,11 @@ export default {
           "title": "An error occurred importing the wallet",
           "caption": ""
         },
+        "noacc": {
+          "title": "This wallet has no accounts",
+          "caption": "The wallet you just opened has no visible accounts. You may now create a new one"
+        },
+        "createacct": "Create a new account",
         "summary": "Your wallet"
       }
     },

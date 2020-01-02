@@ -1,28 +1,36 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import { mergedProperty } from 'melis-cm-svcs/utils/misc'`
-`import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { get, getWithDefault, computed } from '@ember/object'
+import { isBlank } from '@ember/utils'
+
+import { task, taskGroup } from 'ember-concurrency'
+import { mergedProperty } from 'melis-cm-svcs/utils/misc'
+import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 CUTOFF_FEEBUMP = 2
 
-StreamTx = Ember.Component.extend(
+StreamTx = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  ptxsvc: Ember.inject.service('cm-ptxs')
+  cm: service('cm-session')
+  ptxsvc: service('cm-ptxs')
   entry: null
 
   classNames: ['stream-entry', 'row','animated', 'fadeIn', 'xquick']
 
-  tx: Ember.computed.alias('entry.content')
+  tx: alias('entry.content')
 
   showControls: false
 
   feesMult: 1
-  oldMult: Ember.computed.alias('linkedPtx.cmo.meta.feeMultiplier')
+  oldMult: alias('linkedPtx.cmo.meta.feeMultiplier')
 
-  clickable: Ember.computed.not('showControls')
+  clickable: computed.not('showControls')
 
-  invalidated: Ember.computed.alias('tx.cmo.invalidated')
+  invalidated: alias('tx.cmo.invalidated')
 
   linkedPtx: null
   replacingPtx: null
@@ -50,33 +58,33 @@ StreamTx = Ember.Component.extend(
       res = yield @get('ptxsvc').getPtxByHash(hash, account)
       @set 'linkedPtx', res
     catch error
-      Ember.Logger.error "Error: ",  error
+      Logger.error "Error: ",  error
   ).group('apiOps')
 
   changeTxLabels: task( (labels, tx) ->
     api = @get('cm.api')
     try
-      res = yield api.txInfoSet(Ember.get(tx, 'cmo.id'), labels, Ember.get(tx, 'cmo.meta'))
+      res = yield api.txInfoSet(get(tx, 'cmo.id'), labels, get(tx, 'cmo.meta'))
       @set 'selected', res
     catch error
-      Ember.Logger.error "Error: ",  error
+      Logger.error "Error: ",  error
   ).group('apiOps')
 
 
   changeTxInfo: task( (value, tx) ->
-    if !Ember.isBlank(tx)
+    if !isBlank(tx)
       api = @get('cm.api')
       meta = mergedProperty(tx, 'cmo.meta', info: value)
       try
-        res = yield api.txInfoSet(Ember.get(tx, 'cmo.id'), Ember.get(tx, 'cmo.labels'), meta)
+        res = yield api.txInfoSet(get(tx, 'cmo.id'), get(tx, 'cmo.labels'), meta)
         @set 'selected', res
       catch error
-        Ember.Logger.error "Error: ",  error
+        Logger.error "Error: ",  error
   ).group('apiOps')
 
 
   requestRbf: task( (tx) ->
-    hash = Ember.get(tx, 'cmo.tx')
+    hash = get(tx, 'cmo.tx')
     api = @get('cm.api')
 
     try
@@ -88,7 +96,7 @@ StreamTx = Ember.Component.extend(
         res = yield @get('ptxsvc').txFeeBump(tx.get('account'), hash, @get('feesMult'))
       @set('replacingPtx', res)
     catch error
-      Ember.Logger.error "Error: ",  error
+      Logger.error "Error: ",  error
   )
 
 
@@ -119,4 +127,4 @@ StreamTx = Ember.Component.extend(
 )
 
 
-`export default StreamTx`
+export default StreamTx

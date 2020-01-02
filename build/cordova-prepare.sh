@@ -2,7 +2,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 APP=$(cd "${DIR}/.." && pwd)
 CDV=$APP/corber/cordova
-corber=./node_modules/corber/bin/corber
+corber=corber
 
 file=corber/cordova/config.xml
 
@@ -17,10 +17,16 @@ platform=$1
 target=$2
 version=$3
 
+versionCode=`node $DIR/versioncode.js $version`
 
+echo $versionCode
+
+yarn remove corber --save
 rm -rf tmp corber
 $SETUP $platform $target
-sed -i -e 's:version=".*" xmlns=:version="'$version'" xmlns=:g' $file
+sed -i -e 's:__ver__:'$version':g' $file
+sed -i -e 's:__vc__:'$versionCode':g' $file
+
 
 case "$platform" in
   ios)
@@ -29,7 +35,7 @@ case "$platform" in
     cp $DIR/cordova/google-services-melis-$target.json $CDV/google-services.json
     ;;
   android)
-    cp $DIR/cordova/google-services-melis-$target.json $CDV/google-services.json
+    cp $DIR/cordova/google-services-melis-$target.json $CDV/platforms/android/app/google-services.json
     ;;
 
   *)
@@ -39,9 +45,9 @@ case "$platform" in
 esac
 
 
-# we do not have a correspondig app profile for regtest fcm
+# we do not have a corresponding app profile for regtest fcm
 if [ "$target" != "regtest" ]; then
-  #ember cordova:plugin add cordova-plugin-fcm
-  $corber plugin add https://github.com/lp1bp/cordova-plugin-fcm.git
-  #patch -p0 < $DIR/cordova/patch/plugins-fcm.patch
+  echo
+  # using the fork at cmgustavo/cordova-plugin-fcm
+  $corber plugin add cordova-plugin-fcm-ng
 fi

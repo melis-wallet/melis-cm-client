@@ -1,10 +1,9 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
 
-JoinRoute = Ember.Route.extend(
+JoinRoute = Route.extend(
 
-
-  cm: Ember.inject.service('cm-session')
-
+  cm: service('cm-session')
 
   model: (params) ->
 
@@ -16,4 +15,4 @@ JoinRoute = Ember.Route.extend(
     )
 )
 
-`export default JoinRoute`
+export default JoinRoute

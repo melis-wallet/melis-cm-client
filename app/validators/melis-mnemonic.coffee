@@ -1,14 +1,17 @@
-`import BaseValidator from 'ember-cp-validations/validators/base'`
+import { inject as service } from '@ember/service'
+import { isBlank } from '@ember/utils'
+
+import BaseValidator from 'ember-cp-validations/validators/base'
 
 NOT_A_MNEMONIC = 'validations.not-mnemonic'
 
 
 MelisMnemonic = BaseValidator.extend
-  creds: Ember.inject.service('cm-credentials')
-  i18n: Ember.inject.service()
+  creds: service('cm-credentials')
+  i18n: service()
 
   validate: (value, options, model, attribute) ->
-    return true if Ember.isBlank(value) && options.allowBlank
+    return true if isBlank(value) && options.allowBlank
 
     if @get('creds').isMnemonicValid(value)
       true
@@ -16,4 +19,4 @@ MelisMnemonic = BaseValidator.extend
       @get('i18n').t(NOT_A_MNEMONIC).toString()
 
 
-`export default MelisMnemonic`
+export default MelisMnemonic

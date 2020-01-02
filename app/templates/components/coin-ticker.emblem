@@ -3,25 +3,27 @@
   .stat-panel class="{{ if compact 'compact' }}" click='toggleGraph'
     .stat-cell.bg-danger.valign-middle.no-padding-b
       img.tk-coin-icon src="{{coin-img-path unit.unit}}"
-      .pull-right
-        = if compact
+      = if compact
+        .pull-right
           span.text-md
             = liquid-bind value use='toDown' as |value|
               span.text-sm.text-slim.text-lowercase
                 = currencySvc.currencySymbol
                 |/
                 = unit.tsym
-              strong = format-money value
+              strong = format-money-coin value coin=unit compact=true
           br
 
-        = else
+      = else
+        .pull-left.small style='opacity: 0.4;' = moment-format time '(HH:MM)'
+        .pull-right
           span.text-xlg
             = liquid-bind value use='toDown' as |value|
               span.text-lg.text-slim.text-lowercase
                 = currencySvc.currencySymbol
                 |/
                 = unit.tsym
-              strong = format-money value
+              strong = format-money-coin value coin=unit compact=true
 
     = unless compact
       .stat-row

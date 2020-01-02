@@ -1,13 +1,15 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import { waitTime } from 'melis-cm-svcs/utils/delayed-runners'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+
+import { task, taskGroup } from 'ember-concurrency'
+import { waitTime } from 'melis-cm-svcs/utils/delayed-runners'
 
 WAIT_CONNECT = 10000
 WAIT_RESTART = 20000
 
-OverlayNetworkStatus = Ember.Component.extend(
+OverlayNetworkStatus = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
   classNameBindings: ['displayed::hidden']
   classNames: ['animated', 'fadeIn']
 
@@ -48,4 +50,4 @@ OverlayNetworkStatus = Ember.Component.extend(
       @get('cm').reconnect()
 )
 
-`export default OverlayNetworkStatus`
+export default OverlayNetworkStatus

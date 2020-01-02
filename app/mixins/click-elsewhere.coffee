@@ -1,13 +1,16 @@
-`import Ember from 'ember'`
+import Mixin from '@ember/object/mixin'
+import { computed } from '@ember/object'
+import { on as eon } from '@ember/object/evented'
+import { bind } from '@ember/runloop'
 
-ClickElsewhere = Ember.Mixin.create
+ClickElsewhere = Mixin.create
 
  #use this method hook to define your desired behavior
   onClickElsewhere: Ember.K
 
   #bound version of our instance method
-  clickHandler: Em.computed ->
-    Ember.run.bind @, 'onClickElsewhere'
+  clickHandler: computed ->
+    bind @, 'onClickElsewhere'
 
   #logic for determining of a click has landed anywhere but our view
   elsewhereHandler: (e) ->
@@ -17,12 +20,12 @@ ClickElsewhere = Ember.Mixin.create
     unless thisIsElement then @onClickElsewhere event
 
   #attach event listener to window when view in DOM
-  setupClickEvent: Ember.on 'didInsertElement', ->
+  setupClickEvent: eon 'didInsertElement', ->
     $(window).on "click", @get "clickHandler"
 
   #remove window event listener when view removed from DOM
-  teardownClickEvent: Ember.on 'willDestroyElement', ->
+  teardownClickEvent: eon 'willDestroyElement', ->
     $(window).off "click", @get "clickHandler"
 
 
-`export default ClickElsewhere`
+export default ClickElsewhere

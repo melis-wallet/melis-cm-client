@@ -1,6 +1,7 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
 
-MoreInfo = Ember.Component.extend(
+
+MoreInfo = Component.extend(
 
   prompt: null
   displayed: false
@@ -17,5 +18,4 @@ MoreInfo = Ember.Component.extend(
       @set('displayed', false)
 )
 
-
-`export default MoreInfo`
+export default MoreInfo

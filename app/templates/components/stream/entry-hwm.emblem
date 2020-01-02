@@ -7,3 +7,9 @@
         a.btn.btn-primary click='showNew' href=''
           = t 'stream.hwm.show'
 
+
+  = if warnOutdated
+
+    .note.note-info
+      h4 = t 'stream.hwm.outdated.title'
+      p = t 'stream.hwm.outdated.caption'

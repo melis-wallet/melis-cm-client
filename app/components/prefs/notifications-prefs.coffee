@@ -1,10 +1,10 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
-NotifPrefs = Ember.Component.extend(
+NotifPrefs = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  notif: Ember.inject.service('global-notifications')
-
+  cm: service('cm-session')
+  notif: service('global-notifications')
 )
 
-`export default NotifPrefs`
+export default NotifPrefs

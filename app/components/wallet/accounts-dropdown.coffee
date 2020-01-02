@@ -1,15 +1,18 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-WalletAccountsDropdown = Ember.Component.extend(
+
+WalletAccountsDropdown = Component.extend(
   tagName: 'li'
 
   classNames: ['dropdown']
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
-  currentWallet: Ember.computed.alias('cm.currentWallet')
-  currentAccount: Ember.computed.alias('cm.currentAccount')
-  accounts: Ember.computed.alias('cm.accounts')
+  currentWallet: alias('cm.currentWallet')
+  currentAccount: alias('cm.currentAccount')
+  accounts: alias('cm.accounts')
 
   name: (->
     @get('currentAccount.meta.name')
@@ -29,4 +32,4 @@ WalletAccountsDropdown = Ember.Component.extend(
 
 )
 
-`export default WalletAccountsDropdown`
+export default WalletAccountsDropdown

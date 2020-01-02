@@ -1,6 +1,7 @@
 
-= leaf-accordion selected-idx=1 type=accordion as |chord|
-  = each validDevices as |d|
-    = leaf-accordion-panel title=d.value icon=(tfa-device-icon d) simple-header=true parent=chord
+= leaf-accordion selected-idx="tfa--0" type=accordion as |chord|
+  = each validDevices as |d i|
+    = log i
+    = leaf-accordion-panel idx=(concat 'tfa--' i) title=d.value icon=(tfa-device-icon d) simple-header=true parent=chord
       = partial 'components/tfa/prompts-verify'
       = tfa/enter-token device=d sendButton=true on-valid-token='validToken' on-send-token='sendToken' info-text=infoText running=running

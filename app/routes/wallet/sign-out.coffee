@@ -1,6 +1,6 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
 
-WalletSignOutRoute = Ember.Route.extend(
+WalletSignOutRoute = Route.extend(
 
   beforeModel: (transition) ->
     cm = @get('cm')
@@ -8,8 +8,6 @@ WalletSignOutRoute = Ember.Route.extend(
       console.log "Signed Out. Restarting..."
       window.location.replace('/')
     )
-
-
 )
 
-`export default WalletSignOutRoute`
+export default WalletSignOutRoute

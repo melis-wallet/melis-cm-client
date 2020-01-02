@@ -1,10 +1,18 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { sort } from '@ember/object/computed'
+import { get, set } from '@ember/object'
+import { A } from '@ember/array'
 
-TxsList = Ember.Component.extend(
+import { task, taskGroup } from 'ember-concurrency'
 
-  cm:  Ember.inject.service('cm-session')
-  txsvc: Ember.inject.service('cm-tx-infos')
+import Logger from 'melis-cm-svcs/utils/logger'
+
+
+TxsList = Component.extend(
+
+  cm: service('cm-session')
+  txsvc: service('cm-tx-infos')
 
 
   classNames: ['history-container']
@@ -22,7 +30,7 @@ TxsList = Ember.Component.extend(
   account: null
 
   txsSorting: ['time:desc']
-  txsSorted: Ember.computed.sort('txs', 'txsSorting')
+  txsSorted: sort('txs', 'txsSorting')
 
   txsFiltered: (->
     filter = @get('filter')
@@ -30,9 +38,9 @@ TxsList = Ember.Component.extend(
     @get('txsSorted').filter( (tx)->
       if filter
         switch filter
-          when 'in' then !Ember.get(tx, 'negative')
-          when 'out' then Ember.get(tx, 'negative')
-          when 'star' then Ember.get(tx, 'cmo.meta.starred')
+          when 'in' then !get(tx, 'negative')
+          when 'out' then get(tx, 'negative')
+          when 'star' then get(tx, 'cmo.meta.starred')
 
       else
         true
@@ -47,7 +55,7 @@ TxsList = Ember.Component.extend(
         try
           yield svc.txiFetch(account)
         catch error
-          Ember.Logger.error 'Error prefetching: ', error
+          Logger.error 'Error prefetching: ', error
   ).group('pageOps')
 
 
@@ -57,11 +65,11 @@ TxsList = Ember.Component.extend(
       try
         yield svc.txiFetchMore(account)
       catch error
-        Ember.Logger.error 'Error prefetching: ', error
+        Logger.error 'Error prefetching: ', error
   )
 
   setup: (->
-    @set('txs', Ember.A())
+    @set('txs', A())
     svc = @get('txsvc')
     if (account = @get('account'))
       @set 'txs', svc.findByAcct(account)
@@ -99,5 +107,5 @@ TxsList = Ember.Component.extend(
         @sendAction('on-select-tx', tx)
 )
 
-`export default TxsList`
+export default TxsList
 

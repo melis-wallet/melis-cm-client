@@ -1,12 +1,17 @@
-`import Ember from 'ember'`
-`import { task, timeout } from 'ember-concurrency'`
-`import { filterProperties, mergedProperty } from 'melis-cm-svcs/utils/misc'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-PublicProfile = Ember.Component.extend(
+import { task, timeout } from 'ember-concurrency'
+import { filterProperties, mergedProperty } from 'melis-cm-svcs/utils/misc'
 
-  cm: Ember.inject.service('cm-session')
+import Logger from 'melis-cm-svcs/utils/logger'
 
-  account: Ember.computed.alias('cm.currentAccount')
+PublicProfile = Component.extend(
+
+  cm: service('cm-session')
+
+  account: alias('cm.currentAccount')
 
   busy: false
 
@@ -17,7 +22,7 @@ PublicProfile = Ember.Component.extend(
       try
         yield @get('cm.api').accountUpdate(account, pubMeta: pubMeta)
       catch err
-        Ember.Logger.error 'Error updating meta: ', err
+        Logger.error 'Error updating meta: ', err
   ).enqueue()
 
   actions:
@@ -32,4 +37,4 @@ PublicProfile = Ember.Component.extend(
 
 )
 
-`export default PublicProfile`
+export default PublicProfile

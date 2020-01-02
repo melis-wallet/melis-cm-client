@@ -1,36 +1,46 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import { filterProperties, mergedProperty } from 'melis-cm-svcs/utils/misc'`
-`import Alertable from 'ember-leaf-core/mixins/leaf-alertable'`
-`import ModalAlerts from '../../../mixins/modal-alerts'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias, sort, empty } from '@ember/object/computed'
+import { get, set } from '@ember/object'
+import { A } from '@ember/array'
 
-DONATE_IMG_URI = 'https://www.melis.io/images/donate-180x70.png'
+import { task, taskGroup } from 'ember-concurrency'
+import { filterProperties, mergedProperty } from 'melis-cm-svcs/utils/misc'
+import Alertable from 'ember-leaf-core/mixins/leaf-alertable'
+import ModalAlerts from '../../../mixins/modal-alerts'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+import config from '../../../config/environment'
+
+DONATE_IMG_URI = 'https://www.melis.io/images/donate-%COIN-180x70.png'
 DONATE_TEMPLATE = """
   <a href="%URL">
     <img src="%IMG" alt='melis donate'>
   </a>
 """
 
-AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
+AccountIndexController = Controller.extend(Alertable, ModalAlerts,
 
-  credentials: Ember.inject.service('cm-credentials')
-  aa: Ember.inject.service('aa-provider')
+  credentials: service('cm-credentials')
+  aa: service('aa-provider')
+  modalManager: service('modals-manager')
+  accountInfo: service('cm-account-info')
 
 
-  account: Ember.computed.alias('cm.currentAccount')
-  modalManager: Ember.inject.service('modals-manager')
-
-  accountInfo: Ember.inject.service('cm-account-info')
+  account: alias('cm.currentAccount')
+  coin: alias('account.unit.symbol')
 
   apiOps: taskGroup().drop()
 
-
   donateImgUri: DONATE_IMG_URI
+  recoveryUrls: A(config.APP.recoveryUrls)
 
-  queryParams: ['tab']
+  queryParams: ['tab', 'debug']
   tab: 'preferences'
+  debug: false
 
   dangerEnabled: false
+  xpubEnabled: false
 
   showCredWarning: ( ->
     !@get('credentials.backupConfirmed') && !@get('credentialsBackup')
@@ -52,7 +62,7 @@ AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
     uri = @get('cm').webUrlFor('public.payto', id)
 
     tmpl = DONATE_TEMPLATE
-    tmpl.replace('%URL', uri).replace('%IMG', DONATE_IMG_URI)
+    tmpl.replace('%URL', uri).replace('%IMG', DONATE_IMG_URI).replace('%COIN', @get('coin'))
   ).property('encodedUniqueId')
 
 
@@ -90,7 +100,7 @@ AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
       yield @get('cm.api').accountUpdate(account.get('cmo'), hidden: true)
     catch e
       @alertDanger(e.msg, true)
-      Ember.Logger.error 'Error: ', e
+      Logger.error 'Error: ', e
   ).group('apiOps')
 
   accountUnSecure: task((account) ->
@@ -98,7 +108,7 @@ AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
       yield @get('cm.api').accountUpdate(account.get('cmo'), hidden: false)
     catch e
       @alertDanger(e.msg, true)
-      Ember.Logger.error 'Error: ', e
+      Logger.error 'Error: ', e
   ).group('apiOps')
 
 
@@ -106,7 +116,6 @@ AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
     cm = @get('cm')
 
     try
-
       ok = yield @showModalAlert(
         type: 'warning'
         title: 'account.maint.delete.w.title'
@@ -117,39 +126,39 @@ AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
       @transitionToRoute('main.account.dashboard', @get('cm.accounts.firstObject.pubId'))
     catch e
       @alertDanger(e.msg, true)
-      Ember.Logger.error 'Error: ', e
+      Logger.error 'Error: ', e
   ).group('apiOps')
 
 
   changeAcctColor: task((account, color) ->
     try
-      cmo = Ember.get(account, 'cmo')
+      cmo = get(account, 'cmo')
       meta = mergedProperty(cmo, 'meta', color: color)
       yield @get('cm.api').accountUpdate(cmo, {meta: meta})
     catch e
       @alertDanger(e.msg, true)
-      Ember.Logger.error 'Error: ', e
+      Logger.error 'Error: ', e
   ).group('apiOps')
 
   changeAcctIcon: task((account, icon) ->
     try
-      cmo = Ember.get(account, 'cmo')
+      cmo = get(account, 'cmo')
       meta = mergedProperty(cmo, 'meta', icon: icon)
       yield @get('cm.api').accountUpdate(cmo, {meta: meta})
     catch e
       @alertDanger(e.msg, true)
-      Ember.Logger.error 'Error: ', e
+      Logger.error 'Error: ', e
   ).group('apiOps')
 
 
   changeAcctName: task((account, newname) ->
     try
-      cmo = Ember.get(account, 'cmo')
+      cmo = get(account, 'cmo')
       meta = mergedProperty(cmo, 'meta', name: newname)
       yield @get('cm.api').accountUpdate(cmo, {meta: meta})
     catch e
       @alertDanger(e.msg, true)
-      Ember.Logger.error 'Error: ', e
+      Logger.error 'Error: ', e
   ).group('apiOps')
 
   deleteCredentials: task( ->
@@ -162,7 +171,7 @@ AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
       @get('cm').resetApp()
     catch e
       @alertDanger(e.msg, true)
-      Ember.Logger.error 'Error: ', e
+      Logger.error 'Error: ', e
   ).group('apiOps')
 
 
@@ -189,6 +198,10 @@ AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
 
     toggleDanger: ->
       @toggleProperty('dangerEnabled')
+      false
+
+    toggleXpub: ->
+      @toggleProperty('xpubEnabled')
       false
 
     deleteCredentials: ->
@@ -222,4 +235,4 @@ AccountIndexController = Ember.Controller.extend(Alertable, ModalAlerts,
 
 )
 
-`export default AccountIndexController`
+export default AccountIndexController

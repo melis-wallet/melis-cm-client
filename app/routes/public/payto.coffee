@@ -1,10 +1,9 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
 
-PayToRoute = Ember.Route.extend(
+PayToRoute = Route.extend(
 
-
-  cm: Ember.inject.service('cm-session')
-
+  cm: service('cm-session')
 
   model: (params) ->
 
@@ -14,4 +13,4 @@ PayToRoute = Ember.Route.extend(
     )
 )
 
-`export default PayToRoute`
+export default PayToRoute

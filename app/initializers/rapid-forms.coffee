@@ -1,4 +1,4 @@
-`import EmFormGroup from 'ember-rapid-forms/components/em-form-group'`
+import EmFormGroup from 'ember-rapid-forms/components/em-form-group'
 
 
 CmSessionInitializer = {
@@ -6,11 +6,11 @@ CmSessionInitializer = {
 
   initialize: (application) ->
     EmFormGroup.reopen(
-      successIcon: 'fa fa-check-square'
-      errorIcon: 'fa fa-square'
+      successIcon: 'check-square'
+      errorIcon: 'square'
     )
 
 
 }
 
-`export default CmSessionInitializer`
+export default CmSessionInitializer

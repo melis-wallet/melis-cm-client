@@ -1,14 +1,21 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { isBlank } from '@ember/utils'
 
-PaymentQuickSend = Ember.Component.extend(ModelFactory,
+import { task, taskGroup } from 'ember-concurrency'
+import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'
 
-  cm: Ember.inject.service('cm-session')
-  currencySvc: Ember.inject.service('cm-currency')
-  coinsvc: Ember.inject.service('cm-coin')
-  aa: Ember.inject.service('aa-provider')
-  i18n: Ember.inject.service()
+import Logger from 'melis-cm-svcs/utils/logger'
+
+
+PaymentQuickSend = Component.extend(ModelFactory,
+
+  cm: service('cm-session')
+  currencySvc: service('cm-currency')
+  coinsvc: service('cm-coin')
+  aa: service('aa-provider')
+  i18n: service()
 
   error: null
   success: null
@@ -33,7 +40,9 @@ PaymentQuickSend = Ember.Component.extend(ModelFactory,
 
 
   recipient: ( ->
-    return if Ember.isBlank('activeAccount')
+    return if isBlank('activeAccount')
+
+    console.error @get('recipientInfo')
 
     @createSimpleModel('payment-recipient',
       type: if @get('recipientInfo') then 'cm' else 'address'
@@ -47,7 +56,7 @@ PaymentQuickSend = Ember.Component.extend(ModelFactory,
 
 
   changedAccts: ( ->
-    if Ember.isBlank(@get('activeAccount')) && (unit = @get('unit'))
+    if isBlank(@get('activeAccount')) && (unit = @get('unit'))
       @set('activeAccount', @get('cm.accounts')?.findBy('coin', unit))
   ).observes('accounts', 'unit').on('init')
 
@@ -58,9 +67,11 @@ PaymentQuickSend = Ember.Component.extend(ModelFactory,
 
 
   setup: ( ->
-    Ember.Logger.error("[QuickSend] Unit is required") if Ember.isBlank('unit')
+    Logger.error("[QuickSend] Unit is required") if isBlank('unit')
 
-    if @get('recipientId') && Ember.isBlank(@get('recipientInfo'))
+    console.error "Recipient", @get('recipientId')
+
+    if @get('recipientId') && isBlank(@get('recipientInfo'))
       @get('findRecipient').perform()
   ).on('init')
 
@@ -94,19 +105,14 @@ PaymentQuickSend = Ember.Component.extend(ModelFactory,
         yield @get('aa').tfaAuth(op, @get('i18n').t('paysend.prompts.prepare'))
         @set 'success', @get('i18n').t('quicksend.success')
       catch error
-        Ember.Logger.error error
+        Logger.error error
         @set 'error', @get('i18n').t('quicksend.error.pay')
-
-
 
   ).group('apiOps')
 
   actions:
     payNow: ->
       @get('payNow').perform()
-
-
-
 )
 
-`export default PaymentQuickSend`
+export default PaymentQuickSend

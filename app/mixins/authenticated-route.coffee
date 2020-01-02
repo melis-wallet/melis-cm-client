@@ -1,10 +1,15 @@
-`import Ember from 'ember'`
-`import config from '../config/environment';`
+import Mixin from '@ember/object/mixin'
+import { inject as service } from '@ember/service'
 
-AuthenticatedRoute = Ember.Mixin.create(
+import Logger from 'melis-cm-svcs/utils/logger'
 
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
+import config from '../config/environment'
+
+
+AuthenticatedRoute = Mixin.create(
+
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
 
 
   _authenticationNeeded: (transition) ->
@@ -20,17 +25,17 @@ AuthenticatedRoute = Ember.Mixin.create(
       if @get('credentials.validCredentials')
 
         # for debug
-        pin = config['melis-session'].autologinTestPin
+        pin = config['melis-session']?.autologinTestPin
 
         if pin && config['melis-session'].testMode
-          Ember.Logger.warn " -- Autologging with pin #{pin} -- "
+          Logger.warn " -- Autologging with pin #{pin} -- "
           @get('cm').scheduleWalletOpen(pin: pin).catch( =>
             @_authenticationNeeded(transition)
           )
         else
           @_authenticationNeeded(transition)
       else
-        @transitionTo('wallet.enroll')
+        @transitionTo('wallet.welcome')
 
     return(superResult)
 
@@ -40,4 +45,4 @@ AuthenticatedRoute = Ember.Mixin.create(
       @transitionTo('wallet.sign-in')
 )
 
-`export default AuthenticatedRoute`
+export default AuthenticatedRoute

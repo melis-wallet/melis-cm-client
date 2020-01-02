@@ -1,14 +1,21 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, filter } from '@ember/object/computed'
+import { get, set } from '@ember/object'
 
-ManageNlock = Ember.Component.extend(
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
-  cm: Ember.inject.service('cm-session')
-  recovery: Ember.inject.service('cm-recovery-info')
-  aa: Ember.inject.service('aa-provider')
-  i18n: Ember.inject.service()
-  device: Ember.inject.service('device-support')
+ManageNlock = Component.extend(
+
+
+  cm: service('cm-session')
+  recovery: service('cm-recovery-info')
+  aa: service('aa-provider')
+  i18n: service()
+  device: service('device-support')
 
   lockTimeOpts: [
     {value: 180, label: 'view.nlock.time.6mo'}
@@ -28,9 +35,9 @@ ManageNlock = Ember.Component.extend(
   ).property('lockTime')
 
 
-  lockTime: Ember.computed.alias('account.cmo.lockTimeDays')
-  unspents: Ember.computed.alias('account.recoveryInfo.expiring')
-  recoveryInfo: Ember.computed.alias('account.recoveryInfo.current')
+  lockTime: alias('account.cmo.lockTimeDays')
+  unspents: alias('account.recoveryInfo.expiring')
+  recoveryInfo: alias('account.recoveryInfo.current')
 
   account: null
 
@@ -40,22 +47,22 @@ ManageNlock = Ember.Component.extend(
 
   apiOps: taskGroup().drop()
 
-  expiring: Ember.computed.filter('unspents', (e) ->
-    ex = Ember.get(e, 'timeExpire')
+  expiring: filter('unspents', (e) ->
+    ex = get(e, 'timeExpire')
     (ex < moment().add(EXPIRE_THRESH, 'days').valueOf()) if ex
   )
 
-  firstExpiring: Ember.computed.alias('expiring.firstObject')
+  firstExpiring: alias('expiring.firstObject')
 
 
   getCurrentValue: task( ->
     if account = @get('account')
       try
         res = yield  @get('cm.api').getLocktimeDays(account.get('cmo'))
-        if res && (days = Ember.get(res, 'lockTimeDays'))
+        if res && (days = get(res, 'lockTimeDays'))
           @set 'lockTime', days
       catch error
-        Ember.Logger.error error
+        Logger.error error
 
     else
 
@@ -64,7 +71,7 @@ ManageNlock = Ember.Component.extend(
   getExpiring: task( ->
     if account = @get('account')
       res = yield  @get('cm.api').getExpiringUnspents(account.get('cmo'))
-      if res && (list = Ember.get(res, 'list'))
+      if res && (list = get(res, 'list'))
         @set 'unspents', list
     else
 
@@ -73,7 +80,7 @@ ManageNlock = Ember.Component.extend(
   getUnspents: task( ->
     if account = @get('account')
       res = yield  @get('cm.api').getUnspents(account.get('cmo'))
-      if res && (list = Ember.get(res, 'list'))
+      if res && (list = get(res, 'list'))
         @set 'unspents', list
     else
 
@@ -85,7 +92,7 @@ ManageNlock = Ember.Component.extend(
       try
         yield @get('recovery').getRecoveryInfo(account)
       catch error
-        Ember.Logger.error "Error refreshing: ", error
+        Logger.error "Error refreshing: ", error
 
   ).group('apiOps')
 
@@ -98,10 +105,10 @@ ManageNlock = Ember.Component.extend(
 
       try
         res = yield @get('aa').tfaOrLocalPin(op)
-        if res && (days = Ember.get(res, 'lockTimeDays'))
+        if res && (days = get(res, 'lockTimeDays'))
           @set 'lockTime', days
       catch error
-        Ember.Logger.error "Error refreshing: ", error
+        Logger.error "Error refreshing: ", error
   ).group('apiOps')
 
 
@@ -110,12 +117,6 @@ ManageNlock = Ember.Component.extend(
       unspents: null
       error: false
   ).observes('account')
-
-  #getValue: (->
-  #  @get('getCurrentValue').perform()
-  #).observes('account').on('didInsertElement')
-
-
 
   actions:
     changeLockTime: (value) ->
@@ -142,5 +143,4 @@ ManageNlock = Ember.Component.extend(
 
 )
 
-
-`export default ManageNlock`
+export default ManageNlock

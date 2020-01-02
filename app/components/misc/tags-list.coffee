@@ -1,6 +1,10 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { equal } from '@ember/object/computed'
+import { isNone } from '@ember/utils'
+import { A } from '@ember/array'
 
-TagsList = Ember.Component.extend(
+TagsList = Component.extend(
 
   selection: null
   labelsSet: null
@@ -16,22 +20,20 @@ TagsList = Ember.Component.extend(
 
   control: 'left'
 
-  controlOnLeft: Ember.computed.equal('control', 'left')
-  controlOnRight: Ember.computed.equal('control', 'right')
+  controlOnLeft: equal('control', 'left')
+  controlOnRight: equal('control', 'right')
 
   setup: ( ->
-    @set('selection', Ember.A()) if Ember.isNone(@get('selection'))
+    @set('selection', A()) if isNone(@get('selection'))
   ).on('didInsertElement')
 
   actions:
     edit: ->
       @set('editing', true)
-      #Ember.run.scheduleOnce 'afterRender', this, (-> @.$('.selectize-input').click())
 
     doneEdit: (selection) ->
       @set('editing', false)
       @sendAction('on-done-edit', selection)
-
 )
 
-`export default TagsList`
+export default TagsList

@@ -1,7 +1,5 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
 
-InfoController = Ember.Controller.extend(
+InfoController = Controller.extend()
 
-)
-
-`export default InfoController`
+export default InfoController

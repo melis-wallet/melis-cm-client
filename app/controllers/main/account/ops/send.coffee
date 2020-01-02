@@ -1,18 +1,28 @@
-`import Ember from 'ember'`
-`import Alertable from 'ember-leaf-core/mixins/leaf-alertable'`
-`import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'`
-`import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { get, set } from '@ember/object'
+import { A } from '@ember/array'
+import { scheduleOnce } from '@ember/runloop'
+import { isEmpty } from '@ember/utils'
+import RSVP from 'rsvp'
+
+import Alertable from 'ember-leaf-core/mixins/leaf-alertable'
+import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'
+import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 SATOSHI = 100000000.0
 
-MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
+MainSendController = Controller.extend(Alertable, ModelFactory,
 
-  aa: Ember.inject.service('aa-provider')
-  ptxsvc: Ember.inject.service('cm-ptxs')
-  accountInfo: Ember.inject.service('cm-account-info')
-  scanner: Ember.inject.service('scanner-provider')
-  curr: Ember.inject.service('cm-currency')
+  aa: service('aa-provider')
+  ptxsvc: service('cm-ptxs')
+  accountInfo: service('cm-account-info')
+  scanner: service('scanner-provider')
+  curr: service('cm-currency')
 
   # Query params for redirect payment
   queryParams: ['address', 'pubId', 'amount', 'info', 'open-scan']
@@ -41,8 +51,8 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
   #
   #
   #
-  signingProgress: Ember.computed.alias('preparedTx.signingProgress')
-  signing: Ember.computed.alias('preparedTx.signing')
+  signingProgress: alias('preparedTx.signingProgress')
+  signing: alias('preparedTx.signing')
 
   #
   prepareOps: taskGroup().enqueue()
@@ -54,7 +64,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
   accountHasChanged: ( ->
     @setProperties(
       currentRecipient: @createSimpleModel('payment-recipient', account: @get('cm.currentAccount'))
-      recipients: Ember.A()
+      recipients: A()
       preparedTx: null
     )
     @setRecipientFromQuery()
@@ -65,7 +75,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
   #
   openScannerOnInit: ( ->
     if @get('open-scan')
-      Ember.run.scheduleOnce 'afterRender', this, ->
+      scheduleOnce 'afterRender', this, ->
         @openScanner()
   ).observes('open-scan').on('init')
 
@@ -83,14 +93,14 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
   #
   openScanner: ->
     @get('scanner').independentScan().then((data) =>
-      if (addr = @get('scanner').getAddressFromData(data))
-        Ember.set(@get('currentRecipient'), 'type', 'address')
-        Ember.set(@get('currentRecipient'), 'value', addr)
-        if (amount = Ember.get(data, 'queries.amount'))
+      if (addr = @get('scanner').getAddressFromData(data, @get('currentAccount.coin')))
+        set(@get('currentRecipient'), 'type', 'address')
+        set(@get('currentRecipient'), 'value', addr)
+        if (amount = get(data, 'queries.amount'))
           scaled = @get('curr').scaleBtc(amount * SATOSHI)
-          Ember.set(@get('currentRecipient'), 'amount', scaled)
+          set(@get('currentRecipient'), 'amount', scaled)
     ).catch((err) ->
-      Ember.Logger.error "Scanner aborted", err
+      Logger.error "Scanner aborted", err
     )
 
 
@@ -123,7 +133,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
   addRecipient: (recipient) ->
     recipients = @get('recipients')
 
-    if recipients.isAny('value', Ember.get(recipient, 'value'))
+    if recipients.isAny('value', get(recipient, 'value'))
       # would be great to (also) check this on validation
       @alertWarning @get('i18n').t('paysend.err.addr-dup'), true
       false
@@ -144,7 +154,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
 
     isEntireBalance = recipients.any((item) -> item.get('entireBalance'))
 
-    if !Ember.isEmpty(recipients)
+    if !isEmpty(recipients)
       @closeAllAlerts()
 
       op = (tfa) ->
@@ -165,7 +175,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
         unless ptx.get('isMultisig')
           return yield @get('proposePayment').perform()
       catch err
-        Ember.Logger.error('error: ', err)
+        Logger.error('error: ', err)
         if err.ex is 'CmInsufficientFundsException'
           @alertWarning "<b>#{@get('i18n').t('paysend.err.prepare-fail')}:</b> #{@get('i18n').t('paysend.err.no-funds')}", true
         else
@@ -185,7 +195,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
         res = yield ptxsvc.ptxPropose(preparedTx)
         console.log "propose: ", res
       catch err
-        Ember.Logger.error('error: ', err)
+        Logger.error('error: ', err)
         @alertWarning "#{@get('i18n').t('paysend.err.occurred', error: err.msg)}", true
   ).group('confirmOps')
 
@@ -201,13 +211,16 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
     if preparedTx && preparedTx.get('hasFieldsSignature')
       try
         res = yield ptxsvc.ptxSign(preparedTx)
-        @alertSuccess  "<b>#{@get('i18n').t('paysend.success')}:</b> #{@get('i18n').t('paysend.tx-done')}", true
+        if @get('preparedTx.cosignRequired')
+          @alertSuccess  "<b>#{@get('i18n').t('paysend.success')}:</b> #{@get('i18n').t('paysend.tx-success')}", true
+        else
+          @alertSuccess  "<b>#{@get('i18n').t('paysend.success')}:</b> #{@get('i18n').t('paysend.tx-done')}", true
         @clearState()
       catch err
         @alertWarning @get('i18n').t('paysend.err.occurred', error: @get('i18n').t_ex(err)), true
     else
-      Ember.Logger.error '[SEND] prepared has no fields signatures.', preparedTx, preparedTx.get('hasFieldsSignature')
-      Ember.RSVP.reject('invalid prepared tx')
+      Logger.error '[SEND] prepared has no fields signatures.', preparedTx, preparedTx.get('hasFieldsSignature')
+      RSVP.reject('invalid prepared tx')
   ).group('confirmOps')
 
   #
@@ -242,7 +255,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
         yield @get('cancelTx').perform(ptx)
         @set 'preparedTx', null
       catch err
-        Ember.Logger.error '[SEND] cancelPayment error', err
+        Logger.error '[SEND] cancelPayment error', err
   )
 
 
@@ -255,7 +268,7 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
         yield @get('proposePayment').perform()
         @clearState()
       catch err
-        Ember.Logger.error '[SEND] proposePayment error', err
+        Logger.error '[SEND] proposePayment error', err
   )
 
   #
@@ -270,22 +283,22 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
         else
           yield @get('confirmPayment').perform()
       catch err
-        Ember.Logger.error '[SEND] proposePayment error', err
+        Logger.error '[SEND] proposePayment error', err
   )
 
   accountChanged: (->
     @closeAllAlerts()
-    @set('recipients', Ember.A())
+    @set('recipients', A())
     @set('currentRecipient', @createSimpleModel('payment-recipient', account: @get('cm.currentAccount')))
   ).observes('cm.currentAccount')
 
   setup: ( ->
-    @set('recipients', Ember.A())
+    @set('recipients', A())
     @set('currentRecipient', @createSimpleModel('payment-recipient', account: @get('cm.currentAccount')))
 
     # cancel
     @get('ptxsvc').on('update-ptx', (ptx) =>
-      if (@get('preparedTx.cmo.id') == Ember.get(ptx, 'cmo.id')) && !@get('preparedTx.isActive')
+      if (@get('preparedTx.cmo.id') == get(ptx, 'cmo.id')) && !@get('preparedTx.isActive')
         @set('preparedTx', null)
     )
   ).on('init')
@@ -323,4 +336,4 @@ MainSendController = Ember.Controller.extend(Alertable, ModelFactory,
 
 )
 
-`export default MainSendController`
+export default MainSendController

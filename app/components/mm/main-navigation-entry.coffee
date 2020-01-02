@@ -1,10 +1,15 @@
-`import Ember from 'ember'`
-`import ActiveLinkMixin from 'ember-cli-active-link-wrapper/mixins/active-link'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { scheduleOnce } from '@ember/runloop'
 
-MainMenuEntryComponent = Ember.Component.extend(
+import ActiveLinkMixin from 'ember-cli-active-link-wrapper/mixins/active-link'
+
+MainMenuEntryComponent = Component.extend(
   #ActiveLinkMixin,
 
-  router: Ember.inject.service('-routing')
+  router: service('-routing')
+  app_state: service('app-state')
+
 
   tagName: 'li'
   ariaRole: 'menu-item'
@@ -23,15 +28,13 @@ MainMenuEntryComponent = Ember.Component.extend(
 
   'link-to': null
 
-  app_state: Ember.inject.service('app-state')
-
 
   # active-link-mixin produces nasty backtracking rerenders,
   # this is an ugly patch
   #
   trackLink: ( ->
 
-    Ember.run.scheduleOnce('afterRender', this, (->
+    scheduleOnce('afterRender', this, (->
       if @$('a.ember-view')?.hasClass('active') then @$()?.addClass('active') else @$()?.removeClass('active')
     ))
   ).observes('router.currentRouteName').on('didInsertElement')
@@ -50,5 +53,5 @@ MainMenuEntryComponent = Ember.Component.extend(
 
 )
 
-`export default MainMenuEntryComponent`
+export default MainMenuEntryComponent
 

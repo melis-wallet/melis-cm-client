@@ -1,6 +1,3 @@
-//@import url(https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300);
-@import url("../open-sans/open-sans.css");
-@import url("../cm/cm-icons.css");
 
 @import 'leaf-core.scss';
 @import 'tools/leaf-tools.scss';
@@ -755,3 +752,39 @@ a, a:hover, a:focus {
   background-color: $primary-color;
 }
 
+
+
+.upload-area {
+  min-height: 200px;
+  border: 4px dotted #BBB;
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.upload-preview {
+  width: 128px;
+  height: 128px;
+
+  border: 2px solid $primary-color;
+  padding: 2px;
+  margin: 10px;
+}
+
+
+.coin-filter-select, .coin-filter-trigger {
+  .coin-icon {
+    width: 28px;
+    height: 28px;
+    padding: 2px;
+    margin: 5px;
+    opacity: 0.5;
+  }
+
+  li { white-space: nowrap };
+}
+
+.coin-filter-btns {
+  button {
+    margin: 2px;
+  }
+}

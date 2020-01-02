@@ -1,7 +1,12 @@
-`import Ember from 'ember'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 
 Validations = buildValidations(
@@ -12,10 +17,10 @@ Validations = buildValidations(
   ]
 )
 
-EmailEnroll = Ember.Component.extend(Validations, ValidationsHelper,
+EmailEnroll = Component.extend(Validations, ValidationsHelper,
 
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
+  cm: service('cm-session')
+  aa: service('aa-provider')
 
   enrollError: null
   emailAddress: null
@@ -47,7 +52,7 @@ EmailEnroll = Ember.Component.extend(Validations, ValidationsHelper,
           @set  'enrollError', @get('i18n').t('tfa.email.invalid')
         else
           @set 'enrollError', error.msg
-        Ember.Logger.error "error enrolling email: ", error
+        Logger.error "error enrolling email: ", error
         @set('btnstate', 'rejected')
 
       @set 'busy', false
@@ -61,8 +66,6 @@ EmailEnroll = Ember.Component.extend(Validations, ValidationsHelper,
       @setProperties
         enrollError: null
         emailAddress: null
-
-
 )
 
-`export default EmailEnroll`
+export default EmailEnroll

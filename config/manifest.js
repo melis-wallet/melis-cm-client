@@ -11,17 +11,21 @@ module.exports = function(/* environment, appConfig */) {
     description: "A secure multisignature bitcoin wallet",
     start_url: "/",
     display: "standalone",
-    background_color: "#000",
+    background_color: "#333",
     theme_color: "#f49f1f",
     icons: [
       {
-        src: "/images/melis-icon.png",
+        src: "/assets/icons/appicon-32.png",
         sizes: "32x32",
         type: "image/png"
       },
       {
-        src: "/images/melis-badger-r.svg",
-        sizes: "any"
+        src: "assets/icons/appicon-192.png",
+        sizes: "192x192"
+      },
+      {
+        src: "assets/icons/appicon-512.png",
+        sizes: "512x512"
       }
     ]
   };

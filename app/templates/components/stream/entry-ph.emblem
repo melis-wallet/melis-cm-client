@@ -12,4 +12,4 @@
             p = t 'stream.ph.welcome'
 
             p.text-bold.text-light-gray = t 'stream.ph.address'
-            .label = currentAddress.cmo.address
+            .label = coin-address currentAddress.displayAddress account=cm.currentAccount

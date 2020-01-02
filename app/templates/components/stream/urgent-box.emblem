@@ -4,7 +4,7 @@
       = coin-ticker compact=true coin=account.unit.tsym
     = liquid-if displayed class='ll-down-up'
 
-      .panel-body.bg-primary.text-center.has-action click='resetScroll'
+      .panel-body.bg-primary.text-center.has-action click='resetPosition'
         .id-box
         i.summary-icon.cm-icon.cmi-inbox2.animated.bounce
         = liquid-bind streamEntries.length use='toDown' as |entries|
@@ -23,7 +23,7 @@
 
   ul.nav.nav-pills.nav-stacked
     = each streamEntries as |entry|
-      li.entry-detail.has-action: a  click="'scrollTo' entry"
+      li.entry-detail.has-action: a  click="'moveTo' entry"
         .icon
           i class=entry.eventIcon
         .entry

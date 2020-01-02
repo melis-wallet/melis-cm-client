@@ -1,11 +1,11 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
+import Route from '@ember/routing/route'
+import { get } from '@ember/object'
+import CMCore from 'npm:melis-api-js'
+
 
 C = CMCore.C
 
-
-
-MainAccountAddressRoute = Ember.Route.extend(
+MainAccountAddressRoute = Route.extend(
 
 
   model: ->
@@ -16,9 +16,9 @@ MainAccountAddressRoute = Ember.Route.extend(
 
   actions:
     selectAddr: (addr) ->
-      if a = Ember.get(addr, 'address')
+      if a = get(addr, 'address')
         @transitionTo('main.account.address.detail', @get('cm.currentAccount.pubId'), a)
       true
 )
 
-`export default MainAccountAddressRoute`
+export default MainAccountAddressRoute

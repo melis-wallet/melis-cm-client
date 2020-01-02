@@ -1,12 +1,14 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { get } from '@ember/object'
 
-CreateAccountController = Ember.Controller.extend(
-  cm: Ember.inject.service('cm-session')
+CreateAccountController = Controller.extend(
+  cm: service('cm-session')
 
   actions:
     wizardComplete: (account)->
       if account
-        @transitionToRoute('main.account.summary', Ember.get(account, 'pubId'))
+        @transitionToRoute('main.account.summary', get(account, 'pubId'))
       else
          @transitionToRoute('index')
 

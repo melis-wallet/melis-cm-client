@@ -1,8 +1,13 @@
-`import Ember from 'ember'`
-`import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'`
+import Component  from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, union } from '@ember/object/computed'
+import { isBlank, isNone } from "@ember/utils"
+import { A }  from '@ember/array'
+import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'
+import { copy } from 'ember-copy'
 
 
-LabelPicker = Ember.Component.extend(
+LabelPicker = Component.extend(
   classNames: ['form-group']
 
   label: null
@@ -10,41 +15,38 @@ LabelPicker = Ember.Component.extend(
   selection: null
   newLabels: null
 
-  labelsSet: null
-
   maxItems: '6'
 
-  info: Ember.inject.service('cm-account-info')
+  wallet: service('cm-wallet')
 
-  accountLabels: ( ->
-    if labelsSet = @get('labelsSet')
-      @get("info.currentLabels.#{labelsSet}")
-  ).property('info.currentLabels', 'labelsSet')
+  walletLabels: alias('wallet.labels')
 
-  allLabels: Ember.computed.union('accountLabels', 'newLabels')
+  allLabels: union('walletLabels', 'newLabels')
 
   ensureArray: (->
-    if Ember.isNone(@get('selection'))
-      @set('selection', Ember.A())
+    if isNone(@get('selection'))
+      @set('selection', A())
   ).observes('selection')
 
   setup: (->
-    @set('selection', Ember.A()) if Ember.isNone(@get('selection'))
-    @set('newLabels', Ember.A()) if Ember.isNone(@get('newLabels'))
+    @set('selection', A()) if isNone(@get('selection'))
+    @set('newLabels', A()) if isNone(@get('newLabels'))
   ).on('init').on('didReceiveAttrs')
 
 
   updateLabels: ->
-    newL = @get('newLabels').copy()
-    @set('newLabels', Ember.A())
-    @get('accountLabels').pushObjects(newL)
+    newL = copy(@get('newLabels'))
+    @set('newLabels', A())
+    @get('walletLabels').pushObjects(newL) if newL
 
   actions:
     setNewLabel: (text) ->
       @get('newLabels').pushObject(text)
 
     lostFocus: (select) ->
+      console.error "lostfocus"
       selection = @get('selection')
+      @updateLabels()
       waitIdle().then( => @sendAction('on-finish', @get('selection')))
 
     updateLabels: ->
@@ -53,12 +55,13 @@ LabelPicker = Ember.Component.extend(
       @sendAction('on-finish', @get('selection'))
 
     createOnEnter: (select, e) ->
-      if ((e.keyCode == 13) && select.isOpen && !select.highlighted && !Ember.isBlank(select.searchText))
+      if (((e.keyCode == 13) || (e.keyCode == 32))  && select.isOpen && !select.highlighted && !isBlank(select.searchText))
         selection = @get('selection')
         if (!selection.includes(select.searchText))
           this.get('newLabels').pushObject(select.searchText)
           select.actions.choose(select.searchText)
+        e.preventDefault()
 
 )
 
-`export default LabelPicker`
+export default LabelPicker

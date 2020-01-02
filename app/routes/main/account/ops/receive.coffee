@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
 
-MainAccounReceiveRoute = Ember.Route.extend(
+MainAccounReceiveRoute = Route.extend(
 
-  service: Ember.inject.service('cm-address-provider')
+  service: service('cm-address-provider')
 
   beforeModel: (transition) ->
     if !@get('cm.currentAccount.isComplete')
@@ -10,4 +11,4 @@ MainAccounReceiveRoute = Ember.Route.extend(
 
 )
 
-`export default MainAccounReceiveRoute`
+export default MainAccounReceiveRoute

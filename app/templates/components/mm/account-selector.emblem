@@ -1,8 +1,13 @@
 .mm-buttons
-  .btn-group
-    = each coins as |c|
+  //.btn-group
+  .coin-filter-btns
+    = each activeCoins as |c|
       = leaf-button class='btn btn-primary btn-outline dark btn-sm' on-click='setFilter' value=c.unit active=(eq c.unit coin)
         img.btn-coin-icon src="{{coin-img-path c.unit}}"
+
+  //= power-select options=selectCoins selected=selectedCoin  searchEnabled=false dropdownClass='coin-filter-select' triggerClass='coin-filter-trigger' onchange=(action 'changeFilterCoin') as |c|
+    img.coin-icon src="images/coins/{{ c.symbol }}.svg"
+    b = t (concat "coins.unit." c.label)
 
 = each accounts as |account|
   li role='menu-item' class='animated fadeIn' class={ if (and accountRoute (eq account cm.currentAccount)) 'selected' }

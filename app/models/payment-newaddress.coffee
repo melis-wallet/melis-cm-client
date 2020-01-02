@@ -1,7 +1,9 @@
-`import Ember from 'ember'`
-`import Model from './cm-model'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
+import { computed } from '@ember/object'
+import { A } from '@ember/array'
+
+import Model from './cm-model'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 
 Validations = buildValidations(
@@ -23,7 +25,7 @@ PaymentNewaddress = Model.extend(Validations, ValidationsHelper,
   amount: null
 
 
-  info: Ember.computed('meta',
+  info: computed('meta',
     get: (key) ->
       @get('meta.info')
 
@@ -36,7 +38,7 @@ PaymentNewaddress = Model.extend(Validations, ValidationsHelper,
 
 
   setup: (
-    @set('labels', Ember.A())
+    @set('labels', A())
   ).on('init')
 
   addressURL: (->
@@ -46,4 +48,4 @@ PaymentNewaddress = Model.extend(Validations, ValidationsHelper,
 
 )
 
-`export default PaymentNewaddress`
+export default PaymentNewaddress

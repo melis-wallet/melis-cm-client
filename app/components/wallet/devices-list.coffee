@@ -1,13 +1,21 @@
-`import Ember from 'ember'`
-`import Configuration from 'melis-cm-svcs/utils/configuration'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import ModalAlerts from '../../mixins/modal-alerts'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { A } from '@ember/array'
+import { get } from '@ember/object'
+import { isEmpty } from '@ember/utils'
 
-DevicesList = Ember.Component.extend(ModalAlerts,
+import Configuration from 'melis-cm-svcs/utils/configuration'
+import { task, taskGroup } from 'ember-concurrency'
+import ModalAlerts from '../../mixins/modal-alerts'
 
-  cm: Ember.inject.service('cm-session')
-  creds: Ember.inject.service('cm-credentials')
-  aa: Ember.inject.service('aa-provider')
+import Logger from 'melis-cm-svcs/utils/logger'
+
+
+DevicesList = Component.extend(ModalAlerts,
+
+  cm: service('cm-session')
+  creds: service('cm-credentials')
+  aa: service('aa-provider')
 
   devices: null
   apiOps: taskGroup().drop()
@@ -22,15 +30,15 @@ DevicesList = Ember.Component.extend(ModalAlerts,
         yield @get('cm.api').deviceUpdate(deviceId, name)
       yield  @get('getDevices').perform()
     catch e
-      Ember.Logger.error "Dev change name error: ", e
+      Logger.error "Dev change name error: ", e
   ).group('apiOps')
 
   getDevices: task( ->
     try
       res = yield @get('cm.api').devicesGet()
-      @set 'devices', Ember.A(res.list)
+      @set 'devices', A(res.list)
     catch e
-      Ember.Logger.error "Dev list error: ", e
+      Logger.error "Dev list error: ", e
   ).drop()
 
 
@@ -51,7 +59,7 @@ DevicesList = Ember.Component.extend(ModalAlerts,
       yield @get('getDevices').perform()
     catch e
       @set 'error', e.msg
-      Ember.Logger.error "Dev delete error: ", e
+      Logger.error "Dev delete error: ", e
   ).group('apiOps')
 
   promoteToPrimary: task((device) ->
@@ -70,7 +78,7 @@ DevicesList = Ember.Component.extend(ModalAlerts,
       res = yield @get('aa').tfaOrLocalPin(op)
     catch e
       @set 'error', e.msg
-      Ember.Logger.error "Dev promote error: ", e
+      Logger.error "Dev promote error: ", e
   ).group('apiOps')
 
   # this could be much better TODO
@@ -87,8 +95,8 @@ DevicesList = Ember.Component.extend(ModalAlerts,
 
   actions:
     deleteAllDevices: ->
-      devices = @get('devices')?.map((d) -> Ember.get(d, 'deviceId')).removeObject(@get('cm.credentials.deviceId'))
-      unless Ember.isEmpty(devices)
+      devices = @get('devices')?.map((d) -> get(d, 'deviceId')).removeObject(@get('cm.credentials.deviceId'))
+      unless isEmpty(devices)
         @get('deleteDevices').perform(devices)
 
     deleteDevice: (d) ->
@@ -103,4 +111,4 @@ DevicesList = Ember.Component.extend(ModalAlerts,
 
 )
 
-`export default DevicesList`
+export default DevicesList

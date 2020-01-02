@@ -1,14 +1,17 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+
+import { get } from '@ember/object'
+
+EnrollController = Controller.extend(
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
 
 
-EnrollController = Ember.Controller.extend(
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
-
-
-  connected: Ember.computed.alias('cm.connected')
-  disconnected: Ember.computed.alias('cm.disconnected')
-  connectFailed: Ember.computed.alias('cm.connectFailed')
+  connected: alias('cm.connected')
+  disconnected: alias('cm.disconnected')
+  connectFailed: alias('cm.connectFailed')
 
 
   licenseAccepted: false
@@ -34,7 +37,6 @@ EnrollController = Ember.Controller.extend(
 
     abortWizard: (-> @transitionToRoute('wallet.welcome'))
 
-
-
 )
-`export default EnrollController`
+
+export default EnrollController

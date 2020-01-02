@@ -1,7 +1,8 @@
-`import Ember from 'ember'`
-`import Model from './cm-model'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
+import { alias } from '@ember/object/computed'
+
+import Model from './cm-model'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 
 Validations = buildValidations(
@@ -16,7 +17,7 @@ AccountCosigner = Model.extend(Validations, ValidationsHelper,
   mandatory: false
   alias: null
 
-  isValid: Ember.computed.alias('validations.isValid')
+  isValid:alias('validations.isValid')
 )
 
-`export default AccountCosigner`
+export default AccountCosigner

@@ -1,4 +1,4 @@
-`import Ptx from 'melis-cm-svcs/models/ptx'`
+import Ptx from 'melis-cm-svcs/models/ptx'
 
 ClientPtx = Ptx.extend(
 
@@ -34,4 +34,4 @@ ClientPtx = Ptx.extend(
 
 )
 
-`export default ClientPtx`
+export default ClientPtx

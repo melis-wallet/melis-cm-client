@@ -1,22 +1,28 @@
-`import Ember from 'ember'`
-`import SlyEnabled from 'ember-leaf-tools/mixins/sly-enabled'`
-`import RecognizerMixin from 'ember-gestures/mixins/recognizers'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { schedule, later } from '@ember/runloop'
+import $ from 'jquery'
 
+import SlyEnabled from 'ember-leaf-tools/mixins/sly-enabled'
+import RecognizerMixin from 'ember-gestures/mixins/recognizers'
 
-MainMenu = Ember.Component.extend(SlyEnabled, RecognizerMixin,
+import Logger from 'melis-cm-svcs/utils/logger'
+
+MainMenu = Component.extend(SlyEnabled, RecognizerMixin,
 
   classNames: ['side-menu']
   ariaRole: 'navigation'
 
   recognizers: 'swipe'
 
-  appState: Ember.inject.service('app-state')
+  appState: service('app-state')
 
-  expanded: Ember.computed.alias('appState.menuExpanded')
+  expanded: alias('appState.menuExpanded')
 
   # this needed by a quick fix for an issue with the MM getting confused about scrolling
   # a better way would go through signalling to app-state
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   # tell sly to fill the container space
   'fill-container': true
@@ -26,12 +32,13 @@ MainMenu = Ember.Component.extend(SlyEnabled, RecognizerMixin,
   #
   fixMenu: (->
     @get('cm.accounts.length')
-    Ember.run.schedule('afterRender', this, ->
+    schedule('afterRender', this, ->
       if @get('appState.menuFixed')
-        Ember.$('body').addClass('main-menu-fixed')
+        $('body').addClass('main-menu-fixed')
       else
-        Ember.$('body').removeClass('main-menu-fixed')
+        $('body').removeClass('main-menu-fixed')
     )
+    later(this, (->  @slyContentChanged()), 1000)
   ).observes('appState.menuFixed').on('didInsertElement')
 
 
@@ -39,7 +46,7 @@ MainMenu = Ember.Component.extend(SlyEnabled, RecognizerMixin,
   # this needed by a quick fix for an issue with the MM getting confused about scrolling
   # a better way would go through signalling to app-state
   contentChanged: ( ->
-    Ember.Logger.debug('[mm] content changed')
+    Logger.debug('[mm] content changed')
     @slyContentChanged()
   ).observes('cm.accounts.length')
 
@@ -47,11 +54,11 @@ MainMenu = Ember.Component.extend(SlyEnabled, RecognizerMixin,
   #
   #
   toggleExpand: (->
-    Ember.run.schedule('afterRender', this, ->
+    schedule('afterRender', this, ->
       if @get('expanded')
-         Ember.$('body').addClass('mme').removeClass('mmc')
+         $('body').addClass('mme').removeClass('mmc')
       else
-         Ember.$('body').addClass('mmc').removeClass('mme')
+         $('body').addClass('mmc').removeClass('mme')
     )
   ).observes('expanded').on('didInsertElement')
 
@@ -67,4 +74,4 @@ MainMenu = Ember.Component.extend(SlyEnabled, RecognizerMixin,
       @get('cm').resetApp()
 )
 
-`export default MainMenu`
+export default MainMenu

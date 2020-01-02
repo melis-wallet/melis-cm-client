@@ -23,7 +23,30 @@
 
           tr
             td.text-right colspan='2'
-              span.label = address.address
+              span.label = coin-address address.address account=cm.currentAccount
+
+          = if cm.currentAccount.unit.features.altaddrs
+            tr
+              td: i.fa.fa-code
+              td.text-right  = coin-address address.address account=cm.currentAccount format='legacy'
+
+
+          = if address.hdindex
+            tr
+              td: b
+                = t 'newaddr.txs.hdindex'
+                |/
+                = t 'newaddr.txs.chain'
+
+              td.text-right
+                = address.hdindex
+                |/
+                .label
+                  = if (eq address.chain 0)
+                    i.fa.fa-users
+                  = else
+                    i.fa.fa-user-secret
+
 
 
           = if address.lastRequested
@@ -54,7 +77,7 @@
 
           = if address.meta.amount
             tr
-              td.lowercase = cm.globalCurrency
+              td.lowercase = currency-unit
               td.text-right = to-currency address.meta.amount account=cm.currentAccount
 
 
@@ -67,7 +90,7 @@
           tr style='height: 58px;'
             td: i.fa.fa-tags
             td.text-right
-              = misc/tags-list selection=address.labels labelsSet='txLabels' on-done-edit='changeLabels' control='right'
+              = misc/tags-list selection=address.labels labelsSet='addressLabels' on-done-edit='changeLabels' control='right'
 
           tr
             td: b = t 'newaddr.txs.label'

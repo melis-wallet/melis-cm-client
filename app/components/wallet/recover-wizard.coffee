@@ -1,11 +1,16 @@
-`import Ember from 'ember'`
-`import Configuration from 'melis-cm-svcs/utils/configuration'`
-`import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'`
-`import BackButton from '../../mixins/backbutton-support'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import { parseURI } from '../../utils/uris'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+
+import Configuration from 'melis-cm-svcs/utils/configuration'
+import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
+import BackButton from '../../mixins/backbutton-support'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import { task, taskGroup } from 'ember-concurrency'
+import { parseURI } from '../../utils/uris'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 Validations = buildValidations(
   passphrase: [
@@ -16,11 +21,11 @@ Validations = buildValidations(
 
 BACKUP_SCHEME = 'melis+seed'
 
-RecoverWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper, BackButton,
+RecoverWizard = Component.extend(AsWizard, Validations, ValidationsHelper, BackButton,
 
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
-  scanner: Ember.inject.service('scanner-provider')
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
+  scanner: service('scanner-provider')
 
   importError: null
   wrongSignature: null
@@ -64,7 +69,7 @@ RecoverWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
       if e.ex == 'CmLoginWrongSignatureException'
         @set 'wrongSignature', true
       else
-        Ember.Logger.error "Error in recover: ", e
+        Logger.error "Error in recover: ", e
         @set('importError', e.msg)
   ).group('apiOps')
 
@@ -79,7 +84,7 @@ RecoverWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
       @markCompleted(3, 4)
 
     catch err
-      Ember.Logger.error('[recover]', err)
+      Logger.error('[recover]', err)
       if err.ex == 'CmLoginWrongSignatureException'
         @set('validationFailed', err.msg)
       else
@@ -97,7 +102,7 @@ RecoverWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
       if uri.scheme == BACKUP_SCHEME
         @validateParsedData(uri.address)
       else
-        Ember.Logger.error 'Invalid scan'
+        Logger.error 'Invalid scan'
         @set 'importError', 'Invalid Scan'
         # not a valid scan
 
@@ -110,7 +115,7 @@ RecoverWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
         @set 'plaintext', true
         @markCompleted(3, 4)
     else
-      Ember.Logger.error 'Invalid Generator'
+      Logger.error 'Invalid Generator'
       @set 'importError', 'Invalid Generator'
 
 
@@ -154,5 +159,4 @@ RecoverWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
 
 )
 
-
-`export default RecoverWizard`
+export default RecoverWizard

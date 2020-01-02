@@ -1,20 +1,23 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { get, setProperties, getProperties } from '@ember/object'
 
-MainAccountAddressDtRoute = Ember.Route.extend(
+import Logger from 'melis-cm-svcs/utils/logger'
+
+MainAccountAddressDtRoute = Route.extend(
 
   txInfos: null
 
   model: (params) ->
-    id = Ember.get(params, 'addr_id')
+    id = get(params, 'addr_id')
 
     @get('cm').waitForReady().then( =>
       @get('cm.api').addressGet(@get('cm.currentAccount.cmo'), id, includeTxInfos: true).then((res) =>
-          @set('txInfos', Ember.get(res, 'txInfos.list'))
-          if (addr = Ember.get(res, 'address'))
+          @set('txInfos', get(res, 'txInfos.list'))
+          if (addr = get(res, 'address'))
 
             @updateList(addr)
             addr
-      ).catch((e) ->Ember.Logger.error('Error fetching addr:', e))
+      ).catch((e) -> Logger.error('Error fetching addr:', e))
     )
 
   setupController: (controller, model) ->
@@ -24,9 +27,9 @@ MainAccountAddressDtRoute = Ember.Route.extend(
 
   updateList: (addr) ->
     model = @modelFor('main.account.address')
-    if (addr && model && (list = Ember.get(model, 'list')))
-      if (c = list.findBy('address', Ember.get(addr, 'address')))
-        Ember.setProperties(c, Ember.getProperties(addr, 'meta', 'labels', 'lastRequested'))
+    if (addr && model && (list = get(model, 'list')))
+      if (c = list.findBy('address', get(addr, 'address')))
+        setProperties(c, getProperties(addr, 'meta', 'labels', 'lastRequested'))
 
   actions:
     addressUpdated: (addr) ->

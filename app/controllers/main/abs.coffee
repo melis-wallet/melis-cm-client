@@ -1,17 +1,18 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias, sort, empty } from '@ember/object/computed'
 
-AbsController = Ember.Controller.extend(
+AbsController = Controller.extend(
 
-  ab: Ember.inject.service('cm-addressbook')
-
+  ab: service('cm-addressbook')
 
   searchSeed: null
 
   entriesSorting: ['name:asc']
-  entriesSorted: Ember.computed.sort('model', 'entriesSorting')
+  entriesSorted: sort('model', 'entriesSorting')
 
-  empty: Ember.computed.empty('model')
-  noMatches: Ember.computed.empty('filteredEntries')
+  empty: empty('model')
+  noMatches: empty('filteredEntries')
 
   filteredEntries: (->
     if seed = @get('searchSeed')
@@ -26,4 +27,4 @@ AbsController = Ember.Controller.extend(
 
 )
 
-`export default AbsController`
+export default AbsController

@@ -1,4 +1,6 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
 # this is kind of inelegant, but serves as a concept
 EXPAND_ROUTES = [
@@ -11,16 +13,16 @@ EXPAND_ROUTES = [
   'recover'
 ]
 
-HeadingContainer = Ember.Component.extend(
+HeadingContainer = Component.extend(
   classNames: ['signin-container', 'animated', 'fadeIn']
 
   title: 'Melis'
-  'logo-icon': 'fa fa-bitcoin bg-warning'
+  'logo-icon': 'fa fa-database bg-warning'
 
-  cm: Ember.inject.service('cm-session')
-  routing:  Ember.inject.service('-routing')
+  cm: service('cm-session')
+  routing:  service('-routing')
 
-  ready: Ember.computed.alias('cm.ready')
+  ready: alias('cm.ready')
 
   expanded: ( ->
     try
@@ -29,7 +31,6 @@ HeadingContainer = Ember.Component.extend(
     catch
       false
   ).property('routing.currentRouteName')
-
 )
 
-`export default HeadingContainer`
+export default HeadingContainer

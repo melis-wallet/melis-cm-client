@@ -1,25 +1,37 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import config from '../../config/environment'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, notEmpty, equal } from '@ember/object/computed'
+import { isEmpty } from '@ember/utils'
+
+import { task, taskGroup } from 'ember-concurrency'
+import config from '../../config/environment'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 PAYTO_ROUTE = 'public.payto'
 PLACEHOLDER = 'newaddr.active.default-ph'
 
 
-StreamAddress = Ember.Component.extend(
+StreamAddress = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  addrsvc: Ember.inject.service('cm-address-provider')
-  routing: Ember.inject.service('-routing')
-  currencySvc: Ember.inject.service('cm-currency')
-  coinsvc: Ember.inject.service('cm-coin')
+  cm: service('cm-session')
+  addrsvc: service('cm-address-provider')
+  routing: service('-routing')
+  currencySvc: service('cm-currency')
+  coinsvc: service('cm-coin')
 
   entry: null
 
   classNames: ['stream-entry', 'row','animated', 'fadeIn', 'quick']
 
-  address: Ember.computed.alias('entry.content')
-  used: Ember.computed.notEmpty('address.usedIn')
+  address: alias('entry.content')
+  format: alias('address.format')
+
+  isStandard: equal('format', 'standard')
+  showToggle: alias('address.coin.features.altaddrs')
+
+  used: notEmpty('address.usedIn')
 
   showControls: false
 
@@ -36,8 +48,8 @@ StreamAddress = Ember.Component.extend(
     if @get('wantLink')
       @get('publicUrl')
     else
-      @get('address.cmo.address')
-  ).property('wantLink', 'address', 'publicUrl')
+      @get('address.displayAddress')
+  ).property('wantLink', 'address.displayAddress', 'publicUrl')
 
   urlAmount: (->
     if amount = @get('address.cmo.meta.amount')
@@ -54,7 +66,7 @@ StreamAddress = Ember.Component.extend(
       #if info = addr.get('cmo.meta.info')
       #  query.pushObject("message=#{encodeURIComponent(info)}")
 
-      if !Ember.isEmpty(query)
+      if !isEmpty(query)
         url += '?' + query.join('?')
 
     url
@@ -80,7 +92,7 @@ StreamAddress = Ember.Component.extend(
     try
       yield service.releaseAddress(addr)
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
 
   ).group('apiOps')
 
@@ -90,7 +102,7 @@ StreamAddress = Ember.Component.extend(
       try
         yield @get('addrsvc').updateAddress(address, updates)
       catch error
-        Ember.Logger.error "Error: ", error
+        Logger.error "Error: ", error
   ).group('apiOps')
 
 
@@ -104,6 +116,14 @@ StreamAddress = Ember.Component.extend(
   ).observes('used')
 
   actions:
+
+
+    toggleFormat: ->
+      if @get('isStandard')
+        @set('format', 'legacy')
+      else
+        @set('format', 'standard')
+
     selectUsedTx: ->
       # TBD
 
@@ -137,4 +157,4 @@ StreamAddress = Ember.Component.extend(
 )
 
 
-`export default StreamAddress`
+export default StreamAddress

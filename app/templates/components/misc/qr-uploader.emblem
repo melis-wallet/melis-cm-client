@@ -1,0 +1,39 @@
+= liquid-if decoded class='ll-down-up'
+  .well.margin.text-center style='margin: 5px;'
+    .row
+      .col-md-12
+        div
+          img src=imageUrl class='upload-preview'
+        p.label.label-warning = decoded
+
+
+    .row
+      .col-md-4
+        = leaf-tooltip class='value' tooltip=(t 'qrupload.btn.cancel') tooltip-placement='top'
+          = leaf-button block=true outline=true icon='fa fa-trash' outline=true on-click='resetUpload'
+      .col-md-8
+        = leaf-tooltip class='value' tooltip=(t 'qrupload.btn.ok') tooltip-placement='top'
+          = leaf-button block=true outline=true icon='fa fa-check' outline=true on-click='confirmUpload'  type='primary'
+
+
+
+= else
+  .row
+    .col-md-12
+      .upload-area.upload.text-center
+        = file-dropzone name='qrcode' ondrop=(action 'onDrop') as |dropzone queue|
+          = if dropzone.active
+            = if dropzone.valid
+              h1.text-success: i.fa.fa-qrcode.fa-2x
+              h5.text-success: b = t 'qrupload.action.valid'
+            = else
+              h1.text-error: i.fa.fa-qrcode.fa-2x
+              h5.text-warning: b = t 'qrupload.action.invalid'
+          = else
+            h1.text-info: i.fa.fa-qrcode.fa-2x
+            = if dropzone.supported
+              h1.text-success: i.fa.fa-upload
+              h5.text-info: b = t 'qrupload.action.drag'
+            = else
+              | dropzone not supported
+            = file-upload name="qrcode" accept="image/png,image/jpeg" multiple=false onfileadd=(action "addQrcode")

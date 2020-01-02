@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
 
-PtxDetailRoute = Ember.Route.extend(
+PtxDetailRoute = Route.extend(
 
-  ptxsvc: Ember.inject.service('cm-ptxs')
+  ptxsvc: service('cm-ptxs')
 
   model: (params)->
     @get('cm').waitForReady().then( =>
@@ -14,4 +15,4 @@ PtxDetailRoute = Ember.Route.extend(
     )
 )
 
-`export default PtxDetailRoute`
+export default PtxDetailRoute

@@ -1,16 +1,19 @@
-import Ember from 'ember'
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+
 import { task, timeout } from 'ember-concurrency'
 import Account from 'melis-cm-svcs/models/account'
 
 
-ColorPicker = Ember.Component.extend(
+ColorPicker = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   account: null
 
   colors: Account.colors
-  selected: Ember.computed.alias('account.color')
+  selected: alias('account.color')
 
 
   actions:

@@ -9,4 +9,4 @@ I18nInitializer = {
 }
 
 
-`export default I18nInitializer`
+export default I18nInitializer

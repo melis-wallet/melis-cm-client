@@ -1,22 +1,35 @@
-`import Ember from 'ember'`
-`import Alertable from 'ember-leaf-core/mixins/leaf-alertable'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import config from '../config/environment'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, equal } from '@ember/object/computed'
+import { isEmpty } from '@ember/utils'
+import { scheduleOnce } from '@ember/runloop'
+
+import Alertable from 'ember-leaf-core/mixins/leaf-alertable'
+import { task, taskGroup } from 'ember-concurrency'
+import config from '../config/environment'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 PAYTO_ROUTE = 'public.payto'
 PLACEHOLDER = 'newaddr.active.default-ph'
 
 
-PaymentNewaddress = Ember.Component.extend(Alertable,
+PaymentNewaddress = Component.extend(Alertable,
 
-  service: Ember.inject.service('cm-address-provider')
-  currencySvc: Ember.inject.service('cm-currency')
-  coinsvc: Ember.inject.service('cm-coin')
-  cm: Ember.inject.service('cm-session')
-  routing:  Ember.inject.service('-routing')
-  i18n: Ember.inject.service()
+  service: service('cm-address-provider')
+  currencySvc: service('cm-currency')
+  coinsvc: service('cm-coin')
+  cm: service('cm-session')
+  routing:  service('-routing')
+  i18n: service()
 
-  activeAddress: Ember.computed.alias('service.current.activeAddress')
+  activeAddress: alias('service.current.activeAddress')
+  format: alias('activeAddress.format')
+
+  isStandard: equal('format', 'standard')
+
+  showToggle: alias('activeAddress.coin.features.altaddrs')
 
   showCode: true
 
@@ -35,8 +48,8 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
     if @get('wantLink')
       @get('publicUrl')
     else
-      @get('activeAddress.cmo.address')
-  ).property('wantLink', 'activeAddress', 'publicUrl')
+      @get('activeAddress.displayAddress')
+  ).property('wantLink', 'activeAddress.displayAddress', 'publicUrl')
 
   urlAmount: (->
     if amount = @get('activeAddress.cmo.meta.amount')
@@ -52,7 +65,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
       #if info = addr.get('cmo.meta.info')
       #  query.pushObject("message=#{encodeURIComponent(info)}")
 
-      if !Ember.isEmpty(query)
+      if !isEmpty(query)
         url += '?' + query.join('?')
 
     url
@@ -78,7 +91,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
       @sendAction('on-select-active', addr)
     catch error
       @set 'error', error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
   ).group('apiOps')
 
 
@@ -88,7 +101,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
         yield @get('service').updateAddress(address, updates)
         @set('editAmount', false)
       catch error
-        Ember.Logger.error "Error: ", error
+        Logger.error "Error: ", error
 
   ).group('apiOps')
 
@@ -98,7 +111,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
     try
       yield service.createActiveAddr(@get('i18n').t(PLACEHOLDER).toString())
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
   ).drop()
 
 
@@ -111,7 +124,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
       @sendAction('on-select-active', null)
 
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
   ).group('apiOps')
 
   updateCurrentAddress: (data) ->
@@ -128,7 +141,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
   ).observes('code').on('didInsertElement')
 
   setup: ( ->
-  #  Ember.run.scheduleOnce 'afterRender', this, ->
+  #  scheduleOnce 'afterRender', this, ->
   #    @.$('.info-input').click()
 
     @get('addressUrl')
@@ -136,6 +149,12 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
   ).on('init')
 
   actions:
+
+    toggleFormat: ->
+      if @get('isStandard')
+        @set('format', 'legacy')
+      else
+        @set('format', 'standard')
 
     leaveAddr: ->
       @set('activeAddress', null)

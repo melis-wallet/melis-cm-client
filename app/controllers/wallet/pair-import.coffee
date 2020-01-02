@@ -1,6 +1,9 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-EnrollController = Ember.Controller.extend(
-  credentials: Ember.inject.service('cm-credentials')
+EnrollController = Controller.extend(
+  credentials: service('cm-credentials')
 )
-`export default EnrollController`
+
+export default EnrollController

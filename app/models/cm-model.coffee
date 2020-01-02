@@ -1,5 +1,5 @@
-`import Ember from 'ember'`
+import EmberObject from '@ember/object'
 
-Model = Ember.Object.extend()
+Model = EmberObject.extend()
 
-`export default Model`
+export default Model

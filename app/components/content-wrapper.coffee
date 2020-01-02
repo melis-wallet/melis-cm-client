@@ -1,13 +1,16 @@
-`import Ember from 'ember'`
-`import RecognizerMixin from 'ember-gestures/mixins/recognizers'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+
+import RecognizerMixin from 'ember-gestures/mixins/recognizers'
 
 
-ContentWrapper = Ember.Component.extend(RecognizerMixin,
+ContentWrapper = Component.extend(RecognizerMixin,
 
-  cm: Ember.inject.service('cm-session')
-  appState: Ember.inject.service('app-state')
+  cm: service('cm-session')
+  appState: service('app-state')
 
-  expanded: Ember.computed.alias('appState.menuExpanded')
+  expanded: alias('appState.menuExpanded')
 
   recognizers: 'swipe'
 
@@ -19,6 +22,6 @@ ContentWrapper = Ember.Component.extend(RecognizerMixin,
     @set('expanded', false)
 )
 
-`export default ContentWrapper`
+export default ContentWrapper
 
 

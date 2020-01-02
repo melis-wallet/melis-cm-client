@@ -1,39 +1,46 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
-`import AbEntry from '../models/ab-entry'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { A } from '@ember/array'
+import { isBlank, isEmpty } from '@ember/utils'
+import { get, set, getProperties } from '@ember/object'
+import { getOwner } from '@ember/application'
 
+import CMCore from 'npm:melis-api-js'
+import AbEntry from '../models/ab-entry'
+import { task, taskGroup } from 'ember-concurrency'
 
+import Logger from 'melis-cm-svcs/utils/logger'
 
 C = CMCore.C
-NOT_AN_ADDRESS = 'Not a valid bitcoin address.'
+NOT_AN_ADDRESS = 'Not a valid coin address.'
 NOT_AN_ALIAS = 'Not a valid CM Alias.'
 
 
 
-EditAbEntry = Ember.Component.extend(
+EditAbEntry = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  ab: Ember.inject.service('cm-addressbook')
-  scanner: Ember.inject.service('scanner-provider')
-  coinsvc: Ember.inject.service('cm-coin')
+  cm: service('cm-session')
+  ab: service('cm-addressbook')
+  scanner: service('scanner-provider')
+  coinsvc: service('cm-coin')
 
   value: null
   edit: false
 
-  coin: Ember.computed.alias('value.coin')
+  coin: alias('value.coin')
 
   'new-address': null
 
   apiOps: taskGroup().drop()
 
-  contactTypes: Ember.A([
-    {id: C.AB_TYPE_MELIS , label: 'Another Melis User'}
-    {id: C.AB_TYPE_ADDRESS, label: 'Generic Bitcoin Address'}
+  contactTypes: A([
+    {id: C.AB_TYPE_MELIS , label: 'ab.form.t.melis'}
+    {id: C.AB_TYPE_ADDRESS, label: 'ab.form.t.addr'}
   ])
 
 
-  availableCoins: Ember.computed.alias('coinsvc.coins')
+  availableCoins: alias('coinsvc.coins')
 
   selectedCoin: ( ->
     if c = @get('coin')
@@ -48,9 +55,9 @@ EditAbEntry = Ember.Component.extend(
 
 
   checkDupes: (pubId)->
-    if !Ember.isBlank(alias = @get('value.alias')) && pubId
+    if !isBlank(cmalias = @get('value.alias')) && pubId
       matches = @get('ab.store').find('ab-entry', {val: pubId})
-      if !Ember.isEmpty(matches) && !@get('edit')
+      if !isEmpty(matches) && !@get('edit')
         @set('aliasError', 'Duplicate entry.')
         return true
 
@@ -62,16 +69,15 @@ EditAbEntry = Ember.Component.extend(
       if (address = @get('scanner').getAddressFromData(data))
         @set('value.address', address)
     catch err
-      Ember.Logger.error "Scanner aborted: ", err
+      Logger.error "Scanner aborted: ", err
   )
 
   checkAlias: task( ->
     @set('aliasError', false)
-    if !Ember.isBlank(alias = @get('value.alias'))
+    if !isBlank(cmalias = @get('value.alias'))
       api = @get('cm.api')
       try
-        res = yield api.accountGetPublicInfo(name: alias)
-        console.error res
+        res = yield api.accountGetPublicInfo(name: cmalias)
         @set('accountInfo', res)
         if @checkDupes(res.pubId)
           @set('value.pubId', null)
@@ -86,13 +92,13 @@ EditAbEntry = Ember.Component.extend(
             aliasError: 'Alias not found'
           @set('value.pubId', null)
         else
-          Ember.Logger.error "Error: ", err
+          Logger.error "Error: ", err
 
   ).group('apiOps')
 
 
   submitEntry: task( ->
-    alias = yield @get('checkAlias').perform()
+    yield @get('checkAlias').perform()
     if @get('value.isValid')
       @sendAction('on-save', @get('value'))
   )
@@ -102,13 +108,12 @@ EditAbEntry = Ember.Component.extend(
 
   actions:
     selectCoin: (c) ->
-      if unit = Ember.get(c, 'unit')
+      if unit = get(c, 'unit')
         @set('coin', unit)
 
     changeType: (type)->
       if type
-        console.error 'type', type
-        @set('value.type', Ember.get(type, 'id'))
+        @set('value.type', get(type, 'id'))
 
     lookupAlias: (deferred)->
       @get('checkAlias').perform()
@@ -119,22 +124,24 @@ EditAbEntry = Ember.Component.extend(
     scanAddress: ->
       @get('scanAddress').perform()
 
+    updateLabels: (labels) ->
+      @set('value.labels', labels)
 
   resetContent: (initial)->
     @set 'value', AbEntry.create(
-      Ember.getOwner(this).ownerInjection()
+      getOwner(this).ownerInjection()
       type: C.AB_TYPE_ADDRESS
       name: null
       address: initial
       alias: null
-      labels: Ember.A()
+      labels: A()
       coin: @get('availableCoins.firstObject.unit')
     )
 
 
   setup: ( ->
 
-    if Ember.isBlank(@get('value'))
+    if isBlank(@get('value'))
       @resetContent(@get('new-address'))
     else if @get('edit')
       @get('checkAlias').perform()
@@ -142,6 +149,6 @@ EditAbEntry = Ember.Component.extend(
 
 )
 
-`export default EditAbEntry`
+export default EditAbEntry
 
 

@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
-`import StyleBody from 'ember-leaf-core/mixins/leaf-style-body'`
+import Route from '@ember/routing/route'
 
-WalletRoute = Ember.Route.extend(StyleBody,
+import StyleBody from 'ember-leaf-core/mixins/leaf-style-body'
+
+WalletRoute = Route.extend(StyleBody,
  classNames: ['page-signin']
 )
 
-`export default WalletRoute`
+export default WalletRoute

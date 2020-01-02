@@ -1,15 +1,22 @@
-`import Ember from 'ember'`
-`import Alertable from 'ember-leaf-core/mixins/leaf-alertable'`
-`import { task } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, equal } from '@ember/object/computed'
+import { isEmpty } from '@ember/utils'
+import { scheduleOnce } from '@ember/runloop'
 
-PaymentNewaddress = Ember.Component.extend(Alertable,
+import Alertable from 'ember-leaf-core/mixins/leaf-alertable'
+import { task } from 'ember-concurrency'
 
-  service: Ember.inject.service('cm-address-provider')
-  cm: Ember.inject.service('cm-session')
-  coinsvc: Ember.inject.service('cm-coin')
+import Logger from 'melis-cm-svcs/utils/logger'
 
-  currentAddress: Ember.computed.alias('service.current.validAddress')
-  activeAddress: Ember.computed.alias('service.current.activeAddress')
+PaymentNewaddress = Component.extend(Alertable,
+
+  service: service('cm-address-provider')
+  cm: service('cm-session')
+  coinsvc: service('cm-coin')
+
+  currentAddress: alias('service.current.validAddress')
+  activeAddress: alias('service.current.activeAddress')
 
   newAddress: null
 
@@ -29,7 +36,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
     try
       yield @get('service').makeCurrentActive(info: info)
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
 
   ).drop()
 
@@ -39,7 +46,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
         yield @get('service').updateActiveAddr(address, updates)
         @set('editAmount', false)
       catch error
-        Ember.Logger.error "Error: ", error
+        Logger.error "Error: ", error
 
   ).drop()
 
@@ -49,7 +56,7 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
     try
       yield service.createActiveAddr('New Special address')
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
   ).drop()
 
   updateCurrentAddress: (data) ->
@@ -88,4 +95,5 @@ PaymentNewaddress = Ember.Component.extend(Alertable,
 
 
 )
-`export default PaymentNewaddress`
+
+export default PaymentNewaddress

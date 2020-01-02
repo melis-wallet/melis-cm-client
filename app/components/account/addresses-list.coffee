@@ -1,12 +1,25 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { get, set, computed } from '@ember/object'
 
-AddressesList = Ember.Component.extend(
+import { task, taskGroup } from 'ember-concurrency'
+
+AddressesList = Component.extend(
 
   addresses: null
-  cm: Ember.inject.service('cm-session')
-  mm: Ember.inject.service('modals-manager')
+  cm: service('cm-session')
+  mm: service('modals-manager')
 
+  showPublic: true
+  showPrivate: true
+
+  filteredAddresses: computed('addresses.@each.chain', 'showPrivate', 'showPublic', ->
+    @get('addresses').filter((a) =>
+      return true if @get('showPublic') && (get(a, 'chain') == 0)
+      return true if @get('showPrivate') && (get(a, 'chain') == 1)
+      false
+    )
+  )
 
   hasNext: null
   chkSignId: 'sign-msg-ck'
@@ -27,6 +40,13 @@ AddressesList = Ember.Component.extend(
   )
 
   actions:
+    togglePublic: ->
+      @toggleProperty('showPublic')
+
+    togglePrivate: ->
+      @toggleProperty('showPrivate')
+
+
     selectAddr: (addr) ->
       @sendAction('on-select-addr', addr)
 
@@ -43,5 +63,4 @@ AddressesList = Ember.Component.extend(
 
 )
 
-
-`export default AddressesList`
+export default AddressesList

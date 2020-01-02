@@ -1,15 +1,23 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import { filterProperties, mergedProperty } from 'melis-cm-svcs/utils/misc'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { isEmpty } from '@ember/utils'
+import { get } from '@ember/object'
+import RSVP from 'rsvp'
 
-AddressDetail = Ember.Component.extend(
+import Logger from 'melis-cm-svcs/utils/logger'
+
+import { task, taskGroup } from 'ember-concurrency'
+import { filterProperties, mergedProperty } from 'melis-cm-svcs/utils/misc'
+
+AddressDetail = Component.extend(
 
   address: null
 
-  cm: Ember.inject.service('cm-session')
-  currencySvc: Ember.inject.service('cm-currency')
-  mm: Ember.inject.service('modals-manager')
-  aa: Ember.inject.service('aa-provider')
+  cm: service('cm-session')
+  currencySvc: service('cm-currency')
+  coinsvc: service('cm-coin')
+  mm: service('modals-manager')
+  aa: service('aa-provider')
 
   showControls: false
 
@@ -20,7 +28,7 @@ AddressDetail = Ember.Component.extend(
 
   isActive: (->
 
-    !(Ember.isEmpty(@get('address.meta')) && Ember.isEmpty(@get('address.labels')))
+    !(isEmpty(@get('address.meta')) && isEmpty(@get('address.labels')))
   ).property('address.meta', 'address.label')
 
   code: ( ->
@@ -52,7 +60,7 @@ AddressDetail = Ember.Component.extend(
       if amount = @get('urlAmount')
         query.pushObject("amount=#{amount}")
 
-      if !Ember.isEmpty(query)
+      if !isEmpty(query)
         url += '?' + query.join('?')
 
     url
@@ -63,10 +71,10 @@ AddressDetail = Ember.Component.extend(
 
   releaseAddr: task( (address) ->
     try
-      d = yield @get('cm.api').addressUpdate(@get('cm.currentAccount.cmo'), Ember.get(address, 'address'), null, null)
+      d = yield @get('cm.api').addressUpdate(@get('cm.currentAccount.cmo'), get(address, 'address'), null, null)
       @sendAction('on-address-change', d)
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
   ).group('apiOps')
 
 
@@ -75,14 +83,14 @@ AddressDetail = Ember.Component.extend(
 
     updates ||= {}
     meta = mergedProperty(address, 'meta', filterProperties(updates, 'info', 'amount'))
-    labels = Ember.get(updates, 'labels') || Ember.get(address, 'labels')
+    labels = get(updates, 'labels') || get(address, 'labels')
 
     if address
       try
-        d = yield @get('cm.api').addressUpdate(@get('cm.currentAccount.cmo'), Ember.get(address, 'address'), labels, meta)
+        d = yield @get('cm.api').addressUpdate(@get('cm.currentAccount.cmo'), get(address, 'address'), labels, meta)
         @sendAction('on-address-change', d)
       catch error
-        Ember.Logger.error "Error: ", error
+        Logger.error "Error: ", error
   ).group('apiOps')
 
 
@@ -98,14 +106,14 @@ AddressDetail = Ember.Component.extend(
     api = @get('cm.api')
 
     op = (tfa) =>
-      Ember.RSVP.resolve(api.accountAddressToWIF(account, addr))
+      RSVP.resolve(api.exportAddressKeyToWIF(account, addr))
 
 
     try
       wif = yield @get('aa').askLocalPin(op, 'Pin', '', true, true)
       @set('wif', wif)
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
   )
 
 
@@ -137,8 +145,6 @@ AddressDetail = Ember.Component.extend(
 
     trashKey: () ->
       @set('wif', null)
-
-
 )
 
-`export default AddressDetail`
+export default AddressDetail

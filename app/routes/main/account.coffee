@@ -1,10 +1,13 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
+import RSVP from 'rsvp'
 
+import Logger from 'melis-cm-svcs/utils/logger'
 
-MainAccountRoute = Ember.Route.extend(
+MainAccountRoute = Route.extend(
 
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
 
   model: (params) ->
 
@@ -14,16 +17,27 @@ MainAccountRoute = Ember.Route.extend(
 
       if curr_acct_id != params.account_id
 
-        Ember.Logger.info '++ Selecting Account: ', params.account_id
-        cm.selectAccount(params.account_id, true)
-        false
+        Logger.info '++ Selecting Account: ', params.account_id
+
+        if cm.selectAccount(params.account_id, true)
+          false
+        else
+          Logger.error 'Non existent account: ', params.account_id
+          @set('cm.currentAccount', null)
+          #RSVP.reject "trying to select a non-existent account"
+
+
     )
 
   actions:
     need_signin: ->
       @transitionTo('wallet.sign-in')
 
+    #error: (error, transition) ->
+    #  console.error "ERROR TRANS"
+
+
 
 )
 
-`export default MainAccountRoute`
+export default MainAccountRoute

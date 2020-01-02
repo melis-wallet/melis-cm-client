@@ -1,17 +1,20 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-StreamEvt = Ember.Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  clock: Ember.inject.service('clock')
+StreamEvt = Component.extend(
+
+  cm: service('cm-session')
+  clock: service('clock')
 
   entry: null
 
   classNames: ['stream-entry', 'row', 'animated', 'fadeIn']
 
-  event: Ember.computed.alias('entry.content')
+  event: alias('entry.content')
 
-  label: Ember.computed.alias('event.cmo.name')
+  label: alias('event.cmo.name')
 
   inFuture: ( ->
     @get('event.cmo.dateExecutable') > moment.now()
@@ -19,5 +22,4 @@ StreamEvt = Ember.Component.extend(
 
 )
 
-
-`export default StreamEvt`
+export default StreamEvt

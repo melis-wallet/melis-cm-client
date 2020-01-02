@@ -1,6 +1,8 @@
-`import Ember from 'ember'`
+import EmberObject from '@ember/object'
+import { typeOf } from '@ember/utils'
+import { A } from '@ember/array'
 
-TreeNode = Ember.Object.extend(
+TreeNode = EmberObject.extend(
 
   children: null
   parent: null
@@ -47,7 +49,7 @@ TreeNode = Ember.Object.extend(
 
   init: ( ->
     @_super(arguments...)
-    if (ch = @get('children.firstObject')) && (Ember.typeOf(ch != 'TreeNode'))
+    if (ch = @get('children.firstObject')) && (typeOf(ch != 'TreeNode'))
       children = @get('children')
       @emptyChildren()
       children.forEach((c) => @createChild(c))
@@ -55,7 +57,7 @@ TreeNode = Ember.Object.extend(
   )
 
   #parseChildren: (ary) ->
-  #  if (ch = ary.get('firstObject')) && (Ember.typeOf(ch != 'TreeNode'))
+  #  if (ch = ary.get('firstObject')) && (typeOf(ch != 'TreeNode'))
 
   addChild: (node) ->
     if (!ch = @get('children'))
@@ -73,11 +75,11 @@ TreeNode = Ember.Object.extend(
     @get('children').removeObject(node)
 
   emptyChildren: ->
-    @set('children', Ember.A())
+    @set('children', A())
 
 
   allDescendants: ->
-    res = Ember.A()
+    res = A()
     @get(children).forEach((c) ->
       res.pushObject(c)
       res.pushObjects(c.allDescendants())
@@ -89,7 +91,4 @@ TreeNode = Ember.Object.extend(
 
 )
 
-
-
-
-`export default TreeNode`
+export default TreeNode

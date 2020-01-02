@@ -32,7 +32,7 @@
 
 .row
   .col-md-6
-    = prefs/change-currency
+    = prefs/select-currency value=cm.globalCurrency on-change=(action (mut cm.globalCurrency))
 
 
 .row

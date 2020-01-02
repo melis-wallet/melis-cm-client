@@ -1,10 +1,12 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
-WalletAccountEntry = Ember.Component.extend(
+
+WalletAccountEntry = Component.extend(
   ariaRole: 'menuitem'
 
-  cm: Ember.inject.service('cm-session')
-  routing: Ember.inject.service('-routing')
+  cm: service('cm-session')
+  routing: service('-routing')
 
   classNames: ['entry']
 
@@ -27,4 +29,4 @@ WalletAccountEntry = Ember.Component.extend(
   ).property('routing.currentRouteName')
 )
 
-`export default WalletAccountEntry`
+export default WalletAccountEntry

@@ -50,7 +50,7 @@
         = if editing
           .pull-left = coin.subunit.symbol
           .pull-right.padding-xs-vr
-            = input type='text' value=(unbound fmtdAmount) placeholder=(t 'public.payto.amount.ph') width=40 focus-out='changeAmount' enter='changeAmount' autofocus=true class='input-lg form-control animated fadeIn quick' tabindex='0'
+            = input type='text' value=(unbound fmtdAmount) placeholder=(t 'public.payto.amount.ph') width=45 focus-out='changeAmount' enter='changeAmount' autofocus=true class='input-lg form-control animated fadeIn quick' tabindex='0'
 
         = else
           = leaf-tooltip class='value' tooltip=(t 'public.payto.amount.ph')
@@ -58,7 +58,19 @@
           = t 'public.payto.total' unit=coin.subunit.symbol
 
 
+    .public-total.border-t
+      = currencySvc.currency
+      '
+      = leaf-button icon='fa fa-ellipsis-h' size='sm' outline=true id='currencyChange'
+      = bs-popover placement='bottom' triggerElement="#currencyChange" title=(t 'public.payto.curr.enter') as |po|
+        .input-group
+          .input-group-addon = currencySvc.currency
+          = input value=currencyAmount class='form-control' type='number' enter=(action 'currencyConfirm' po)
+          span.input-group-btn
+            = leaf-button icon='fa fa-check' size='sm' type='primary'  on-click=(action 'currencyConfirm' po)
 
+      .pull-right
+        = format-money-coin currencyConv coin=coin
 
 
   /.public-table
@@ -86,6 +98,11 @@
             = payment-quick-send recipientId=recipient.pubId amount=amount info=info unit=unit foo='bar'
 
       .col-md-6.border-l
+        .row
+          .col-xs-12
+            = prefs/select-currency value=currencySvc.currency on-change=(action (mut currencySvc.activeCurrency))
+
+
         = if error
           = leaf-alert type='warning' dark=true
             = error
@@ -97,7 +114,7 @@
             .col-xs-12
               .pull-right.padding-sm-vr
 
-                .label = recipient.address
+                .label = coin-address address coin=coin
             .row
               .col-xs-12
 
@@ -106,4 +123,6 @@
                   p = t 'public.payto.scan.caption'
 
         = else
-          = leaf-button outline=true type='primary' label=(t 'public.payto.showcode') on-click='showCode' block=true
+          p = leaf-button outline=true type='primary' label=(t 'public.payto.showcode') on-click='showCode' block=true
+
+

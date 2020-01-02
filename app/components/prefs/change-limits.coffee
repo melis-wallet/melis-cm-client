@@ -1,6 +1,14 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
-`import { task, timeout } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { filterBy } from '@ember/object/computed'
+import { get, set, setProperties } from '@ember/object'
+import { A } from '@ember/array'
+import { isBlank } from '@ember/utils'
+
+import CMCore from 'npm:melis-api-js'
+import { task, timeout } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 TIMELIMITS = [
   { name: 'daily', hours: 24 }
@@ -10,21 +18,21 @@ TIMELIMITS = [
 
 C = CMCore.C
 
-ChangeLimits = Ember.Component.extend(
+ChangeLimits = Component.extend(
 
   # TODO FIXME validations are disabled!
 
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
-  coinsvc: Ember.inject.service('cm-coin')
+  cm: service('cm-session')
+  aa: service('aa-provider')
+  coinsvc: service('cm-coin')
 
   error: null
 
   spendableLimits: null
   changeRequests: null
 
-  allSoftLimits: Ember.computed.filterBy('spendableLimits', 'isHard', false)
-  allHardLimits: Ember.computed.filterBy('spendableLimits', 'isHard', true)
+  allSoftLimits: filterBy('spendableLimits', 'isHard', false)
+  allHardLimits: filterBy('spendableLimits', 'isHard', true)
 
   allLimits: TIMELIMITS
 
@@ -53,8 +61,8 @@ ChangeLimits = Ember.Component.extend(
 
   setup: (->
     @setProperties
-      spendableLimits: Ember.A()
-      changeRequests: Ember.A()
+      spendableLimits: A()
+      changeRequests: A()
   ).on('init')
 
 
@@ -98,10 +106,10 @@ ChangeLimits = Ember.Component.extend(
         console.log "--------------- limits"
         console.log data
         @setProperties
-          spendableLimits: Ember.A(data.spendableLimits)
-          changeRequests: Ember.A(data.changeRequests)
+          spendableLimits: A(data.spendableLimits)
+          changeRequests: A(data.changeRequests)
       catch error
-        Ember.Logger.error 'Error getting limits: ',  error
+        Logger.error 'Error getting limits: ',  error
   ).drop()
 
   setLimit: task((value, ident, isHard) ->
@@ -109,7 +117,7 @@ ChangeLimits = Ember.Component.extend(
 
     @set('error', null)
 
-    if Ember.isBlank(value)
+    if isBlank(value)
       value = C.LIMIT_NONE
     else
       value = @get('coinsvc').parseUnit(@get('account'), value)
@@ -117,16 +125,16 @@ ChangeLimits = Ember.Component.extend(
     account = @get('account.cmo')
 
     op = (tfa) ->
-      value = -1 if Ember.isBlank(value)
+      value = -1 if isBlank(value)
       api.accountSetLimit(account, {type: ident, isHard: isHard, amount: value}, tfa.payload)
 
     try
       res = yield @get('aa').tfaOrLocalPin(op)
-      if l = Ember.get(res, 'limitChangeRequest')
+      if l = get(res, 'limitChangeRequest')
         if (l.dateExecutable && (l.dateExecutable > (l.dateRequested + 60000))) then @updateChange(l) else @updateLimit(l)
     catch error
       @set 'error', error
-      Ember.Logger.error 'Error changing limit: ', error
+      Logger.error 'Error changing limit: ', error
 
   )
 
@@ -157,4 +165,4 @@ ChangeLimits = Ember.Component.extend(
 
 )
 
-`export default ChangeLimits`
+export default ChangeLimits

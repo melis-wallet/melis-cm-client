@@ -1,41 +1,53 @@
-`import Ember from 'ember'`
-`import Model from './cm-model'`
-`import formatMoney from "accounting/format-money"`
-`import { mergeProperty } from 'melis-cm-svcs/utils/misc'`
-'import { translationMacro as t } from "ember-i18n"'
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
+import { computed } from '@ember/object'
+import { inject as service } from '@ember/service'
+import { alias, bool, equal } from '@ember/object/computed'
+import { get, set } from '@ember/object'
+import { A } from '@ember/array'
+import { isBlank } from '@ember/utils'
+
+import Model from './cm-model'
+import formatMoney from "accounting/format-money"
+import { mergeProperty } from 'melis-cm-svcs/utils/misc'
+import { translationMacro as t } from "ember-i18n"
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 INSUFF_FUNDS = 'paysend.form.insuff-funds'
 
 Validations = buildValidations(
   value: [
     validator('presence', presence: true)
-    validator('bitcoin-address', disabled: Ember.computed.not('model.isAddress'))
-    validator('melis-pubid', disabled: Ember.computed.not('model.isPubid'))
-    validator('melis-alias', disabled: Ember.computed.not('model.isAlias'))
+    validator('coin-address', disabled: computed.not('model.isAddress'), coin: alias('model.account.coin'), allowURI: true)
+    validator('melis-pubid', disabled: computed.not('model.isPubid'))
+    validator('melis-alias', disabled: computed.not('model.isAlias'))
   ]
 
   amount: [
-    validator('presence', presence: true, disabled: Ember.computed.bool('model.entireBalance'))
+    validator('presence', presence: true, disabled: bool('model.entireBalance'))
     validator('number', positive: true, gt: 0, allowString: true, allowBlank: true)
-    validator(((value, options, model, attribute) ->
-      return true if model.get('allowUnconfirmed')
+    validator('inline' , validate: ((value, options, model, attribute) ->
+
       amount = model.get('fullAmount')
-      if amount > model.get('account.balance.amAvailable')
+
+      if model.get('allowUnconfirmed') && (amount <= (model.get('account.balance.amAvailable') + model.get('account.balance.amUnconfirmed')))
+        return true
+      else if amount > model.get('account.balance.amAvailable')
         return model.get('i18n').t(INSUFF_FUNDS).toString()
       else
         true
-    ), dependentKeys: ['model.allowUnconfirmed', 'model.account.balance.amAvailable'])
+    ), dependentKeys: ['model.allowUnconfirmed', 'model.account.balance.amAvailable', 'model.account.balance.amUnconfirmed'])
   ]
 )
 
 PaymentRecipient = Model.extend(Validations, ValidationsHelper,
 
-  cm: Ember.inject.service('cm-session')
-  currencySvc: Ember.inject.service('cm-currency')
-  coinsvc: Ember.inject.service('cm-coin')
-  i18n: Ember.inject.service('i18n')
+  cm: service('cm-session')
+  currencySvc: service('cm-currency')
+  coinsvc: service('cm-coin')
+  i18n: service('i18n')
 
   account: null
   type: 'address'
@@ -49,29 +61,41 @@ PaymentRecipient = Model.extend(Validations, ValidationsHelper,
   meta: null
 
   currency: null
-  currencyValue: Ember.computed.alias('account.unit.value')
+  currencyValue: alias('account.unit.value')
 
   entireBalance: false
   allowUnconfirmed: false
 
-  isAddress: Ember.computed.equal('type', 'address')
-  isCm: Ember.computed.equal('type', 'cm')
-  isAccount: Ember.computed.equal('type', 'account')
+  isAddress: equal('type', 'address')
+  isCm: equal('type', 'cm')
+  isAccount: equal('type', 'account')
 
+
+  value: computed(
+    get: (key) ->
+      return @_value
+
+    set: (key, val) ->
+      if @isAddress
+        return @set('_value', val?.trim())
+      else
+        return @set('_value', val)
+  )
 
 
   currencyChanged: (->
+    @set('meta',  {}) if !@get('meta')
     meta = @get('meta')
 
     if @get('currencyIsCrypto')
       data = {currency: @get('currencySvc.currency'), amount: @get('amountInTickerCurrency'), rate: @get('currencyValue') }
     else
       data = {currency: @get('currency'), amount: @get('amountInTickerCurrency'), rate: @get('currencyValue'), native: true }
-    Ember.set(meta, 'currencyData', data)
+    set(meta, 'currencyData', data)
   ).observes('currency', 'amount', 'account.unit.value')
 
 
-  info: Ember.computed('meta',
+  info: computed('meta',
     get: (key) ->
       @get('meta.info')
 
@@ -134,7 +158,7 @@ PaymentRecipient = Model.extend(Validations, ValidationsHelper,
 
   typeChanged: ( -> @set('value', null) ).observes('type')
 
-  btcUnitChanged: ( -> @set('amount', null)).observes('cm.btcUnit')
+  btcUnitChanged: ( -> @set('amount', null)).observes('account.unit')
 
   resetUnit: ( -> @set 'currency', @get('account.subunit.id') ).observes('account.subunit').on('init')
 
@@ -153,7 +177,7 @@ PaymentRecipient = Model.extend(Validations, ValidationsHelper,
 
     switch type
       when 'address'
-        cmo.address = @get('value')
+        cmo.address = @get('coinsvc').addressFromUri(@get('value'), @get('account.coin'))
       when 'cm'
         cmo.pubId = @get('value.alias') || @get('value.pubId')
       when 'account'
@@ -165,9 +189,9 @@ PaymentRecipient = Model.extend(Validations, ValidationsHelper,
   setup: ( ->
     @setProperties
       meta: {}
-      labels: Ember.A()
-    Ember.Logger.warn("[recp] Account is not defined") if Ember.isBlank(@get('account'))
+      labels: A()
+    Logger.warn("[recp] Account is not defined") if isBlank(@get('account'))
   ).on('init')
 )
 
-`export default PaymentRecipient`
+export default PaymentRecipient

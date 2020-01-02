@@ -1,7 +1,7 @@
 .row
   .form-group
     .col-xs-8
-      label.control-label = t 'paysend.form.feesperbyte'
+      label.control-label = t 'paysend.form.feesperbyte' unit=coin.unit
       = if feesData
         br
         i.text-small

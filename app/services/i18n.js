@@ -7,7 +7,7 @@ export default I18nService.extend({
     if (ex.params && ex.params.i18n) {
       return this.t(ex.params.i18n, ex.params );
     } else {
-      return ex.msg
+      return ex.msg;
     }
   }
 

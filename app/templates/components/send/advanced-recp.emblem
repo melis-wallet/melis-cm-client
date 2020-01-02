@@ -29,8 +29,12 @@
 
       .col-xs-4
         .pull-right.xr-top-sp
+          // dummy button as a workaround to a bug with forms sending stray clicks
+          span style="display: none;"
+            = leaf-button outline=true
+
           = leaf-tooltip class='value' tooltip=(t 'paysend.form.type') tooltip-placement='left'
-            = send/destination-type dst-type=recipient.type size='sm' class='xr-bt-sp' on-type-change=(action (mut recipient.type))
+            = send/destination-type dst-type=recipient.type size='sm' class='xr-bt-sp' showall=true on-type-change=(action (mut recipient.type))
           '
 
           = leaf-tooltip class='value' tooltip=(t 'paysend.form.scan') tooltip-placement='left'
@@ -60,7 +64,7 @@
           = else
             = f.input type='number' property='amount' label=(t 'paysend.form.amount.label')  placeholder=(t 'paysend.form.amount.ph') class='form-group required'
         .col-sm-1.col-xs-4.xr-top-sp-f
-          = leaf-button size='sm' icon='fa fa-fire' outline=true on-click='toggleEntireBalance' active=recipient.entireBalance disabled=blockEntireBalance
+          = leaf-button size='sm' icon='fa fa-fire' outline=true on-click='toggleEntireBalance' active=recipient.entireBalance disabled=(not canToggleEntireBalance)
 
         .col-sm-3.col-xs-5 class="{{if recipient.entireBalance 'hidden'}}"
           = f.select label=(t 'paysend.form.currency.label') content=currencies property='currency'
@@ -71,8 +75,8 @@
             = f.input property='amountInCryptoUnit' label=(unit-id account=account) disabled=true
 
     = misc/more-info prompt=(t 'paysend.form.more') class='no-padding-t'
-      = label-picker selection=recipient.labels label=(t 'paysend.form.labels.label') labelsSet='txLabels'
       = f.input property='info'  label=(t 'paysend.form.info.label') placeholder=(t 'paysend.form.info.ph')
+      = label-picker selection=recipient.labels label=(t 'paysend.form.labels.label') labelsSet='txLabels'
 
   = liquid-if  recipient.isValid class='ll-down-up'
     .row

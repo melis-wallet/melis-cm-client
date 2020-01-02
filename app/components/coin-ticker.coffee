@@ -1,9 +1,11 @@
-import Ember from 'ember'
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-CoinTicker = Ember.Component.extend(
+CoinTicker = Component.extend(
 
-  currencySvc: Ember.inject.service('cm-currency')
-  coinsvc: Ember.inject.service('cm-coin')
+  currencySvc: service('cm-currency')
+  coinsvc: service('cm-coin')
 
   coin: 'BTC'
 
@@ -12,8 +14,9 @@ CoinTicker = Ember.Component.extend(
       @get('coinsvc.coins').findBy('tsym', coin)
   ).property('coin')
 
-  history: Ember.computed.alias('unit.history')
-  value: Ember.computed.alias('unit.value')
+  history: alias('unit.history')
+  value: alias('unit.value')
+  time: alias('unit.currencyValue.time')
 
   compact: false
 

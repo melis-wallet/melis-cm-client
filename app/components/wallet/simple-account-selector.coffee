@@ -1,12 +1,15 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
+import Component from '@ember/component'
+import { A } from '@ember/array'
 
-SimpleAccSelector = Ember.Component.extend(
+import CMCore from 'npm:melis-api-js'
+
+
+SimpleAccSelector = Component.extend(
 
 
   accountType: CMCore.C.TYPE_2OF2_SERVER
 
-  accountTypes: Ember.A([
+  accountTypes: A([
     {id: CMCore.C.TYPE_2OF2_SERVER, label: '2of2'}
     {id: CMCore.C.TYPE_PLAIN_HD, label: 'plain'}
   ])
@@ -15,8 +18,6 @@ SimpleAccSelector = Ember.Component.extend(
     if type = @get('accountType')
       @sendAction 'on-change-selected', type
   ).observes('accountType')
-
-
 )
 
-`export default SimpleAccSelector`
+export default SimpleAccSelector

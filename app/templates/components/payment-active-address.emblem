@@ -36,7 +36,7 @@
 
               = if activeAddress.cmo.meta.amount
                 tr
-                  td.lowercase = cm.globalCurrency
+                  td.lowercase = currency-unit
                   td: .pull-right = to-currency activeAddress.cmo.meta.amount account=activeAddress.account
 
 
@@ -49,7 +49,7 @@
               tr
                 td: i.fa.fa-tags
                 td.text-right
-                  = misc/tags-list selection=activeAddress.cmo.labels labelsSet='txLabels' on-done-edit='changeLabels' control='right'
+                  = misc/tags-list selection=activeAddress.cmo.labels labelsSet='addressLabels' on-done-edit='changeLabels' control='right'
 
               tr
                 td = leaf-switcher checked=wantLink theme='modern'
@@ -63,14 +63,18 @@
               /tr
                 td colspan='2'
                   span.pull-right
+                    = if showToggle
+                      = leaf-button on-click='toggleFormat' size='xs' outline=true icon='fa fa-low-vision' style='padding-bottom: 2px;' tooltip=(t 'newaddr.a.alternate') active=isStandard
                     = leaf-clipboard size='xs' block=true outline=true content=clipCode tooltip=(t 'newaddr.a.clip')
                   span.code-label = clipCode
       .row.padding-sm-vr.border-b
-        .col-sm-11
+        .col-xs-10
           span.code-label = clipCode
           .hidden = addressUrl
           .hidden = code
-        .col-sm-1
+        .col-xs-2
+          = if showToggle
+            = leaf-button on-click='toggleFormat' size='xs' block=true outline=true icon='fa fa-low-vision' style='padding-bottom: 2px;' tooltip=(t 'newaddr.a.alternate') active=isStandard
           = leaf-clipboard size='xs' block=true outline=true content=clipCode tooltip=(t 'newaddr.a.clip')
 
       .row.padding-sm-vr.no-padding-b

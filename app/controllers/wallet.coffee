@@ -1,13 +1,23 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-WalletController = Ember.Controller.extend(
-  cm: Ember.inject.service('cm-session')
+import Logger from 'melis-cm-svcs/utils/logger'
 
-  ready: Ember.computed.alias('cm.ready')
-  connected: Ember.computed.alias('cm.connected')
-  disconnected: Ember.computed.alias('cm.disconnected')
-  connectFailed: Ember.computed.alias('cm.connectFailed')
+WalletController = Controller.extend(
+  cm: service('cm-session')
 
+  ready: alias('cm.ready')
+  connected: alias('cm.connected')
+  disconnected: alias('cm.disconnected')
+  connectFailed: alias('cm.connectFailed')
+
+
+  actions:
+    retryConnect: ->
+      Logger.info('[wallet] Manually retrying connect')
+      @get('cm').connect().then( -> Logger.info('[wallet] Connect Success') )
 
 )
-`export default WalletController`
+
+export default WalletController

@@ -1,18 +1,23 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
+import Service, { inject as service } from '@ember/service'
+import { get, set } from '@ember/object'
+
+import CMCore from 'npm:melis-api-js'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 C = CMCore.C
 
-ToastsProvider = Ember.Service.extend(
+ToastsProvider = Service.extend(
 
 
-  cm: Ember.inject.service('cm-session')
-  toasts: Ember.inject.service('leaf-toasts')
-  stream: Ember.inject.service('cm-stream')
-  chat: Ember.inject.service('cm-chat')
-  ptxsvc: Ember.inject.service('cm-ptxs')
+  cm: service('cm-session')
+  toasts: service('leaf-toasts')
+  stream: service('cm-stream')
+  chat: service('cm-chat')
+  ptxsvc: service('cm-ptxs')
 
-  i18n: Ember.inject.service()
+  i18n: service()
 
 
   newNotif: (notif) ->
@@ -35,16 +40,16 @@ ToastsProvider = Ember.Service.extend(
     @get('toasts').showWarn(text)
 
   newSig: (signer, enough, ptx) ->
-    account = Ember.get(ptx, 'account')
+    account = get(ptx, 'account')
     if signer && (signer != account.get('cmo.pubId'))
       signerName = account.cosignerName(signer, {unknown: @get('i18n').t('toasts.ptx.cosigner')})
       text = @get('i18n').t('toasts.ptx.newsig', signer: signerName, account: account)
       @get('toasts').showSuccess(text)
 
   newPtxMsg: (msg, account) ->
-    if Ember.get(account, 'cmo.pubId') != Ember.get(msg, 'fromPubId')
-      if Ember.get(msg, 'type') == 'M'
-        text = Ember.get(msg, 'payload.plaintext')
+    if get(account, 'cmo.pubId') != get(msg, 'fromPubId')
+      if get(msg, 'type') == 'M'
+        text = get(msg, 'payload.plaintext')
         if(text && (text.length > 30))
           text = text.substring(0, 27) + '...'
         if true  #|| @get('appState.ptxChatNotify')
@@ -56,20 +61,17 @@ ToastsProvider = Ember.Service.extend(
     newer = account.get('stream.newer.length')
     urgent = account.get('stream.urgentNewer.length')
 
-    console.error "STREAM", urgent, newer, account
 
     if urgent > 0
       text = @get('i18n').t('toasts.stream.urgent', name: name, count: urgent)
       @get('toasts').showWarn(text)
     if (newer - urgent) > 0
-      console.error "displaying newer"
       text = @get('i18n').t('toasts.stream.entries', name: name, count: newer)
       @get('toasts').showSuccess(text)
 
 
 
   observeStreams: ( ->
-    console.error("OBSERVER")
     @get('cm.accounts').forEach((account) =>
       newer = account.get('stream.newer.length')
       urgent = account.get('stream.urgentNewer.length')
@@ -88,21 +90,11 @@ ToastsProvider = Ember.Service.extend(
   ).observes('cm.accounts.@each.stream.newer.length')
 
   setup: ( ->
-    Ember.Logger.debug('== Starting toasts service')
-
-  #  @get('ptxsvc').on('new-sig-requested', this, @newSigReq)
-  #  @get('ptxsvc').on('new-sig', this, @newSig)
-  #  @get('chat').on('msg-to-ptx', this, @newPtxMsg)
-  # @get('stream').on('new-entry', this, @streamEntry)
+    Logger.debug('== Starting toasts service')
   ).on('init')
 
-
   teardown: (->
-  #  @get('ptxsvc').off('new-sig-requested', this, @newSigReq)
-  #  @get('ptxsvc').off('new-sig', this, @newSig)
-  #  @get('chat').off('msg-to-ptx', this, @newMsg)
-  # @get('stream').off('new-entry', this, @streamEntry)
   ).on('willDestroy')
 )
 
-`export default ToastsProvider`
+export default ToastsProvider

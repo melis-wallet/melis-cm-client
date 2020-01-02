@@ -1,7 +1,9 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { isBlank } from '@ember/utils'
+import { scheduleOnce } from '@ember/runloop'
 
 
-QrCode = Ember.Component.extend(
+QrCode = Component.extend(
 
   content: null
   placeholder: null
@@ -26,7 +28,7 @@ QrCode = Ember.Component.extend(
   ).property('content', 'placeholder')
 
   contentChanged: (->
-    Ember.run.scheduleOnce 'afterRender', this, @_makeCode
+    scheduleOnce 'afterRender', this, @_makeCode
   ).observes('content')
 
   setup: (->
@@ -34,7 +36,7 @@ QrCode = Ember.Component.extend(
   ).on('didInsertElement')
 
   isPlaceholder: ( ->
-    Ember.isBlank(@get('content')) && @get('placeholder')
+    isBlank(@get('content')) && @get('placeholder')
   ).property('content', 'placeholder')
 
 
@@ -58,4 +60,4 @@ QrCode = Ember.Component.extend(
 
 )
 
-`export default QrCode`
+export default QrCode

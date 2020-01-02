@@ -1,8 +1,16 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
-`import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { A } from '@ember/array'
+import { get, set } from '@ember/object'
+import { scheduleOnce } from '@ember/runloop'
+
+import CMCore from 'npm:melis-api-js'
+import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 C = CMCore.C
 
@@ -14,9 +22,9 @@ Validations = buildValidations(
   ]
 )
 
-CollectCosigners = Ember.Component.extend(Validations, ValidationsHelper, ModelFactory,
+CollectCosigners = Component.extend(Validations, ValidationsHelper, ModelFactory,
 
-  info: Ember.inject.service('cm-account-info')
+  info: service('cm-account-info')
 
   withServer: false
   accountType: null
@@ -25,7 +33,7 @@ CollectCosigners = Ember.Component.extend(Validations, ValidationsHelper, ModelF
   minSignatures: 2
   currentCosigner: null
 
-  cosignersCnt: Ember.computed.alias('cosigners.length')
+  cosignersCnt: alias('cosigners.length')
   totalSignatures: ( ->
     @get('cosignersCnt') + 1
   ).property('cosignersCnt')
@@ -44,7 +52,7 @@ CollectCosigners = Ember.Component.extend(Validations, ValidationsHelper, ModelF
     @get('allMandatory') || (@get('minSignatures') < 1)
   ).property('minSignatures', 'allMandatory')
 
-  #maxMandatory: Ember.computed.alias('minSignatures')
+  #maxMandatory: alias('minSignatures')
 
   maxMandatory: (->
     (@get('minSignatures') - 1)
@@ -93,7 +101,7 @@ CollectCosigners = Ember.Component.extend(Validations, ValidationsHelper, ModelF
 
   setup: ( ->
 
-    @set 'cosigners', Ember.A()
+    @set 'cosigners', A()
     cosigner = @createSimpleModel('account-cosigner', name: null)
     @get('cosigners').pushObject(cosigner)
 
@@ -106,7 +114,7 @@ CollectCosigners = Ember.Component.extend(Validations, ValidationsHelper, ModelF
 
 
   focusInput: ( ->
-    Ember.run.scheduleOnce('afterRender', this, ->
+    scheduleOnce('afterRender', this, ->
       @.$('input.ember-text-field').focus().click()
     )
   )
@@ -183,12 +191,12 @@ CollectCosigners = Ember.Component.extend(Validations, ValidationsHelper, ModelF
       if state && (@get('mandatoryCnt') >= @get('maxMandatory'))
         if (c = @get('mandatoryCosigners').get('firstObject'))
           c.set('mandatory', false)
-          Ember.set(cosigner, 'mandatory', true )
+          set(cosigner, 'mandatory', true )
         else if @get('masterMandatory')
           @set('masterMandatory', false)
-          Ember.set(cosigner, 'mandatory', true )
+          set(cosigner, 'mandatory', true )
       else
-        Ember.set(cosigner, 'mandatory', state)
+        set(cosigner, 'mandatory', state)
 
     setMasterMandatory: (state) ->
       if state && (@get('mandatoryCnt') >= @get('maxMandatory'))
@@ -199,4 +207,5 @@ CollectCosigners = Ember.Component.extend(Validations, ValidationsHelper, ModelF
         @set('masterMandatory', state)
 
 )
-`export default CollectCosigners`
+
+export default CollectCosigners

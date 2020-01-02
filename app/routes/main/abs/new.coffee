@@ -1,9 +1,9 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
 
+MainAbsNewRoute = Route.extend(
 
-MainAbsNewRoute = Ember.Route.extend(
-
-  abook: Ember.inject.service('cm-addressbook')
+  abook: service('cm-addressbook')
 
   actions:
     addAbEntry: (entry) ->
@@ -13,4 +13,4 @@ MainAbsNewRoute = Ember.Route.extend(
       )
 )
 
-`export default MainAbsNewRoute`
+export default MainAbsNewRoute

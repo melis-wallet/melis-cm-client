@@ -1,25 +1,31 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'`
-`import { parseURI } from '../../utils/uris'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias  } from '@ember/object/computed'
+import { computed } from '@ember/object'
+
+import { task, taskGroup } from 'ember-concurrency'
+import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
+import { parseURI } from '../../utils/uris'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
 Validations = buildValidations(
   passphrase: [
-    validator('presence', presence: true, disabled: Ember.computed.not('model.encrypted'))
-    validator('length', min: 8, max: 32, disabled: Ember.computed.not('model.encrypted'))
+    validator('presence', presence: true, disabled: computed.not('model.encrypted'))
+    validator('length', min: 8, max: 32, disabled: computed.not('model.encrypted'))
   ]
 )
 
 BACKUP_SCHEME = 'melis+seed'
 
-BackupChecker = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
-  scanner: Ember.inject.service('scanner-provider')
-  i18n: Ember.inject.service()
+BackupChecker = Component.extend(AsWizard, Validations, ValidationsHelper,
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
+  scanner: service('scanner-provider')
+  i18n: service()
 
   pin: null
 
@@ -43,11 +49,11 @@ BackupChecker = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
       if res
         @validOk()
       else
-        Ember.Logger.debug 'Does not validate'
+        Logger.debug 'Does not validate'
         @set 'failed',  @get('i18n').t('backup.ck.err.failed-backup')
 
     catch e
-      Ember.Logger.error "Failed check: ", e
+      Logger.error "Failed check: ", e
       @set 'failed',  @get('i18n').t('backup.ck.err.failed-check')
   )
 
@@ -66,7 +72,7 @@ BackupChecker = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
       if uri.scheme == BACKUP_SCHEME
         @validateGenerator(uri.address)
       else
-        Ember.Logger.error 'Invalid scan'
+        Logger.error 'Invalid scan'
         @set 'importError', @get('i18n').t('backup.ck.err.invalid-scan')
 
 
@@ -81,7 +87,7 @@ BackupChecker = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
         @get('checkGenerator').perform(data)
 
     else
-      Ember.Logger.error 'Invalid Generator'
+      Logger.error 'Invalid Generator'
       @set 'importError',  @get('i18n').t('backup.ck.err.invalid-gen')
 
 
@@ -102,11 +108,11 @@ BackupChecker = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
       if res
         @validOk()
       else
-        Ember.Logger.debug 'Does not validate'
+        Logger.debug 'Does not validate'
         @set 'failed',  @get('i18n').t('backup.ck.err.failed-backup')
 
     catch e
-      Ember.Logger.error "Failed check: ", e
+      Logger.error "Failed check: ", e
   )
 
 
@@ -121,7 +127,7 @@ BackupChecker = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
       if res && res.data
         @parseData(res.data.trim())
     catch e
-      Ember.Logger.error('Scanner Error', e)
+      Logger.error('Scanner Error', e)
       @set 'importError',  @get('i18n').t('backup.ck.err.scanner')
 
   )
@@ -158,5 +164,4 @@ BackupChecker = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
 
 )
 
-
-`export default BackupChecker`
+export default BackupChecker

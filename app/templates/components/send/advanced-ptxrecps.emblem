@@ -12,7 +12,7 @@
                   span.label.m-sm = l
                 span.text-light-gray = format-text rec.meta.info len=15
           = else
-            td: span.label.label-info: i.fa.fa-btc
+            td: span.label.label-info: i.fa.fa-barcode
             td.break-words
               p
                 b = rec.address

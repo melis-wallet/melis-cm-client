@@ -1,20 +1,27 @@
-`import Ember from 'ember'`
-`import { mergedProperty } from 'melis-cm-svcs/utils/misc'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { isBlank } from '@ember/utils'
+import { get, set, getWithDefault } from '@ember/object'
 
-MainHistoryController = Ember.Controller.extend(
+import { mergedProperty } from 'melis-cm-svcs/utils/misc'
 
-  media: Ember.inject.service('responsive-media')
+import Logger from 'melis-cm-svcs/utils/logger'
+
+MainHistoryController = Controller.extend(
+
+  media: service('responsive-media')
 
   actions:
     toggleStar: (tx) ->
-      if !Ember.isBlank(tx)
+      if !isBlank(tx)
         api = @get('cm.api')
-        value = !Ember.getWithDefault(tx, 'cmo.meta.starred', false)
+        value = !getWithDefault(tx, 'cmo.meta.starred', false)
         meta = mergedProperty(tx, 'cmo.meta', starred: value)
-        api.txInfoSet(Ember.get(tx, 'cmo.id'), Ember.get(tx, 'cmo.labels'), meta).then( (res) =>
+        api.txInfoSet(get(tx, 'cmo.id'), get(tx, 'cmo.labels'), meta).then( (res) =>
 
         ).catch((err) ->
-          console.error "Failed setting info: ", err
+          Logger.error "Failed setting info: ", err
         )
 
     selectTx: (tx) ->
@@ -24,4 +31,4 @@ MainHistoryController = Ember.Controller.extend(
         @transitionToRoute('main.account.history', @get('cm.currentAccount.pubId'))
 )
 
-`export default MainHistoryController`
+export default MainHistoryController

@@ -1,6 +1,6 @@
 
 .col-md-12
-  .panel class="{{if isRespent 'inactive' }}"
+  .panel
     .accent.colored-bg class=tx.account.color
     .panel-heading.light
       = if apiOps.isRunning
@@ -14,7 +14,7 @@
         i.text-default = live-moment-from-now entry.updated
 
       span.icon: i class=entry.eventIcon
-    .panel-body
+    .panel-body class="{{if isRespent 'inactive' }}"
       = with entry.content as |c|
         .row
           .col-sm-3.col-xs-2
@@ -35,9 +35,8 @@
                         '
                         = link-to 'main.account.ptx.detail' c.account.pubId c.cmo.id
                           =  t 'stream.ptx.details'
-                      = if isRespent
-                        p.text-warning =  t 'stream.ptx.respent'
-                      = else if tx.cmo.originalPtx
+
+                      = if tx.cmo.originalPtx
                         .alert.alert-info
                           =  t 'stream.ptx.feebump'
 
@@ -65,7 +64,7 @@
                     | (
                     = to-currency c.cmo.amount account=tx.account
                     '
-                    = cm.globalCurrency
+                    = currency-unit
                     |)
                 tr class="{{ if tx.cmo.originalPtx 'warning' }}"
                   td = t 'stream.ptx.fees'
@@ -100,7 +99,7 @@
           .col-xs-5
             = if c.accountCanSign
               = leaf-button icon='fa fa-check' type='warning' on-click='approveTx' block=true tooltip=(t 'stream.ptx.a.approve') disabled=apiOps.isRunning
-            = else if isRespent
+            //= else if isRespent
               = leaf-button icon='fa fa-recycle' type='default' on-click='reissueTx' block=true tooltip=(t 'stream.ptx.a.reissue') disabled=apiOps.isRunning
 
         = if tx.signing
@@ -108,3 +107,10 @@
             .col-xs-12
               p = leaf-progress value=tx.signingProgress striped=true style='height: 4px;'
 
+    = if isRespent
+      .panel-body
+        .row
+          .col-sm-3.col-xs-2
+            = leaf-button icon='fa fa-recycle' type='default' on-click='reissueTx' block=true tooltip=(t 'stream.ptx.a.reissue') disabled=apiOps.isRunning
+          .col-sm-8.col-xs-9.col-xs-offset-1
+            p.text-warning =  t 'stream.ptx.respent'

@@ -1,13 +1,15 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
+MainAbsRoute = Route.extend(
 
 
-MainAbsRoute = Ember.Route.extend(
+  cm: service('cm-session')
+  ab: service('cm-addressbook')
 
-
-  cm: Ember.inject.service('cm-session')
-  ab: Ember.inject.service('cm-addressbook')
-
-  scanner: Ember.inject.service('scanner-provider')
+  scanner: service('scanner-provider')
 
   model: ->
     @get('ab').findAll()
@@ -19,7 +21,7 @@ MainAbsRoute = Ember.Route.extend(
       if (addr = @get('scanner').getAddressFromData(data))
         @transitionToRoute('main.abs.new', [], queryParams: {newaddr: addr})
     ).catch((err) ->
-      Ember.Logger.error "Scanner aborted", err
+      Logger.error "Scanner aborted", err
     )
 
   actions:
@@ -30,9 +32,6 @@ MainAbsRoute = Ember.Route.extend(
     scanAddress: ->
       @scanAddress()
 
-
-
-
 )
 
-`export default MainAbsRoute`
+export default MainAbsRoute

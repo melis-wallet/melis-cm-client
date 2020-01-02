@@ -1,6 +1,5 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
 
-ProfileController = Ember.Controller.extend(
-)
+ProfileController = Controller.extend()
 
-`export default ProfileController`
+export default ProfileController

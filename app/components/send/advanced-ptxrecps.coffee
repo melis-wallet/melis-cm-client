@@ -1,8 +1,11 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, filter, mapBy, sum } from '@ember/object/computed'
+import { get, set } from '@ember/object'
 
-AdvancedListRecps = Ember.Component.extend(
+AdvancedListRecps = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   account: null
 
@@ -11,9 +14,9 @@ AdvancedListRecps = Ember.Component.extend(
 
   preparedTx: null
 
-  preparedRecps: Ember.computed.alias('preparedTx.cmo.recipients')
-  preparedFees: Ember.computed.alias('preparedTx.cmo.fees')
-  preparedAmount: Ember.computed.alias('preparedTx.cmo.amount')
+  preparedRecps: alias('preparedTx.cmo.recipients')
+  preparedFees: alias('preparedTx.cmo.fees')
+  preparedAmount: alias('preparedTx.cmo.amount')
 
   preparedTotal: ( ->
     @get('preparedAmount') + @get('preparedFees')
@@ -21,14 +24,14 @@ AdvancedListRecps = Ember.Component.extend(
 
 
   # recipients that are not remainders
-  normalPRcpts: Ember.computed.filter('preparedRecps', (r) -> !Ember.get(r, 'isRemainder'))
-  remainderPRcpts: Ember.computed.filter('preparedRecps', (r) -> Ember.get(r, 'isRemainder'))
+  normalPRcpts: filter('preparedRecps', (r) -> !get(r, 'isRemainder'))
+  remainderPRcpts: filter('preparedRecps', (r) -> get(r, 'isRemainder'))
 
-  normalPRAmounts: Ember.computed.mapBy('normalPRcpts', 'amount')
-  normalPRSum: Ember.computed.sum('normalPRAmounts')
+  normalPRAmounts: mapBy('normalPRcpts', 'amount')
+  normalPRSum: sum('normalPRAmounts')
 
-  reqTotal: Ember.computed.alias('parent.totalAmount')
-  isEntireBalance: Ember.computed.alias('parent.isEntireBalance')
+  reqTotal: alias('parent.totalAmount')
+  isEntireBalance: alias('parent.isEntireBalance')
 
   preparedRemainder: ( ->
     @get('preparedAmount') - @get('normalPRSum') - @get('preparedFees')
@@ -40,4 +43,4 @@ AdvancedListRecps = Ember.Component.extend(
 
 )
 
-`export default AdvancedListRecps`
+export default AdvancedListRecps

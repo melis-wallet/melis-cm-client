@@ -1,12 +1,12 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
-AdvancedPtx = Ember.Component.extend(
+AdvancedPtx = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   account: null
   preparedTx: null
-
 
   actions:
     cancelTx: ->
@@ -17,9 +17,7 @@ AdvancedPtx = Ember.Component.extend(
 
     confirmTx: ->
       @sendAction('on-confirm')
-
-
 )
 
 
-`export default AdvancedPtx`
+export default AdvancedPtx

@@ -1,18 +1,24 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-ScannerModal = Ember.Component.extend(
+ScannerModal = Component.extend(
 
-  provider: Ember.inject.service('scanner-provider')
-  modalId: Ember.computed.alias('provider.modalId')
+  provider: service('scanner-provider')
+  modalId: alias('provider.modalId')
 
   mediaError: null
+
+  tab: null
 
   actions:
     successAcquire: (data)->
       @get('provider').successAcquire(data)
 
     mediaError: (error) ->
-      @set 'mediaError', error
+      @setProperties
+        mediaError: error
+        tab: 'upload'
 )
 
-`export default ScannerModal`
+export default ScannerModal

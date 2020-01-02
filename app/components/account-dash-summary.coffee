@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
-DashSummary = Ember.Component.extend(
+DashSummary = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   account: null
   detailExpanded: false
@@ -14,4 +15,4 @@ DashSummary = Ember.Component.extend(
 
 )
 
-`export default DashSummary`
+export default DashSummary

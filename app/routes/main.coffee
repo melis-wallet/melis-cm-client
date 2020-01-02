@@ -1,9 +1,10 @@
-`import Ember from 'ember'`
-`import StyleBody from 'ember-leaf-core/mixins/leaf-style-body'`
-`import AuthenticatedRoute from '../mixins/authenticated-route'`
+import Route from '@ember/routing/route'
+
+import StyleBody from 'ember-leaf-core/mixins/leaf-style-body'
+import AuthenticatedRoute from '../mixins/authenticated-route'
 
 
-MainRoute = Ember.Route.extend(StyleBody, AuthenticatedRoute,
+MainRoute = Route.extend(StyleBody, AuthenticatedRoute,
 
   classNames: ['animate-mm-lg', 'animate-mm-md', 'animate-mm-sm']
 
@@ -16,4 +17,4 @@ MainRoute = Ember.Route.extend(StyleBody, AuthenticatedRoute,
     )
 )
 
-`export default MainRoute`
+export default MainRoute

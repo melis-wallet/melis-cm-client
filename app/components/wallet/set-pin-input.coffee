@@ -1,6 +1,8 @@
-`import Ember from 'ember'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
+import Component from '@ember/component'
+import { schedule } from '@ember/runloop'
+
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 Validations = buildValidations(
   pin: [
@@ -13,13 +15,13 @@ Validations = buildValidations(
   ]
 )
 
-SetPinInput = Ember.Component.extend(Validations, ValidationsHelper,
+SetPinInput = Component.extend(Validations, ValidationsHelper,
 
   pin: null
   pinCheck: null
 
   listenKeypress: (->
-    Ember.run.schedule 'afterRender', this, (->
+    schedule 'afterRender', this, (->
       # ember-rapid-forms seems to have an 'autofocus' attribute, it just doesn't do anything
       @.$('input#set_pin_input').focus()
       # listen to keypresses to submit with enter pinCheck /ugly/fixme/
@@ -46,4 +48,4 @@ SetPinInput = Ember.Component.extend(Validations, ValidationsHelper,
 
 )
 
-`export default SetPinInput`
+export default SetPinInput

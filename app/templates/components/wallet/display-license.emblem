@@ -2,11 +2,16 @@
   = leaf-modal id=modal-id backdrop-dismiss=false as |mod|
     = leaf-modal-header title=(t 'license.modal.title') modal=mod
     = leaf-modal-body class='modal-lim'
-      p: b = t 'license.scroll-hint'
+      p
+        b = t 'license.scroll-hint'
+        '
+        a click='scrollDown'
+          i.fa.fa-flash
       hr
       br
       = partial licenseFile
       = misc/scroller-guard on-enter='enableAccept' on-exit='disableAccept'
+      div.scrollto id='btm' style='min-height: 90px;'
     = leaf-modal-footer modal=mod
       = if displayOnly
         .row

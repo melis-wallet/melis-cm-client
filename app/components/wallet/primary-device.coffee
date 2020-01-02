@@ -1,12 +1,18 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { get } from '@ember/object'
+
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
-PrimaryDevice = Ember.Component.extend(
+PrimaryDevice = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  creds: Ember.inject.service('cm-credentials')
-  aa: Ember.inject.service('aa-provider')
+  cm: service('cm-session')
+  creds: service('cm-credentials')
+  aa: service('aa-provider')
+
   apiOps: taskGroup().enqueue()
 
   error: null
@@ -15,8 +21,6 @@ PrimaryDevice = Ember.Component.extend(
   recoveryDays: null
   maxRecoveryDays: 30
   recoveryConfirm: false
-
-
 
   updateRecovery: task((days) ->
     api = @get('cm.api')
@@ -29,7 +33,7 @@ PrimaryDevice = Ember.Component.extend(
 
     catch e
       @set 'error', e.msg
-      Ember.Logger.error "Make Primary error: ", e
+      Logger.error "Make Primary error: ", e
 
   ).group('apiOps')
 
@@ -41,23 +45,23 @@ PrimaryDevice = Ember.Component.extend(
 
     try
       res = yield @get('aa').tfaOrLocalPin(op)
-      if res && (date = Ember.get(res, 'dateExecutable'))
+      if res && (date = get(res, 'dateExecutable'))
         @set 'dateExecutable', date
 
     catch e
       @set 'error', e.msg
-      Ember.Logger.error "Make primary error: ", e
+      Logger.error "Make primary error: ", e
   ).group('apiOps')
 
 
   getRecovery: task( ->
     try
       data  = yield @get('cm.api').deviceGetRecoveryHours()
-      if h = Ember.get(data, 'hours')
+      if h = get(data, 'hours')
         @set('recoveryDays', Math.round(h / 24))
         @set('recoveryConfirm', false)
     catch e
-      Ember.Logger.error "Error: ", e
+      Logger.error "Error: ", e
   )
 
 
@@ -65,9 +69,8 @@ PrimaryDevice = Ember.Component.extend(
     try
       yield @get('cm').deviceChangeName(name)
     catch e
-      Ember.Logger.error "Dev change name error: ", e
+      Logger.error "Dev change name error: ", e
   )
-
 
   getInfo: ( ->
     @get('getRecovery').perform()
@@ -90,4 +93,4 @@ PrimaryDevice = Ember.Component.extend(
       @get('changeDeviceName').perform(name) if name
 )
 
-`export default PrimaryDevice`
+export default PrimaryDevice

@@ -1,4 +1,6 @@
-`import Ember from 'ember'`
+import Helper from '@ember/component/helper'
+import { inject as service } from '@ember/service'
+import { get, set } from '@ember/object'
 
 ICONS = {
   email: 'fa fa-envelope-o'
@@ -11,18 +13,18 @@ ICONS = {
 
 }
 
-TFADeviceIcon = Ember.Helper.extend(
+TFADeviceIcon = Helper.extend(
 
-  i18n:  Ember.inject.service()
+  i18n:  service()
 
   compute: (params, hash) ->
     device = params[0]
 
-    if deviceName = Ember.get(device, 'name')?.toLowerCase()
+    if deviceName = get(device, 'name')?.toLowerCase()
       ICONS[deviceName] || ICONS['unknown']
     else
       ICONS[device] || ICONS['unknown']
 
 )
 
-`export default TFADeviceIcon`
+export default TFADeviceIcon

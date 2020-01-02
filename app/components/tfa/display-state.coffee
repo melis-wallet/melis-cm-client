@@ -1,24 +1,30 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, filterBy } from '@ember/object/computed'
+import { get } from '@ember/object'
+
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 SUPPORTED_DRIVERS=['email', 'telegram', 'rfc6238', 'xmpp', 'regtest']
 
+DisplayState = Component.extend(
 
-DisplayState = Ember.Component.extend(
 
+  cm: service('cm-session')
+  aa: service('aa-provider')
 
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
+  drivers: alias('cm.config.tfaDrivers')
+  devices: alias('aa.tfaDevices')
+  allDevices: alias('aa.tfaAllDevices')
 
-  drivers: Ember.computed.alias('cm.config.tfaDrivers')
-  devices: Ember.computed.alias('aa.tfaDevices')
-  allDevices: Ember.computed.alias('aa.tfaAllDevices')
-
-  incompleteDevices: Ember.computed.filterBy('devices', 'verified', false)
-  completeDevices: Ember.computed.filterBy('devices', 'verified', true)
+  incompleteDevices: filterBy('devices', 'verified', false)
+  completeDevices: filterBy('devices', 'verified', true)
 
   activeDrivers: ( ->
-    @get('drivers')?.filter((d) -> SUPPORTED_DRIVERS.includes(Ember.get(d, 'name')))
+    @get('drivers')?.filter((d) -> SUPPORTED_DRIVERS.includes(get(d, 'name')))
   ).property('drivers')
 
 
@@ -42,7 +48,7 @@ DisplayState = Ember.Component.extend(
       @get('refreshState').perform()
 
     catch error
-      Ember.Logger.error "Error doing enroll finish: ", error
+      Logger.error "Error doing enroll finish: ", error
       @set 'currentError', error.msg
   ).group('tfaOps')
 
@@ -59,7 +65,7 @@ DisplayState = Ember.Component.extend(
       yield api.tfaEnrollFinish(name: device.name, value: device.value, code: token)
       @get('refreshState').perform()
     catch error
-      Ember.Logger.error "Error doing enroll finish: ", error
+      Logger.error "Error doing enroll finish: ", error
       @set 'currentError', error.msg
 
   ).group('apiOps')
@@ -79,4 +85,4 @@ DisplayState = Ember.Component.extend(
       @get('enrollFinish').perform(device, token)
 )
 
-`export default DisplayState`
+export default DisplayState

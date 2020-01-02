@@ -10,5 +10,5 @@
     | (
     = to-currency content.amSummary account=content
     '
-    = cm.globalCurrency
+    = currency-unit
     |)

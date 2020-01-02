@@ -1,9 +1,15 @@
-`import Ember from 'ember'`
-`import { mergedProperty } from 'melis-cm-svcs/utils/misc'`
+import Controller, { inject as controller } from '@ember/controller'
+import { get, set } from '@ember/object'
+import { isEmpty, isBlank } from '@ember/utils'
 
-MainHistoryDetailController = Ember.Controller.extend(
+import { mergedProperty } from 'melis-cm-svcs/utils/misc'
 
-  historyCtrl: Ember.inject.controller('main.account.history')
+import Logger from 'melis-cm-svcs/utils/logger'
+
+
+MainHistoryDetailController = Controller.extend(
+
+  historyCtrl: controller('main.account.history')
 
   modelChanged: ( ->
     @set('historyCtrl.activeModel', @get('model'))
@@ -16,18 +22,18 @@ MainHistoryDetailController = Ember.Controller.extend(
       api.txInfoSet(tx.id, labels, tx.meta).then( (res)=>
         @set 'selected', res
       ).catch((err) ->
-        console.error "Failed setting info: ", err
+        Logger.error "Failed setting info: ", err
       )
 
     changeTxInfo: (value, tx) ->
-      if !Ember.isBlank(tx)
+      if !isBlank(tx)
         api = @get('cm.api')
         meta = mergedProperty(tx, 'cmo.meta', info: value)
-        api.txInfoSet(Ember.get(tx, 'cmo.id'), Ember.get(tx, 'cmo.labels'), meta).then( (res)=>
+        api.txInfoSet(get(tx, 'cmo.id'), get(tx, 'cmo.labels'), meta).then( (res)=>
           @set 'selected', res
         ).catch((err) ->
-          console.error "Failed setting info: ", err
+          Logger.error "Failed setting info: ", err
         )
 )
 
-`export default MainHistoryDetailController`
+export default MainHistoryDetailController

@@ -1,13 +1,18 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { isBlank, isEmpty } from '@ember/utils'
 
-PayToController = Ember.Controller.extend(
+import Logger from 'melis-cm-svcs/utils/logger'
 
-  credentials: Ember.inject.service('cm-credentials')
-  currencySvc: Ember.inject.service('cm-currency')
-  coinsvc: Ember.inject.service('cm-coin')
-  i18n: Ember.inject.service()
+PayToController = Controller.extend(
 
-  queryParams: ['amount', 'info']
+  credentials: service('cm-credentials')
+  currencySvc: service('cm-currency')
+  coinsvc: service('cm-coin')
+  i18n: service()
+
+  queryParams: ['amount', 'info', 'currencyAmount', 'currency']
 
   editAmount: false
 
@@ -15,12 +20,16 @@ PayToController = Ember.Controller.extend(
   amount: null
   info: null
 
-  recipient: Ember.computed.alias('model')
+  recipient: alias('model')
 
-  unit: Ember.computed.alias('model.coin')
+  unit: alias('model.coin')
+
+
+  currInput: null
+
   coin: ( ->
     @get('coinsvc.coins')?.findBy('unit', @get('unit'))
-  ).property('coin', 'coinsvc.inited')
+  ).property('coin', 'coinsvc.inited', 'coinsvc.coins.[]')
 
 
   fmtdAmount: ( ->
@@ -28,6 +37,18 @@ PayToController = Ember.Controller.extend(
       @get('coinsvc').formatUnit(@get('coin'), amount)
   ).property('coin.subunit', 'amount')
 
+
+  setCurrAmount: ( ->
+
+    if (c = @get('currency'))
+      @get('currencySvc')?.set('activeCurrency', c)
+
+
+    if @get('unit') && !isEmpty(@get('coinsvc.coins')) && (a = @get('currencyAmount')) && @get('coin.ticker')
+
+      @get('currencySvc')?.convertFrom(@get('unit'), a)
+      @set('amount', @get('currencySvc')?.convertFrom(@get('unit'), a))
+  ).observes('currencyAmount', 'currency', 'coinsvc.coins.[]', 'unit', 'coin.ticker').on('init')
 
 
   makeEditable: (->
@@ -43,15 +64,23 @@ PayToController = Ember.Controller.extend(
   ).property('amount')
 
   paymentUrl: ( ->
-    amount = @get('urlAmount')
-    address = @get('address')
+    { urlAmount,
+      address } = @getProperties('urlAmount', 'address')
+
+    scheme =
+      if @get('coin.scheme') then (@get('coin.scheme') + ':') else ''
+    params =
+      if urlAmount then "?amount=#{urlAmount}" else ''
 
     if address
-      "bitcoin:#{address}?amount=#{amount}"
+      "#{scheme}#{address}#{params}"
 
   ).property('model', 'address', 'urlAmount')
 
-
+  currencyConv: ( ->
+    if (amount = @get('amount'))
+      @get('coin')?.convertToCurrency(amount)
+  ).property('amount', 'coin.value')
 
   resetOnChange: ( ->
     @setProperties
@@ -66,7 +95,7 @@ PayToController = Ember.Controller.extend(
       @get('cm.api').getPaymentAddressForAccount(id, memo: @get('info'), address: @get('address')).then((res) =>
         @set('address', res)
       ).catch((err) =>
-        Ember.Logger.error('Error getting payment address: ', err)
+        Logger.error('Error getting payment address: ', err)
         @setProperties
           address: null
           showCode: false
@@ -76,6 +105,13 @@ PayToController = Ember.Controller.extend(
 
 
   actions:
+    currencyConfirm: (po)->
+      if (i = @get('currencyAmount'))
+        a = @get('currencySvc').convertFrom(@get('unit'), i)
+        @set('amount', a)
+
+        po.close() if po
+
     showCode: ->
       @requestAddress()
       false
@@ -101,4 +137,4 @@ PayToController = Ember.Controller.extend(
 
 )
 
-`export default PayToController`
+export default PayToController

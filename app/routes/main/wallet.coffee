@@ -1,9 +1,10 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
 
-MainWalletRoute = Ember.Route.extend(
+
+MainWalletRoute = Route.extend(
   setupController: (controller) ->
      controller.set('dangerEnabled', false)
 
 )
 
-`export default MainWalletRoute`
+export default MainWalletRoute

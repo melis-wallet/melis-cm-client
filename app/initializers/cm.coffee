@@ -8,4 +8,4 @@ CmSessionInitializer = {
 
 }
 
-`export default CmSessionInitializer`
+export default CmSessionInitializer

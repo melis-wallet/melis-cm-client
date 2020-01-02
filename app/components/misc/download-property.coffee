@@ -1,9 +1,12 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
-DownloadProperty = Ember.Component.extend(
+DownloadProperty = Component.extend(
 
-  device: Ember.inject.service('device-support')
+  device: service('device-support')
 
   tagName: 'span'
   icon: 'fa fa-cloud-download'
@@ -25,8 +28,8 @@ DownloadProperty = Ember.Component.extend(
         @get('filename'),
         @get('additionalInfo').toString(),
         JSON.stringify(@get('data'))
-      ).then( -> Ember.Logger.debug('Mail Sent'))
+      ).then( -> Logger.debug('Mail Sent'))
 )
 
 
-`export default DownloadProperty`
+export default DownloadProperty

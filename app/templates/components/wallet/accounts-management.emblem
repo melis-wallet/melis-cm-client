@@ -20,10 +20,14 @@ table.table.table-striped
           = if a.secure
             '
             span.label.label-info = t 'account.secure'
+          = if a.isLite
+            '
+            span.label.label-info = t 'account.lite'
         td
           = leaf-button-group class='flex' outline=true
             = leaf-button icon='fa fa-eye-slash' on-click='toggleInvisible' value=a active=a.invisible tooltip=(t 'account.a.hide-show')
-            = if a.secure
-              = leaf-button icon='fa fa-lock' on-click='unsetSecure' value=a active=true disable=apiOps.isRunning tooltip=(t 'account.a.unsecure')
-            = else
-              = leaf-button icon='fa fa-lock' type='warning' on-click='setSecure' value=a disable=apiOps.isRunning tooltip=(t 'account.a.secure')
+            = unless a.isLite
+              = if a.secure
+                = leaf-button icon='fa fa-lock' on-click='unsetSecure' value=a active=true disable=apiOps.isRunning tooltip=(t 'account.a.unsecure')
+              = else
+                = leaf-button icon='fa fa-lock' type='warning' on-click='setSecure' value=a disable=apiOps.isRunning tooltip=(t 'account.a.secure')

@@ -15,7 +15,7 @@
   .right.clearfix
     ul.nav.navbar-nav.pull-right.right-navbar-nav
 
-      li.nav-icon-btn
+      //li.nav-icon-btn
         a href='#' click='startGenericScanner'
           i.nav-icon.fa.fa-camera
 

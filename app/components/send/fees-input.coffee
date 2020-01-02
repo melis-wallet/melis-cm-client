@@ -1,43 +1,59 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
-FeesInput = Ember.Component.extend(
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
-  cm: Ember.inject.service('cm-session')
+FeesInput = Component.extend(
+
+
+  cm: service('cm-session')
   value: null
+  coin: null
+  account: null
 
   feesData: null
 
-  getEstimate: task(->
+
+  getFeeEstimate: task( ->
+    return unless (coin = @get('coin.unit'))
+
     try
-      val = yield @get('cm.api').updateNetworkFeesFromExternalProviders()
-      console.error val
-      if val
-        @set('feesData', val)
-        value = Ember.get(val, 'fastestFee')
-        @set('value', value) if value
-        @sendAction('on-change', value)
+      provs = yield @get('cm.api').feeApi.getProviderNames(coin)
+      Logger.debug('Fee provs:', coin, provs)
+      if provs
+        p = provs[Math.floor(Math.random() * provs.length)]
+        val = yield @get('cm.api').feeApi.getFeesByProvider(coin, p)()
+        Logger.debug('Fee est:', coin, val)
+        if val
+          @set('feesData', val)
+          value = get(val, 'fastestFee')
+          @set('value', value) if value
+          @sendAction('on-change', value)
+
     catch error
-      Ember.Logger.error('Unable to hit fees: ', error)
+       Logger.error('Unable to hit fees: ', error)
   )
 
-
+  coinChanged: ( ->
+    @setProperties
+      value: null
+      feesData: null
+  ).observes('coin.unit', 'account')
 
   setup: (->
-    if Ember.isEmpty(@get('value'))
-      @get('getEstimate').perform()
+    @get('account')
+    @get('getFeeEstimate').perform()
   ).on('init')
-
 
   actions:
     changedValue: (value) ->
       @set('feesData', null)
       @sendAction('on-change', value)
-
-
 )
 
-`export default FeesInput`
+export default FeesInput
 
 

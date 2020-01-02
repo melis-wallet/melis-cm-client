@@ -1,10 +1,16 @@
-`import Ember from 'ember'`
-`import Configuration from 'melis-cm-svcs/utils/configuration'`
-`import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'`
-`import BackButton from '../../mixins/backbutton-support'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { get } from '@ember/object'
+
+import Configuration from 'melis-cm-svcs/utils/configuration'
+import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
+import BackButton from '../../mixins/backbutton-support'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 Validations = buildValidations(
   pin: [
@@ -13,11 +19,11 @@ Validations = buildValidations(
   ]
 )
 
-PairWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper, BackButton,
+PairWizard = Component.extend(AsWizard, Validations, ValidationsHelper, BackButton,
 
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
-  scanner: Ember.inject.service('scanner-provider')
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
+  scanner: service('scanner-provider')
 
   scanError: null
   importError: null
@@ -62,7 +68,7 @@ PairWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper, Ba
     catch e
       unless e == 'closed'
         @set 'scanError', true
-        Ember.Logger.error "error: ", e
+        Logger.error "error: ", e
   ).drop()
 
   setup: (->
@@ -102,5 +108,4 @@ PairWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper, Ba
 
 )
 
-
-`export default PairWizard`
+export default PairWizard

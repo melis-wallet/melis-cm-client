@@ -1,8 +1,5 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
 
-PublicRoute = Ember.Route.extend(
+PublicRoute =  Route.extend()
 
-
-)
-
-`export default PublicRoute`
+export default PublicRoute

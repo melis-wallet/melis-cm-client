@@ -14,14 +14,14 @@
 
   table.table
     tbody
-      = if recipient
+      = if recipientInfo
         tr
           td: b = t 'quicksend.to'
           td
-            if recipient.alias
-              = recipient.alias
+            if recipientInfo.alias
+              = recipientInfo.alias
             else
-              = recipient.pubId
+              = recipientInfo.pubId
         tr
           td: b = unit-id account=recipient.account
           td

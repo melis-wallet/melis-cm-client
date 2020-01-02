@@ -1,13 +1,19 @@
-`import Ember from 'ember'`
-`import SlyEnabled from 'ember-leaf-tools/mixins/sly-enabled'`
-`import CMCore from 'npm:melis-api-js'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, sort, empty } from '@ember/object/computed'
+import { get, set, getProperties } from '@ember/object'
+
+import SlyEnabled from 'ember-leaf-tools/mixins/sly-enabled'
+import CMCore from 'npm:melis-api-js'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 C = CMCore.C
 
-ContactPicker = Ember.Component.extend(SlyEnabled,
+ContactPicker = Component.extend(SlyEnabled,
 
-  cm: Ember.inject.service('cm-session')
-  ab: Ember.inject.service('cm-addressbook')
+  cm: service('cm-session')
+  ab: service('cm-addressbook')
 
   searchSeed: null
   addrs: null
@@ -22,14 +28,14 @@ ContactPicker = Ember.Component.extend(SlyEnabled,
   'return-btn': null
 
   entriesSorting: ['name:asc']
-  entriesSorted: Ember.computed.sort('addrs', 'entriesSorting')
+  entriesSorted: sort('addrs', 'entriesSorting')
 
-  empty: Ember.computed.empty('addrs')
-  noMatches: Ember.computed.empty('filteredEntries')
+  empty: empty('addrs')
+  noMatches: empty('filteredEntries')
 
   filteredEntries: (->
     @get('entriesSorted').filter( (item) =>
-      return false if ((coin = @get('coin')) && (Ember.get(item, 'coin') != coin))
+      return false if ((coin = @get('coin')) && (get(item, 'coin') != coin))
       if seed = @get('searchSeed')
         seed = seed.toLowerCase()
         item.getWithDefault('name', '').toLowerCase().includes(seed)
@@ -52,26 +58,22 @@ ContactPicker = Ember.Component.extend(SlyEnabled,
     selectEntry: (entry) ->
       @sendAction('on-selected', entry)
       if @get('scope') == 'address'
-        if Ember.get(entry, 'type') == C.AB_TYPE_ADDRESS
-          @sendAction('on-recipient-selected', 'address', Ember.get(entry, 'address'), entry)
+        if get(entry, 'type') == C.AB_TYPE_ADDRESS
+          @sendAction('on-recipient-selected', 'address', get(entry, 'address'), entry)
         else
-          if id = Ember.get(entry, 'pubId')
+          if id = get(entry, 'pubId')
             if @get('resolveAddress')
               @get('cm.api').getPaymentAddressForAccount(id).then((res) =>
                 @sendAction('on-recipient-selected', 'address', res, entry)
               ).catch((err) ->
-                Ember.Logger.error 'Error fetching Payment Address: ', err
+                Logger.error 'Error fetching Payment Address: ', err
               )
             else
-              @sendAction('on-recipient-selected', 'cm', Ember.getProperties(entry, 'pubId', 'alias'), entry)
-
-
-
-
+              @sendAction('on-recipient-selected', 'cm', getProperties(entry, 'pubId', 'alias'), entry)
 
     returnBtn: ->
       @sendAction('on-return')
 
 )
 
-`export default ContactPicker`
+export default ContactPicker

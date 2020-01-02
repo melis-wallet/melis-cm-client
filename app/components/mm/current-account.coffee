@@ -1,7 +1,10 @@
-`import Ember from 'ember'`
-`import ActiveLinkMixin from 'ember-cli-active-link-wrapper/mixins/active-link'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { A } from '@ember/array'
 
-CurrentAccount = Ember.Component.extend(
+import ActiveLinkMixin from 'ember-cli-active-link-wrapper/mixins/active-link'
+
+CurrentAccount = Component.extend(
   #ActiveLinkMixin,
 
   tagName: 'li'
@@ -10,18 +13,16 @@ CurrentAccount = Ember.Component.extend(
   classNameBindings: ['active', 'linkActive:active']
   account: null
 
-  app_state: Ember.inject.service('app-state')
+  app_state: service('app-state')
 
   linkActive: (->
-     Ember.A(@get('childLinkViews')).isAny('active')
+     A(@get('childLinkViews')).isAny('active')
   ).property('childLinkViews.@each.active')
 
   linkFollowed: ((event)->
     event.preventDefault()
     @get('app_state').routingStateChanged()
   ).on('click')
-
-
 )
 
-`export default CurrentAccount`
+export default CurrentAccount

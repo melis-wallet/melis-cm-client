@@ -13,38 +13,58 @@
         = leaf-button icon='fa fa-eye-slash' block=true on-click='toggleAcctInvis' value=cm.currentAccount active=cm.currentAccount.invisible disabled=(and (eq cm.accounts.length 1) (not cm.currentAccount.invisible))
 
 
-  .col-md-6
-    = leaf-note type='warning'
-      h4 = t 'account.maint.danger.title'
-      p = t 'account.maint.danger.caption'
-      = leaf-button type='warning' on-click='toggleDanger' block=true icon='fa fa-check'
+  = if account.isLite
+    .col-md-12
+      = leaf-note type='info'
+        h4 = t 'account.maint.lite.title'
+        p = t 'account.maint.lite.caption'
+  = else
+    .col-md-12
+      = leaf-note type='warning'
+        h4 = t 'account.maint.danger.title'
+        p = t 'account.maint.danger.caption'
+        = leaf-button type='warning' on-click='toggleDanger' block=true icon='fa fa-check'
 
-    = liquid-if dangerEnabled class='ll-down-up'
-
-      = leaf-note type='default'
-        h4 = t 'account.maint.secure.title'
-        p = t 'account.maint.secure.caption'
-        = unless cm.currentWallet.info.isPrimaryDevice
-          p.text-warning: b = t 'account.maint.secure.warn'
-        = if cm.currentAccount.secure
-          p: b = t 'account.maint.secure.already'
-          = leaf-button icon='fa fa-eye' block=true on-click='accountUnSecure' value=cm.currentAccount active=cm.currentAccount.secure
-        = else
-          = leaf-button icon='fa fa-eye-slash' block=true on-click='accountSecure' value=cm.currentAccount active=cm.currentAccount.secure
+      = liquid-if dangerEnabled class='ll-down-up'
 
 
-      = leaf-note type='danger'
+        = leaf-note type='default'
+          h4 = t 'account.maint.xpub.title'
+          p = t 'account.maint.xpub.caption'
+          = leaf-button  on-click='toggleXpub' block=true icon='fa fa-eye'
 
-        h4 = t 'account.maint.delete.title'
-        p = t 'account.maint.delete.caption'
-        = leaf-button [
-          type='danger'
-          on-click='deleteCurrentAcct'
-          block=true
-          icon='fa fa-check'
-          label=(t 'account.maint.delete.btn')
-          disabled=account.amSummary
-        ]
+          = liquid-if xpubEnabled
+            hr
+            .row
+              .col-md-8
+                span.code-label = cm.currentAccount.cmo.xpub
+              .col-md-4
+                = leaf-clipboard size='xs' block=true outline=true content= cm.currentAccount.cmo.xpub tooltip=(t 'account.maint.xpub.clip')
 
-        = if account.amSummary
-          p = t 'account.maint.delete.hasbalance'
+        = leaf-note type='default'
+          h4 = t 'account.maint.secure.title'
+          p = t 'account.maint.secure.caption'
+          = unless cm.currentWallet.info.isPrimaryDevice
+            p.text-warning: b = t 'account.maint.secure.warn'
+          = if cm.currentAccount.secure
+            p: b = t 'account.maint.secure.already'
+            = leaf-button icon='fa fa-eye' block=true on-click='accountUnSecure' value=cm.currentAccount active=cm.currentAccount.secure
+          = else
+            = leaf-button icon='fa fa-eye-slash' block=true on-click='accountSecure' value=cm.currentAccount active=cm.currentAccount.secure
+
+
+        = leaf-note type='danger'
+
+          h4 = t 'account.maint.delete.title'
+          p = t 'account.maint.delete.caption'
+          = leaf-button [
+            type='danger'
+            on-click='deleteCurrentAcct'
+            block=true
+            icon='fa fa-check'
+            label=(t 'account.maint.delete.btn')
+            disabled=account.amSummary
+          ]
+
+          = if account.amSummary
+            p = t 'account.maint.delete.hasbalance'

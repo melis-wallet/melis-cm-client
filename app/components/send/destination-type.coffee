@@ -1,30 +1,34 @@
-`import Ember from 'ember'`
-`import SizeSupport from 'ember-leaf-core/mixins/leaf-size-support'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { oneWay } from "@ember/object/computed"
+import SizeSupport from 'ember-leaf-core/mixins/leaf-size-support'
 
 TYPES = ['address', 'account', 'cm']
 TYPES_SIMPLE = ['address', 'cm']
 
 ICONS = {
-  address: 'fa fa-btc'
+  address: 'fa fa-barcode'
   cm: 'fa fa-vcard'
   account: 'fa fa-share-square'
 }
 
-DestinationType = Ember.Component.extend(SizeSupport,
+DestinationType = Component.extend(SizeSupport,
   tagName: 'button'
   classNames: ['btn', 'btn-outline', 'btn-primary']
   classTypePrefix: 'btn'
 
+  showall: false
+
   'dst-type': 'address'
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
-  currentType: Ember.computed.oneWay('dst-type')
+  currentType: oneWay('dst-type')
 
   iconClass: ( -> ICONS[@get('dst-type')] ).property('currentType')
 
   availableTypes: ( ->
-    if @get('cm.accounts.length') > 1
+    if @get('showall') ||  (@get('cm.accounts.length') > 1)
       TYPES
     else
       TYPES_SIMPLE
@@ -45,6 +49,6 @@ DestinationType = Ember.Component.extend(SizeSupport,
 
 )
 
-`export default DestinationType`
+export default DestinationType
 
 

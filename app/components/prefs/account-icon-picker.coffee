@@ -1,11 +1,13 @@
-import Ember from 'ember'
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+
 import { task, timeout } from 'ember-concurrency'
 import Account from 'melis-cm-svcs/models/account'
 
 
-IconPicker = Ember.Component.extend(
+IconPicker = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   account: null
 

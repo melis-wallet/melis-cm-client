@@ -8,19 +8,20 @@
         '
         = stream/stream-counter account=a property='newer' vclass='label-success animated tada'
 .mm-buttons
-  = if account.isComplete
-    .btn-group
+  = if account
+    = if account.isComplete
+      .btn-group
+          = link-to 'main.account.view' account.pubId class='btn btn-primary btn-outline dark'
+            i.fa.fa-cog
+          = link-to 'main.account.history' account.pubId class='btn btn-primary btn-outline dark'
+            i.fa.fa-list
+      .label = format-unit account.amSummary compact=true account=account
+    = else
+      .btn-group
         = link-to 'main.account.view' account.pubId class='btn btn-primary btn-outline dark'
           i.fa.fa-cog
-        = link-to 'main.account.history' account.pubId class='btn btn-primary btn-outline dark'
-          i.fa.fa-list
-    .label = format-unit account.amSummary compact=true account=account
-  = else
-    .btn-group
-      = link-to 'main.account.view' account.pubId class='btn btn-primary btn-outline dark'
-        i.fa.fa-cog
-    .pull-right
-      .text-xs.text-light-gray
-        = leaf-progress value=account.completeness.complete striped=true style='margin-top: 8px; margin-bottom: 4px; height: 4px;'
-        span.no-margin-t
-          = t 'account.selector.joined-s' count=account.completeness.count total=account.totalSignatures
+      .pull-right
+        .text-xs.text-light-gray
+          = leaf-progress value=account.completeness.complete striped=true style='margin-top: 8px; margin-bottom: 4px; height: 4px;'
+          span.no-margin-t
+            = t 'account.selector.joined-s' count=account.completeness.count total=account.totalSignatures

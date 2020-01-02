@@ -1,23 +1,25 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { get, set, computed } from '@ember/object'
+import { isBlank } from '@ember/utils'
 
-TxDetail = Ember.Component.extend(
+TxDetail = Component.extend(
 
-  cm:  Ember.inject.service('cm-session')
-  txsvc: Ember.inject.service('cm-tx-infos')
-  ptxSvc: Ember.inject.service('cm-ptxs')
+  cm:  service('cm-session')
+  txsvc: service('cm-tx-infos')
+  ptxSvc: service('cm-ptxs')
 
   editLabels: false
 
   tx: null
   ptx: null
 
-  negative: Ember.computed.lt('tx.amount', 0)
+  negative: computed.lt('tx.amount', 0)
 
   fetchPtx: ->
     console.log "TX: ", @get('tx')
-    if Ember.isBlank(@get('ptx')) && (hash = @get('tx.cmo.tx'))
+    if isBlank(@get('ptx')) && (hash = @get('tx.cmo.tx'))
       @get('ptxSvc').getPtxByHash(hash).then((res) =>
-        console.error res
         @set 'ptx', res
       )
 
@@ -45,5 +47,4 @@ TxDetail = Ember.Component.extend(
 
 )
 
-
-`export default TxDetail`
+export default TxDetail

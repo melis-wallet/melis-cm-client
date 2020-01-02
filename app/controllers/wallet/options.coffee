@@ -1,10 +1,9 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
 
-OptionsController = Ember.Controller.extend(
-  credentials: Ember.inject.service('cm-credentials')
-
-
-
+OptionsController = Controller.extend(
+  credentials: service('cm-credentials')
 
 )
-`export default OptionsController`
+
+export default OptionsController

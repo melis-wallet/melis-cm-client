@@ -49,7 +49,7 @@
                         = t 'newaddr.empty.amount'
                 = if address.cmo.meta.amount
                   tr
-                    td.lowercase = cm.globalCurrency
+                    td.lowercase = currency-unit
                     td.text-right = to-currency address.cmo.meta.amount account=address.account
 
 
@@ -62,7 +62,7 @@
                 tr style='height: 58px;'
                   td: i.fa.fa-tags
                   td.text-right
-                    = misc/tags-list selection=address.cmo.labels labelsSet='txLabels' on-done-edit='changeLabels' control='right'
+                    = misc/tags-list selection=address.cmo.labels labelsSet='addressLabels' on-done-edit='changeLabels' control='right'
 
                 tr
                   td = leaf-switcher checked=wantLink theme='modern'
@@ -118,7 +118,10 @@
             .hidden = addressUrl
             .hidden = code
           .col-sm-2.col-xs-3.text-right
-            p = leaf-clipboard size='xs' block=false outline=true content=clipCode tooltip=(t 'newaddr.a.clip')
+            p
+              = if showToggle
+                = leaf-button on-click='toggleFormat' size='xs' block=false outline=true icon='fa fa-low-vision' style='padding-bottom: 4px;' tooltip=(t 'newaddr.a.alternate') active=isStandard
+              = leaf-clipboard size='xs' block=false outline=true content=clipCode tooltip=(t 'newaddr.a.clip') tooltip-placement='left'
 
         .row.padding-sm-vr.no-padding-b
           .col-xs-4

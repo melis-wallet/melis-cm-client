@@ -1,29 +1,35 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { filter, filterBy } from '@ember/object/computed'
+import { get } from '@ember/object'
+import { isEmpty } from '@ember/utils'
 
+import CMCore from 'npm:melis-api-js'
+import { task, taskGroup } from 'ember-concurrency'
+import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'
 
-NlockExpiring = Ember.Component.extend(
+import Logger from 'melis-cm-svcs/utils/logger'
 
-  cm: Ember.inject.service('cm-session')
-  recovery: Ember.inject.service('cm-recovery-info')
-  aaProvider: Ember.inject.service('aa-provider')
-  ptxsvc: Ember.inject.service('cm-ptxs')
+NlockExpiring = Component.extend(
+
+  cm: service('cm-session')
+  recovery: service('cm-recovery-info')
+  aaProvider: service('aa-provider')
+  ptxsvc: service('cm-ptxs')
 
   account: null
   unspents: null
   error: false
 
-  validUnspents: Ember.computed.filter('unspents', ((i) ->
+  validUnspents: filter('unspents', ((i) ->
     (i.blockMature > 0) &&
     (i.timeExpire < moment().add(1, 'week').valueOf())
   ))
 
-  checkedUnspents: Ember.computed.filterBy('validUnspents', 'checked', true)
+  checkedUnspents: filterBy('validUnspents', 'checked', true)
 
   activeUnspents: ( ->
-    if Ember.isEmpty(@get('checkedUnspents')) then @get('validUnspents') else @get('checkedUnspents')
+    if isEmpty(@get('checkedUnspents')) then @get('validUnspents') else @get('checkedUnspents')
   ).property('validUnspents', 'checkedUnspents')
 
   preparedTx: null
@@ -46,7 +52,7 @@ NlockExpiring = Ember.Component.extend(
         doneTx: true
     catch error
       @set('error', true)
-      Ember.Logger.error "Error signing: ", error
+      Logger.error "Error signing: ", error
 
     @get('delayRefresh').perform()
   ).group('apiOps')
@@ -65,7 +71,7 @@ NlockExpiring = Ember.Component.extend(
         doneTx: null
     catch error
       @set('error', true)
-      Ember.Logger.error "Error cancelling: ", error
+      Logger.error "Error cancelling: ", error
 
     @get('refresh').perform()
   ).group('apiOps')
@@ -76,7 +82,7 @@ NlockExpiring = Ember.Component.extend(
       error: false
       doneTx: false
 
-    return if Ember.isEmpty(inputs)
+    return if isEmpty(inputs)
     if (account = @get('account'))
       unspents = inputs.map((i) -> {hash: i.tx, n: i.n })
 
@@ -89,7 +95,7 @@ NlockExpiring = Ember.Component.extend(
 
       catch error
         @set('error', true)
-        Ember.Logger.error "Error rotating: ", error
+        Logger.error "Error rotating: ", error
 
   ).group('apiOps')
 
@@ -104,7 +110,7 @@ NlockExpiring = Ember.Component.extend(
     try
       yield @get('recovery').getExpiringUnspents(acc)
     catch error
-      Ember.Logger.error "Error refresh: ", error
+      Logger.error "Error refresh: ", error
   )
 
   actions:
@@ -127,4 +133,5 @@ NlockExpiring = Ember.Component.extend(
       @set('doneTx', false)
 
 )
-`export default NlockExpiring`
+
+export default NlockExpiring

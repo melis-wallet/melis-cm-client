@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
+import Helper from '@ember/component/helper'
+import { inject as service } from '@ember/service'
 
-PubidToName = Ember.Helper.extend(
+PubidToName = Helper.extend(
 
-  cm:  Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
 
   compute: (params, hash) ->
@@ -23,7 +24,6 @@ PubidToName = Ember.Helper.extend(
         pubid
     else
       pubid
-
 )
 
-`export default PubidToName`
+export default PubidToName

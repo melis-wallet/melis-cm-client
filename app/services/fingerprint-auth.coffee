@@ -1,33 +1,41 @@
-`import Ember from 'ember'`
-`import subscribe from 'ember-cordova-events/utils/subscribe'`
-`import { storageFor } from 'ember-local-storage'`
+import Service, { inject as service } from '@ember/service'
+import Evented from '@ember/object/evented'
+import { alias } from '@ember/object/computed'
+import { isBlank } from '@ember/utils'
+import { get, set } from '@ember/object'
+import RSVP from 'rsvp'
+
+import subscribe from 'ember-cordova-events/utils/subscribe'
+import { storageFor } from 'ember-local-storage'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 CLIENTID = 'melis-cm-wallet'
 
-FingerPrint = Ember.Service.extend(Ember.Evented,
+FingerPrint = Service.extend(Evented,
 
-  cordova: Ember.inject.service('ember-cordova/events')
-  platform: Ember.inject.service('ember-cordova/platform')
-  cm: Ember.inject.service('cm-session')
+  cordova: service('ember-cordova/events')
+  platform: service('ember-cordova/platform')
+  cm: service('cm-session')
 
   isAvailable: false
   isHardwareDetected: false
   hasEnrolledFingerprints: false
 
-  isSupported: Ember.computed.alias('isAvailable')
+  isSupported: alias('isAvailable')
 
   walletstate: storageFor('wallet-state')
-  credentials: Ember.computed.alias('walletstate.touchCreds')
+  credentials: alias('walletstate.touchCreds')
 
   successfullyEnrolled: ( ->
-    @get('isAvailable') && !Ember.isBlank(@get('credentials'))
+    @get('isAvailable') && !isBlank(@get('credentials'))
   ).property('isAvailable', 'credentials')
 
   serviceReady: false
   userId: 'melis-user'
 
   setup: ( ->
-    Ember.Logger.debug '[fpa] service started'
+    Logger.debug '[fpa] service started'
   ).on('init')
 
   ready: subscribe('cordova.deviceready', ->
@@ -35,24 +43,24 @@ FingerPrint = Ember.Service.extend(Ember.Evented,
 
     FingerprintAuth.isAvailable(( (result) =>
       if result.isAvailable
-        Ember.Logger.debug('[fpa] fingerprint is available')
+        Logger.debug('[fpa] fingerprint is available')
         @setProperties(result)
         if !@get('serviceReady')
           @set('serviceReady', true)
           @trigger('service-ready')
       else
-        Ember.Logger.debug('[fpa] fingerprint is not available')
+        Logger.debug('[fpa] fingerprint is not available')
     ), ((error) ->
-        Ember.Logger.error('[fpa] fingerprint check error', error)
+        Logger.error('[fpa] fingerprint check error', error)
     ))
   )
 
 
   disable: ->
-    return if !@get('successfullyEnrolled') || Ember.isBlank(token = @get('credentials'))
+    return if !@get('successfullyEnrolled') || isBlank(token = @get('credentials'))
 
-    new Ember.RSVP.Promise((resolve, reject) =>
-      Ember.Logger.debug "[fpa] deleting"
+    new RSVP.Promise((resolve, reject) =>
+      Logger.debug "[fpa] deleting"
       resolve() unless @get('isSupported')
 
       info =
@@ -61,11 +69,11 @@ FingerPrint = Ember.Service.extend(Ember.Evented,
         token: token
 
       success = (result) =>
-        Ember.Logger.debug('[fpa] fingerprint delete SUCCESS', result)
+        Logger.debug('[fpa] fingerprint delete SUCCESS', result)
 
         resolve(result)
       error = (error) =>
-        Ember.Logger.error('[fpa] fingerprint delete error', error)
+        Logger.error('[fpa] fingerprint delete error', error)
         reject(error)
 
       @set('credentials', null)
@@ -75,8 +83,8 @@ FingerPrint = Ember.Service.extend(Ember.Evented,
 
   enroll: (pin) ->
 
-    new Ember.RSVP.Promise((resolve, reject) =>
-      Ember.Logger.debug "[fps] enrolling"
+    new RSVP.Promise((resolve, reject) =>
+      Logger.debug "[fps] enrolling"
       resolve() unless @get('isSupported')
 
       enroll =
@@ -86,24 +94,24 @@ FingerPrint = Ember.Service.extend(Ember.Evented,
         password: pin
 
       success = (result) =>
-        Ember.Logger.debug('[fpa] fingerprint enroll SUCCESS', result)
-        if result && (token = Ember.get(result, 'token'))
+        Logger.debug('[fpa] fingerprint enroll SUCCESS', result)
+        if result && (token = get(result, 'token'))
           @set('credentials', token)
           resolve(result)
         else
           reject('no token')
 
       error = (error) =>
-        Ember.Logger.error('[fpa] fingerprint enroll error', error)
+        Logger.error('[fpa] fingerprint enroll error', error)
         reject(error)
       FingerprintAuth.encrypt(enroll, success, error)
     )
 
 
   login: ->
-    return if !@get('successfullyEnrolled') || Ember.isBlank(token = @get('credentials'))
+    return if !@get('successfullyEnrolled') || isBlank(token = @get('credentials'))
 
-    new Ember.RSVP.Promise((resolve, reject) =>
+    new RSVP.Promise((resolve, reject) =>
       login =
         disableBackup: true
         language: @get('cm.locale')
@@ -112,15 +120,15 @@ FingerPrint = Ember.Service.extend(Ember.Evented,
         token: token
 
       success = (result) =>
-        Ember.Logger.debug('[fpa] fingerprint login SUCCESS', result)
-        if result && (password = Ember.get(result, 'password'))
+        Logger.debug('[fpa] fingerprint login SUCCESS', result)
+        if result && (password = get(result, 'password'))
           result.pin ||= result.password
           resolve(result)
         else
           reject('no password')
 
       error = (error) =>
-        Ember.Logger.error('[fpa] fingerprint login error', error)
+        Logger.error('[fpa] fingerprint login error', error)
         reject(error)
 
       FingerprintAuth.decrypt(login, success, error)
@@ -128,4 +136,4 @@ FingerPrint = Ember.Service.extend(Ember.Evented,
 )
 
 
-`export default FingerPrint`
+export default FingerPrint

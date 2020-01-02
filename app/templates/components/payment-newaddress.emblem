@@ -68,7 +68,7 @@
                     | [ request a specific amount ]
             = if activeAddress.cmo.meta.amount
               tr
-                td.lowercase = cm.globalCurrency
+                td.lowercase = currency-unit
                 td: .pull-right = to-currency activeAddress.cmo.meta.amount account=activeAddress.account
 
 

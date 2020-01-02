@@ -1,17 +1,26 @@
-`import Ember from 'ember'`
-`import Alertable from 'ember-leaf-core/mixins/leaf-alertable'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, notEmpty } from '@ember/object/computed'
+import { get, set } from '@ember/object'
+import { isEmpty } from '@ember/utils'
+import { A } from '@ember/array'
 
-PaymentSend = Ember.Component.extend(Alertable,
+import Alertable from 'ember-leaf-core/mixins/leaf-alertable'
 
-  cm: Ember.inject.service('cm-session')
-  currencySvc: Ember.inject.service('cm-currency')
+import Logger from 'melis-cm-svcs/utils/logger'
+
+
+PaymentSend = Component.extend(Alertable,
+
+  cm: service('cm-session')
+  currencySvc: service('cm-currency')
 
   recipients: null
   currentRecipient: null
 
   preparedTx: null
-  preparedState: Ember.computed.alias('preparedTx.state')
-  paymentReady: Ember.computed.notEmpty('preparedTx')
+  preparedState: alias('preparedTx.state')
+  paymentReady: notEmpty('preparedTx')
 
   showSummary: false
 
@@ -20,10 +29,10 @@ PaymentSend = Ember.Component.extend(Alertable,
 
   abOpened: false
 
-  hasRecipients: Ember.computed.notEmpty('recipients')
-  currency: Ember.computed.alias('cm.globalCurrency')
+  hasRecipients: notEmpty('recipients')
+  currency: alias('currencySvc.currency')
 
-  coin: Ember.computed.alias('cm.currentAccount.unit')
+  coin: alias('cm.currentAccount.unit')
 
   optRBF: true
   allowUnconfirmed: false
@@ -33,8 +42,8 @@ PaymentSend = Ember.Component.extend(Alertable,
   ).property('recipients.@each.entireBalance', 'currentRecipient.entireBalance')
 
   canToggleEntireBalance: ( ->
-    @get('currentRecipient.entireBalance') || !@get('cm.currentAccount.balance.amUnconfirmed')
-  ).property('cm.currentAccount.balance.amUnconfirmed', 'currentRecipient.entireBalance')
+    @get('currentRecipient.entireBalance') || @get('allowUnconfirmed') || !@get('cm.currentAccount.balance.amUnconfirmed')
+  ).property('cm.currentAccount.balance.amUnconfirmed', 'currentRecipient.entireBalance', 'allowUnconfirmed')
 
   canAddRecipient: ( ->
     @get('currentRecipient.isValid') && !@get('isEntireBalance')
@@ -57,7 +66,7 @@ PaymentSend = Ember.Component.extend(Alertable,
 
   ).property('currency', 'cm.currentAccount.subunit')
 
-  fees: Ember.computed.alias('preparedTx.cmo.fees')
+  fees: alias('preparedTx.cmo.fees')
 
   computedFees: (->
     @getWithDefault('fees', 0.0)
@@ -73,16 +82,16 @@ PaymentSend = Ember.Component.extend(Alertable,
     if @get('preparedTx')
       recipients = @get('preparedTx.cmo.recipients')
       recipients.reduce ((sum, row) ->
-          sum += Ember.get(row, 'amount')
+          sum += get(row, 'amount')
         ), 0
     else
       recipients = @get('recipients')
       recipients.reduce ((sum, row) ->
-          sum += Ember.get(row, 'fullAmount')
+          sum += get(row, 'fullAmount')
         ), 0
   ).property('recipients.[]', 'preparedTx')
 
-  actualRecipients: Ember.computed.alias('preparedTx.cmo.recipients')
+  actualRecipients: alias('preparedTx.cmo.recipients')
 
   successfulAdd: (->
     @setProperties
@@ -92,11 +101,15 @@ PaymentSend = Ember.Component.extend(Alertable,
 
   watchUnconfirmed: ( ->
     @set('currentRecipient.allowUnconfirmed', @get('allowUnconfirmed'))
+    @set('currentRecipient.entireBalance', false)
   ).observes('allowUnconfirmed')
 
-  coinChanged: ( ->
-    @set('optRBF', @get('coin.features.rbf'))
-  ).observes('coin').on('init')
+  rcptChanged: ( ->
+    @setProperties
+      optRBF: @get('coin.features.rbf')
+      allowUnconfirmed: @get('coin.features.defaultUncf') || false
+    @set('currentRecipient.allowUnconfirmed', @get('allowUnconfirmed'))
+  ).observes('coin', 'currentRecipient').on('init')
 
   actions:
 
@@ -116,7 +129,7 @@ PaymentSend = Ember.Component.extend(Alertable,
     submitRecipientComplete: ->
       if (recipient = @get('currentRecipient')) && recipient.get('isValid')
         @sendAction('on-submit-complete', recipient, @getProperties('feesMult', 'optRBF', 'allowUnconfirmed', 'isEntireBalance'))
-      else if Ember.isEmpty(recipient.get('address'))
+      else if isEmpty(recipient.get('address'))
         @sendAction('on-complete', @get('recipients'))
 
     submitComplete: ->
@@ -127,25 +140,26 @@ PaymentSend = Ember.Component.extend(Alertable,
       @get('recipients').removeObject(recipient)
 
     addRecipientFromAb: (type, value, entry) ->
-      Ember.Logger.info "Adding recp: ", {type: type, value: value, entry: entry}
+      Logger.info "Adding recp: ", {type: type, value: value, entry: entry}
       @set 'abOpened', false
       if (r = @get('currentRecipient'))
         # do not coalesce into setProperties, setting type clears value
         r.set('type', type)
         r.set('value', value)
-        if name = Ember.get(entry, 'meta.name')
+        if name = get(entry, 'meta.name')
           r.set('info', "[#{name}]")
-        if (alias = Ember.get(entry, 'meta.alias'))
-          r.setMeta('toAlias', alias)
+        if (cmalias = get(entry, 'meta.alias'))
+          r.setMeta('toAlias', cmalias)
 
     cancelForm: ->
 
     cancelPayment: ->
       @setProperties
-        recipients: Ember.A()
+        recipients: A()
         optRBF: true
         feesMult: 1.0
-        allowUnconfirmed: false
+        allowUnconfirmed: @get('coin.features.defaultUncf') || false
+      @set('currentRecipient.allowUnconfirmed', @get('allowUnconfirmed'))
 
       @sendAction('on-cancel-payment')
 
@@ -166,4 +180,4 @@ PaymentSend = Ember.Component.extend(Alertable,
       @sendAction('on-scan')
 )
 
-`export default PaymentSend`
+export default PaymentSend

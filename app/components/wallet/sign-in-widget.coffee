@@ -1,8 +1,13 @@
-`import Ember from 'ember'`
-`import Configuration from 'melis-cm-svcs/utils/configuration'`
-`import { task, timeout, taskGroup } from 'ember-concurrency'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import Fpa from 'melis-cm-client/mixins/fingerprint-auth'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { schedule } from '@ember/runloop'
+
+import Configuration from 'melis-cm-svcs/utils/configuration'
+import { task, timeout, taskGroup } from 'ember-concurrency'
+import { validator, buildValidations } from 'ember-cp-validations'
+import Fpa from 'melis-cm-client/mixins/fingerprint-auth'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
 Validations = buildValidations(
@@ -13,11 +18,11 @@ Validations = buildValidations(
 
 )
 
-SignInWidget = Ember.Component.extend(Validations, Fpa,
+SignInWidget = Component.extend(Validations, Fpa,
 
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
-  i18n: Ember.inject.service()
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
+  i18n: service()
 
   signinPin: null
   signInError: null
@@ -27,7 +32,7 @@ SignInWidget = Ember.Component.extend(Validations, Fpa,
   apiOps: taskGroup().drop()
 
   setup: (->
-    Ember.run.schedule 'afterRender', this, (-> @.$('input#signin_pin').focus())
+    schedule 'afterRender', this, (-> @.$('input#signin_pin').focus())
   ).on('willInsertElement')
 
   deviceLocked: (->
@@ -72,7 +77,7 @@ SignInWidget = Ember.Component.extend(Validations, Fpa,
       res = yield cm.walletReOpen(pin)
       @sendAction('on-success', res)
     catch err
-      Ember.Logger.error 'Sign-in error: ', err
+      Logger.error 'Sign-in error: ', err
       switch err.ex
         when 'CmInvalidClientException'
           @set 'barredClient', true
@@ -99,4 +104,4 @@ SignInWidget = Ember.Component.extend(Validations, Fpa,
 )
 
 
-`export default SignInWidget`
+export default SignInWidget

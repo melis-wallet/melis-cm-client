@@ -1,6 +1,6 @@
 .panel-heading
   .widget-basic-bg-icon
-    i.fa.fa-bitcoin.animated.fadeInDown
+    i.fa.fa-database.animated.fadeInDown
   img.widget-basic-avatar src='/images/avatar-1.jpg'
   .widget-basic-header
     = liquid-bind accountName use='toLeft' class='title'

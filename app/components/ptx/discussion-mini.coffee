@@ -1,10 +1,17 @@
-`import Ember from 'ember'`
-`import { task } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, sort } from '@ember/object/computed'
+import { get } from '@ember/object'
+import { isBlank } from '@ember/utils'
 
-DiscussionMini = Ember.Component.extend(
+import { task } from 'ember-concurrency'
 
-  cm: Ember.inject.service('cm-session')
-  ptxsvc: Ember.inject.service('cm-ptxs')
+import Logger from 'melis-cm-svcs/utils/logger'
+
+DiscussionMini = Component.extend(
+
+  cm: service('cm-session')
+  ptxsvc: service('cm-ptxs')
   tx: null
 
   view: 'detailed'
@@ -13,11 +20,11 @@ DiscussionMini = Ember.Component.extend(
   last: 3
   animate: true
 
-  messages: Ember.computed.alias('tx.discussion')
+  messages: alias('tx.discussion')
   newMessage: null
 
   messagesSorting: ['date:asc']
-  messagesSorted: Ember.computed.sort('messages', 'messagesSorting')
+  messagesSorted: sort('messages', 'messagesSorting')
 
   lastMessages: ( ->
     if @get('animate')
@@ -25,7 +32,7 @@ DiscussionMini = Ember.Component.extend(
     else
       @get('messagesSorted').slice(-(@get('last')))
   ).property('messagesSorted')
-  lastMessage: Ember.computed.alias('messagesSorted.lastObject')
+  lastMessage: alias('messagesSorted.lastObject')
 
 
   txChanged: ( ->
@@ -34,17 +41,17 @@ DiscussionMini = Ember.Component.extend(
   ).observes('tx').on('init')
 
   sendMessage: task((tx, msg) ->
-    account = Ember.get(tx, 'account.cmo')
-    if tx && !Ember.isBlank(msg)
+    account = get(tx, 'account.cmo')
+    if tx && !isBlank(msg)
       try
         yield @get('cm.api').msgSendToPtx(account, tx.get('cmo'), {plaintext: msg})
         @set('newMessage', null)
       catch error
-        Ember.Logger.error "Error in send to ptx:", error
+        Logger.error "Error in send to ptx:", error
   ).enqueue()
 
   refreshDiscussion: ->
-    Ember.Logger.debug "Refreshing discussion"
+    Logger.debug "Refreshing discussion"
     if tx = @get('tx')
       get('ptxsvc').fetchDiscussion(tx)
 
@@ -64,4 +71,4 @@ DiscussionMini = Ember.Component.extend(
 
 )
 
-`export default DiscussionMini`
+export default DiscussionMini

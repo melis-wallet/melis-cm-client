@@ -1,23 +1,28 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import ModalAlerts from '../../mixins/modal-alerts'`
-`import { waitTime } from 'melis-cm-svcs/utils/delayed-runners'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { scheduleOnce } from '@ember/runloop'
+import { get, set } from '@ember/object'
 
+import { task, taskGroup } from 'ember-concurrency'
+import ModalAlerts from '../../mixins/modal-alerts'
+import { waitTime } from 'melis-cm-svcs/utils/delayed-runners'
 
-MainWalletController = Ember.Controller.extend(ModalAlerts,
+import Logger from 'melis-cm-svcs/utils/logger'
 
-  credentials: Ember.inject.service('cm-credentials')
-  coinsvc: Ember.inject.service('cm-coin')
-  aa: Ember.inject.service('aa-provider')
-  mm: Ember.inject.service('modals-manager')
+MainWalletController = Controller.extend(ModalAlerts,
+
+  credentials: service('cm-credentials')
+  coinsvc: service('cm-coin')
+  aa: service('aa-provider')
+  mm: service('modals-manager')
 
   queryParams: ['new-account', 'tab']
   tab: null
 
   'new-account': false
 
-  account: Ember.computed.alias('cm.currentAccount')
-  modalManager: Ember.inject.service('modals-manager')
+  account: alias('cm.currentAccount')
 
   apiOps: taskGroup().drop()
 
@@ -27,8 +32,8 @@ MainWalletController = Ember.Controller.extend(ModalAlerts,
 
   openAccWizard: ( ->
     if @get('new-account')
-      Ember.run.scheduleOnce 'afterRender', this, ->
-        @get('modalManager').showModal('new-acct-wizard')
+      scheduleOnce 'afterRender', this, ->
+        @get('mm').showModal('new-acct-wizard')
         @set('new-account', false)
   ).observes('new-account').on('init')
 
@@ -51,7 +56,7 @@ MainWalletController = Ember.Controller.extend(ModalAlerts,
       res = yield @get('aa').tfaOrLocalPin(op)
     catch e
       @set 'error', e.msg
-      Ember.Logger.error "Dev delete error: ", e
+      Logger.error "Dev delete error: ", e
   ).group('apiOps')
 
   deleteCredentials: task( ->
@@ -72,7 +77,7 @@ MainWalletController = Ember.Controller.extend(ModalAlerts,
       @get('cm').resetApp()
     catch e
       @alertDanger(e.msg, true)
-      Ember.Logger.error 'Error: ', e
+      Logger.error 'Error: ', e
   ).group('apiOps')
 
 
@@ -91,11 +96,8 @@ MainWalletController = Ember.Controller.extend(ModalAlerts,
     changeLocale: (locl)->
       @set('cm.locale', locl)
 
-    changeBtcUnit: (btcunit)->
-      @set('cm.btcUnit', Ember.get(btcunit, 'id'))
-
     newAcctWizard: ->
-      @get('modalManager').showModal('new-acct-wizard')
+      @get('mm').showModal('new-acct-wizard')
 
     doAcctJoinIn: ->
       @set 'acctJoinIn', true
@@ -122,8 +124,8 @@ MainWalletController = Ember.Controller.extend(ModalAlerts,
 
 
     doneNewAccount: (acct) ->
-      Ember.run.scheduleOnce 'afterRender', this, ->
-        @transitionToRoute('main.account.summary', Ember.get(acct, 'pubId'))
+      scheduleOnce 'afterRender', this, ->
+        @transitionToRoute('main.account.summary', get(acct, 'pubId'))
 
 
     toggleDanger: ->
@@ -142,4 +144,4 @@ MainWalletController = Ember.Controller.extend(ModalAlerts,
 
 )
 
-`export default MainWalletController`
+export default MainWalletController

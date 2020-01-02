@@ -1,9 +1,11 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
 
-PairController = Ember.Controller.extend(
-  credentials: Ember.inject.service('cm-credentials')
+PairController = Controller.extend(
+  credentials: service('cm-credentials')
 
   actions:
     abortWizard: (-> @transitionToRoute('wallet.welcome'))
 )
-`export default PairController`
+
+export default PairController

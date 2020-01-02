@@ -1,19 +1,18 @@
-`import Ember from 'ember'`
-`import StyleBody from 'ember-leaf-core/mixins/leaf-style-body'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
 
-ApplicationRoute = Ember.Route.extend(StyleBody,
-  #i18n: Ember.inject.service()
-  cdv: Ember.inject.service('device-support')
+import StyleBody from 'ember-leaf-core/mixins/leaf-style-body'
+
+
+ApplicationRoute = Route.extend(StyleBody,
+
+  cdv: service('device-support')
 
   classNames: ['theme-melis']
 
 
   beforeModel: ->
     @get('cdv')
-    #console.error @get('i18n.locale')
-    #@set('i18n.locale', 'en');
-    #Ember.I18n = @get('i18n')
-
 
   actions:
     error: (e) ->
@@ -22,4 +21,4 @@ ApplicationRoute = Ember.Route.extend(StyleBody,
 
 )
 
-`export default ApplicationRoute`
+export default ApplicationRoute

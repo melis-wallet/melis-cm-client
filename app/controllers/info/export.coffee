@@ -1,14 +1,17 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-InfoExportController = Ember.Controller.extend(
 
-  app_state: Ember.inject.service('app-state')
+InfoExportController = Controller.extend(
 
-  exportedGeneratorQR:  Ember.computed.alias('app_state.exportedGeneratorQR')
-  exportedMnemonic:  Ember.computed.alias('app_state.exportedMnemonic')
+  app_state: service('app-state')
+
+  exportedGeneratorQR:  alias('app_state.exportedGeneratorQR')
+  exportedMnemonic:  alias('app_state.exportedMnemonic')
 
   includeFancy: true
 
 )
 
-`export default InfoExportController`
+export default InfoExportController

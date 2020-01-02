@@ -1,8 +1,12 @@
-`import Ember from 'ember'`
+import Mixin from '@ember/object/mixin'
+import { inject as service } from '@ember/service'
+import { get, set } from '@ember/object'
 
-FingerPrintAuth = Ember.Mixin.create(
+import Logger from 'melis-cm-svcs/utils/logger'
 
-  fpa: Ember.inject.service('fingerprint-auth')
+FingerPrintAuth = Mixin.create(
+
+  fpa: service('fingerprint-auth')
 
   disableFpa: false
 
@@ -12,10 +16,10 @@ FingerPrintAuth = Ember.Mixin.create(
 
     checkfp =  =>
       if @get('fpa.successfullyEnrolled')
-        Ember.Logger.debug "[fpa-auth] can do fpa"
+        Logger.debug "[fpa-auth] can do fpa"
         @_fpaLogin()
       else
-        Ember.Logger.debug "[fpa-auth] can NOT do fpa"
+        Logger.debug "[fpa-auth] can NOT do fpa"
       @get('fpa').off('service-ready', this, checkfp)
 
 
@@ -25,15 +29,14 @@ FingerPrintAuth = Ember.Mixin.create(
       @get('fpa').on('service-ready', this, checkfp)
 
   _fpaLogin: ->
-    Ember.Logger.debug "[fpa-auth] logging in"
+    Logger.debug "[fpa-auth] logging in"
     @get('fpa').login().then( (res) =>
-      Ember.Logger.debug('[fpa-auth] Success: ', res)
-      if (pin = Ember.get(res, 'pin'))
+      Logger.debug('[fpa-auth] Success: ', res)
+      if (pin = get(res, 'pin'))
         @onValidFpa(pin) if @onValidFpa
     ).catch((err) ->
-      Ember.Logger.error('[fpa-auth] Error: ', err)
+      Logger.error('[fpa-auth] Error: ', err)
     )
-
 )
 
-`export default FingerPrintAuth`
+export default FingerPrintAuth

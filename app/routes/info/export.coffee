@@ -1,10 +1,12 @@
-`import Ember from 'ember'`
-`import AuthenticatedRoute from '../../mixins/authenticated-route'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
+
+import AuthenticatedRoute from '../../mixins/authenticated-route'
 
 
-InfoExportRoute = Ember.Route.extend(AuthenticatedRoute,
+InfoExportRoute = Route.extend(AuthenticatedRoute,
 
-  app_state: Ember.inject.service('app-state')
+  app_state: service('app-state')
 
   actions:
     willTransition: (transition) ->
@@ -14,4 +16,4 @@ InfoExportRoute = Ember.Route.extend(AuthenticatedRoute,
 
 )
 
-`export default InfoExportRoute`
+export default InfoExportRoute

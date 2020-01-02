@@ -1,18 +1,20 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { get } from '@ember/object'
+import { isBlank } from '@ember/utils'
+import { A } from '@ember/array'
 
-
-SelectLocale = Ember.Component.extend(
+SelectLocale = Component.extend(
 
 
   selected: null
 
   locales: ( ->
-    if (i18n = @get('i18n')) && !Ember.isBlank(i18n.get('locales'))
+    if (i18n = @get('i18n')) && !isBlank(i18n.get('locales'))
       @get('i18n.locales').uniq().map((l) ->
         return {id: l, text: i18n.t("locales.#{l}")}
       )
     else
-      Ember.A()
+      A()
   ).property('i18n.locales.[]', 'selected')
 
   locale: ( ->
@@ -22,11 +24,7 @@ SelectLocale = Ember.Component.extend(
 
   actions:
     changeLocale: (locl)->
-      @sendAction('on-change', Ember.get(locl, 'id'))
-
-
-
-
+      @sendAction('on-change', get(locl, 'id'))
 )
 
-`export default SelectLocale`
+export default SelectLocale

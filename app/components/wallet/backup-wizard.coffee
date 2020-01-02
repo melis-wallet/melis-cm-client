@@ -1,13 +1,16 @@
-`import Ember from 'ember'`
-`import Configuration from 'melis-cm-svcs/utils/configuration'`
-`import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { computed } from '@ember/object'
 
-ExportWizard = Ember.Component.extend(AsWizard,
+import Configuration from 'melis-cm-svcs/utils/configuration'
+import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
 
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
+ExportWizard = Component.extend(AsWizard,
 
-  app_state: Ember.inject.service('app-state')
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
+
+  app_state: service('app-state')
 
   step: 1
   completeOn: 4
@@ -87,9 +90,6 @@ ExportWizard = Ember.Component.extend(AsWizard,
 
     confirmBackup: ->
       @markCompleted(4)
-
-
-
 )
 
-`export default ExportWizard`
+export default ExportWizard

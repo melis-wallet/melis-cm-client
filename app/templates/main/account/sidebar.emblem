@@ -33,6 +33,9 @@
       p = leaf-label content=(t 'account.multi.status.server-sig')
     = if account.info.serverMandatory
       p = leaf-label content=(t 'account.multi.status.server-mand')
+    = if account.isLite
+      p: span.label.label-info = t 'account.multi.status.lite'
+
     = if account.secure
       p
         span.label.label-info

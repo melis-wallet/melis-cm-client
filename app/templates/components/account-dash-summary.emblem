@@ -28,10 +28,10 @@
             = liquid-bind account.amSummary use='toDown' as |amount|
               span.text-xlg style='margin-right: 10px;'
                 span.text-lg.text-slim.lowercase = unit-id account=account
-                strong = format-unit amount compact=true account=cm.currentAccount
+                strong = format-unit amount compact=true account=account
               '
               span.text-lg
-                span.text-bg.text-slim.lowercase = cm.globalCurrency
+                span.text-bg.text-slim.lowercase = currency-unit
                 strong = to-currency amount compact=true account=account
           = else
             .text-xs.text-light-gray

@@ -1,10 +1,11 @@
-`import Ember from 'ember'`
+import Helper from '@ember/component/helper'
+import { inject as service } from '@ember/service'
 
 TIME_PER_BLOCK = 600
 
-EstimateBlockTime = Ember.Helper.extend(
+EstimateBlockTime = Helper.extend(
 
-  cm:  Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   compute: (params, hash) ->
     block = params[0]
@@ -17,4 +18,4 @@ EstimateBlockTime = Ember.Helper.extend(
 
 )
 
-`export default EstimateBlockTime`
+export default EstimateBlockTime

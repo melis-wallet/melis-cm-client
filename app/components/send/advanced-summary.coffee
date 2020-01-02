@@ -1,16 +1,17 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
+AdvancedSummary = Component.extend(
 
-AdvancedSummary = Ember.Component.extend(
-
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
 
   account: null
   parent: null
 
 
-  valid: Ember.computed.alias('parent.valid')
+  valid: alias('parent.valid')
 
   actions:
     preparePayment: ->
@@ -21,6 +22,6 @@ AdvancedSummary = Ember.Component.extend(
 
 )
 
-`export default AdvancedSummary`
+export default AdvancedSummary
 
 

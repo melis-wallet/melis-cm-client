@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
+import Mixin from '@ember/object/mixin'
+import { inject as service } from '@ember/service'
 
-BackButton = Ember.Mixin.create(
+BackButton = Mixin.create(
 
-  device: Ember.inject.service('device-support')
+  device: service('device-support')
 
   #
   onBack: ( -> @sendAction('on-backbutton', this) )
@@ -17,4 +18,4 @@ BackButton = Ember.Mixin.create(
   ).on('willDestroyElement')
 )
 
-`export default BackButton`
+export default BackButton

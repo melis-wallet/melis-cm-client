@@ -1,15 +1,15 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, notEmpty } from '@ember/object/computed'
 
-UrgentAlerts = Ember.Component.extend(
-
-
-  cm: Ember.inject.service('cm-session')
-  firstPtx: Ember.computed.alias('cm.currentAccount.ptxs.lastObject')
-
-  show: Ember.computed.notEmpty('firstPtx')
+UrgentAlerts = Component.extend(
 
 
+  cm: service('cm-session')
+  firstPtx: alias('cm.currentAccount.ptxs.lastObject')
+
+  show: notEmpty('firstPtx')
 )
 
 
-`export default UrgentAlerts`
+export default UrgentAlerts

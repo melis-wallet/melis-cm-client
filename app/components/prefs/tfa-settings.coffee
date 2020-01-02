@@ -1,11 +1,12 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
-TfaSettings = Ember.Component.extend(
-  aa: Ember.inject.service('aa-provider')
+TfaSettings = Component.extend(
+  aa: service('aa-provider')
 
   actions:
     setDefault: ->
       @get('aa').setDefaultTfa()
 )
 
-`export default TfaSettings`
+export default TfaSettings

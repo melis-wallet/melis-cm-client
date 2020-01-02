@@ -28,35 +28,48 @@
     = leaf-modal-footer modal=mod
       = leaf-modal-button icon='fa fa-check' type='primary' label=(t 'sign.message.dismiss') modal=mod value='ok' block=true
 
+
+.history-controls
+  .btn-group
+    = leaf-button icon='fa fa-users' on-click='togglePublic' active=showPublic tooltip='Public'
+    '
+    = leaf-button icon='fa fa-user-secret' on-click='togglePrivate' active=showPrivate tooltip='Private'
+
 ul.history-list
   li.history-item
-    .h-lbl: span.label TXs
-    .h-amount: amount
-    .h-subject: span.data subject
-    .h-date date
+    .h-lbl: span.label = t 'newaddr.txs.table.txs'
+    .h-amount = t 'newaddr.txs.table.amount'
+    .h-subject: span.data = t 'newaddr.txs.table.address'
+    .h-date = t 'newaddr.txs.table.date'
 
-  = each addresses as |a|
+  = each filteredAddresses as |ad|
     li.history-item
-      = if a.numTxs
+      = if ad.numTxs
         .h-lbl
-          span.label = a.numTxs
+          span.label = ad.numTxs
       = else
         .h-lbl
           /span.label: i.fa.fa-hourglass-o
 
-      = if a.meta.amount
-        .h-amount: a.expandable click="'selectAddr' a"
+      = if ad.meta.amount
+        .h-amount: a.expandable click="'selectAddr' ad"
           span.data
-            = format-unit a.meta.amount compact=true withUnit=true account=cm.currentAccount
-      .h-subject: a.expandable click="'selectAddr' a"
-        p.code-label = a.address
-        = if a.labels
+            = format-unit ad.meta.amount compact=true withUnit=true account=cm.currentAccount
+      .h-subject: a.expandable click="'selectAddr' ad"
+        .label
+          = if (eq ad.chain 0)
+            i.fa.fa-users
+          = else
+            i.fa.fa-user-secret
+        '
+        p.code-label = coin-address ad.address account=cm.currentAccount
+        = if ad.labels
           p
-            = each a.labels as |label|
+            = each ad.labels as |label|
               .label.label-info.label-tag.m-sm-r = label
-        = if a.meta.info
-          .bar: b = a.meta.info
-      .h-date = moment-from-now a.lastRequested
+        = if ad.meta.info
+          .bar: b = ad.meta.info
+      .h-date = moment-from-now ad.lastRequested
 
 
   = if pageOps.isRunning

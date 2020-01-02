@@ -1,0 +1,12 @@
+--- corber/cordova/platforms/ios/Melis Testnet/Melis Testnet-Info.plist	2019-05-24 19:20:58.000000000 +0200
++++ corber/cordova/platforms/ios/Melis Testnet/Melis Testnet-Info.1.plist	2019-05-24 19:22:19.000000000 +0200
+@@ -25,7 +25,9 @@
+ 	<key>LSRequiresIPhoneOS</key>
+ 	<true/>
+ 	<key>NSMainNibFile</key>
++	<string/>
+ 	<key>NSMainNibFile~ipad</key>
++	<string/>
+ 	<key>UIRequiresFullScreen</key>
+ 	<true/>
+ 	<key>UISupportedInterfaceOrientations</key>

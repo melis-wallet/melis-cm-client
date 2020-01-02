@@ -1,9 +1,6 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
 
-MainAccountPtxRoute = Ember.Route.extend(
-
-
-)
+MainAccountPtxRoute = Route.extend()
 
 
-`export default MainAccountPtxRoute`
+export default MainAccountPtxRoute

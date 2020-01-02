@@ -1,9 +1,9 @@
-/* jshint node: true */
+'use strict';
 
 module.exports = function(environment) {
-  var ENV = {
+  let ENV = {
     modulePrefix: 'melis-cm-client',
-    environment: environment,
+    environment,
     rootURL: '',
     locationType: 'hash',
     exportApplicationGlobal: true,
@@ -11,7 +11,10 @@ module.exports = function(environment) {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
-        //'ember-glimmer-allow-backtracking-rerender': true
+      },
+      EXTEND_PROTOTYPES: {
+        // Prevent Ember Data from overriding Date.parse.
+        Date: false
       }
     },
 
@@ -35,7 +38,8 @@ module.exports = function(environment) {
       // To cherry-pick specific locale support into your application.
       // Full list of locales: https://github.com/moment/moment/tree/2.10.3/locale
       includeLocales: ['en', 'it'],
-      outputFormat: 'LLL'
+      outputFormat: 'LLL',
+      allowEmpty: true
     },
 
     i18n: {
@@ -52,8 +56,8 @@ module.exports = function(environment) {
      'media-src': "'self'"
    };
 
-  var session = ENV['melis-session'];
-  var csp = ENV.contentSecurityPolicy;
+  let session = ENV['melis-session'];
+  let csp = ENV.contentSecurityPolicy;
 
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
@@ -75,12 +79,15 @@ module.exports = function(environment) {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
+    ENV.APP.autoboot = false;
   }
 
   if (environment === 'production') {
   }
 
   var deployTarget = process.env.DEPLOY_TARGET;
+
+  ENV.APP.recoveryUrls = ['https://recovery.melis.io/', 'https://github.com/melis-wallet/melis-recovery']
 
   if (deployTarget === 'local') {
     ENV.APP.publicUrl= 'https://wallet-regtest.melis.io';
@@ -103,6 +110,7 @@ module.exports = function(environment) {
   if (deployTarget === 'production') {
     ENV.APP.publicUrl= 'https://wallet.melis.io';
     session.apiDiscoveryUrl =  'https://discover.melis.io/api/v1/endpoint/stomp';
+    ENV.APP.recoveryUrls = ['https://recovery.melis.io/', 'https://github.com/melis-wallet/melis-recovery']
     csp['connect-src'] = "'self' wss://api.melis.io/stomp";
   }
 

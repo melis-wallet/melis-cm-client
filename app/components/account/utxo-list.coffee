@@ -1,16 +1,24 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import groupBy from '../../utils/group-by'`
-`import CMCore from 'npm:melis-api-js'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { get, set, setProperties } from '@ember/object'
+import { A } from '@ember/array'
+import { isEmpty, isPresent } from '@ember/utils'
+import RSVP from 'rsvp'
+
+import { task, taskGroup } from 'ember-concurrency'
+import groupBy from '../../utils/group-by'
+import CMCore from 'npm:melis-api-js'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 C = CMCore.C
 
-UtxoList = Ember.Component.extend(
+UtxoList = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  mm: Ember.inject.service('modals-manager')
-  aa: Ember.inject.service('aa-provider')
-  txsvc: Ember.inject.service('cm-tx-infos')
+  cm: service('cm-session')
+  mm: service('modals-manager')
+  aa: service('aa-provider')
+  txsvc: service('cm-tx-infos')
 
 
   account: null
@@ -23,26 +31,26 @@ UtxoList = Ember.Component.extend(
   ops: taskGroup().drop()
 
   groupedTxo: ( ->
-    groups = Ember.A()
+    groups = A()
     items = @get('txo')
-    return if Ember.isEmpty(items)
+    return if isEmpty(items)
 
     items.forEach((item) ->
-      value = Ember.get(item, 'aa')
-      group = groups.find((item) -> Ember.get(item, 'value.address') == Ember.get(value, 'address') )
+      value = get(item, 'aa')
+      group = groups.find((item) -> get(item, 'value.address') == get(value, 'address') )
 
-      if Ember.isPresent(group)
-        amount = Ember.get(group, 'amount') + Ember.get(item, 'amount')
-        firstcd = Ember.get(group, 'firstcd')
-        itemcd = Ember.get(item, 'cd')
+      if isPresent(group)
+        amount = get(group, 'amount') + get(item, 'amount')
+        firstcd = get(group, 'firstcd')
+        itemcd = get(item, 'cd')
         firstcd = itemcd if (itemcd < firstcd)
-        Ember.setProperties(group,
+        setProperties(group,
           amount: amount
           firstcd: firstcd
         )
-        Ember.get(group, 'items').push(item)
+        get(group, 'items').push(item)
       else
-        group = { amount: Ember.get(item, 'amount'), firstcd: Ember.get(item, 'cd'), value: value, items: [item] }
+        group = { amount: get(item, 'amount'), firstcd: get(item, 'cd'), value: value, items: [item] }
         groups.push(group)
 
     )
@@ -55,11 +63,11 @@ UtxoList = Ember.Component.extend(
 
     try
       res = yield @get('cm.api').getUnspents(account.get('cmo'), sortField: 'creationDate', sortDir: C.DIR_DESCENDING)
-      if list = Ember.get(res, 'list')
+      if list = get(res, 'list')
         @set('txo', list)
-        @set('hasNext', Ember.get(res, 'hasNext'))
+        @set('hasNext', get(res, 'hasNext'))
     catch error
-      Ember.Logger.error(error)
+      Logger.error(error)
   )
 
 
@@ -68,7 +76,7 @@ UtxoList = Ember.Component.extend(
       @set('activeAddr', addr)
       yield @get('mm').showModal(@get('signId'))
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
 
   ).group('ops')
 
@@ -77,14 +85,14 @@ UtxoList = Ember.Component.extend(
     api = @get('cm.api')
 
     op = (tfa) =>
-      Ember.RSVP.resolve(api.accountAddressToWIF(account, addr))
+      RSVP.resolve(api.exportAddressKeyToWIF(account, addr))
 
 
     try
       wif = yield @get('aa').askLocalPin(op, 'Pin', '', true, true)
-      Ember.set(addr, 'wif', wif)
+      set(addr, 'wif', wif)
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
   ).group('ops')
 
 
@@ -95,7 +103,7 @@ UtxoList = Ember.Component.extend(
 
   actions:
     toggleExpanded: (addr) ->
-      Ember.set(addr, 'expanded', !Ember.get(addr, 'expanded'))
+      set(addr, 'expanded', !get(addr, 'expanded'))
 
     signWithAddr: (addr) ->
       if addr && @get('account.canSignMessage')
@@ -110,10 +118,9 @@ UtxoList = Ember.Component.extend(
 
 
     trashKey: (addr) ->
-      Ember.set(addr, 'wif', null)
-
+      set(addr, 'wif', null)
 
 )
 
 
-`export default UtxoList`
+export default UtxoList

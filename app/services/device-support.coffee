@@ -1,15 +1,22 @@
-`import Ember from 'ember'`
-`import subscribe from 'ember-cordova-events/utils/subscribe'`
+import Service, { inject as service } from '@ember/service'
+import Evented from '@ember/object/evented'
+import { get, set, computed } from '@ember/object'
+import { alias } from '@ember/object/computed'
+import RSVP from 'rsvp'
 
-CdvDeviceSupport = Ember.Service.extend(Ember.Evented,
-  cm: Ember.inject.service('cm-session')
-  platform: Ember.inject.service('ember-cordova/platform')
-  appstate: Ember.inject.service('app-state')
-  cordova: Ember.inject.service('ember-cordova/events')
-  keyboard: Ember.inject.service('ember-cordova/keyboard')
-  splash: Ember.inject.service('ember-cordova/splash')
+import subscribe from 'ember-cordova-events/utils/subscribe'
 
-  recovery:  Ember.inject.service('cm-recovery-info')
+import Logger from 'melis-cm-svcs/utils/logger'
+
+
+CdvDeviceSupport = Service.extend(Evented,
+  cm: service('cm-session')
+  platform: service('ember-cordova/platform')
+  appstate: service('app-state')
+  cordova: service('ember-cordova/events')
+  keyboard: service('ember-cordova/keyboard')
+  splash: service('ember-cordova/splash')
+  recovery:  service('cm-recovery-info')
 
   deviceReady: false
   connectionType: null
@@ -18,12 +25,12 @@ CdvDeviceSupport = Ember.Service.extend(Ember.Evented,
 
   paused: false
 
-  isMobile: Ember.computed.alias('platform.isHybrid')
-  hasDownload: Ember.computed.not('isMobile')
+  isMobile: alias('platform.isHybrid')
+  hasDownload: computed.not('isMobile')
 
   setup: ( ->
 
-    Ember.Logger.debug('= CDV Device Support. Mobile support: ', @get('isMobile'))
+    Logger.debug('= CDV Device Support. Mobile support: ', @get('isMobile'))
 
     @get('splash').hide()
 
@@ -32,21 +39,21 @@ CdvDeviceSupport = Ember.Service.extend(Ember.Evented,
   ).on('init')
 
   ready: subscribe('cordova.deviceready', ->
-    Ember.Logger.debug('CDV Device Ready')
+    Logger.debug('CDV Device Ready')
     @set('deviceReady', true)
     @checkMail()
   )
 
   checkMail: ->
     cordova.plugins.email.isAvailable( (isAvailable) =>
-      Ember.Logger.debug('CDV Mail is available:', isAvailable)
+      Logger.debug('CDV Mail is available:', isAvailable)
       @set('hasMail', isAvailable)
     )
 
   pause: subscribe('cordova.pause', ->
     return unless @get('isMobile')
 
-    Ember.Logger.debug('CDV Pause')
+    Logger.debug('CDV Pause')
     @get('recovery').stopScheduling()
     @set('paused', true)
     @get('cm.api').hintDevicePaused()
@@ -57,7 +64,7 @@ CdvDeviceSupport = Ember.Service.extend(Ember.Evented,
 
     return unless @get('isMobile')
 
-    Ember.Logger.debug('CDV Resume')
+    Logger.debug('CDV Resume')
     @set('paused', false)
     @get('cm.api').verifyConnectionEstablished()
   )
@@ -65,7 +72,7 @@ CdvDeviceSupport = Ember.Service.extend(Ember.Evented,
   offline: subscribe('cordova.offline', ->
     return unless @get('isMobile')
 
-    Ember.Logger.debug('CDV Offline')
+    Logger.debug('CDV Offline')
     @set('connectionType', null)
     @get('cm.api').networkOffline()
   )
@@ -73,7 +80,7 @@ CdvDeviceSupport = Ember.Service.extend(Ember.Evented,
   online: subscribe('cordova.online', ->
     return unless @get('isMobile')
 
-    Ember.Logger.debug('CDV Online')
+    Logger.debug('CDV Online')
     @set('connectionType', navigator.connection.type)
     @get('cm.api').networkOnline()
   )
@@ -81,18 +88,18 @@ CdvDeviceSupport = Ember.Service.extend(Ember.Evented,
   backbtn: subscribe('cordova.backbutton', ->
     return unless @get('isMobile')
 
-    Ember.Logger.debug('CDV Back')
+    Logger.debug('CDV Back')
     @set('appstate.menuExpanded', false)
     @trigger('backbutton')
   )
 
   menubtn: subscribe('cordova.menubutton', ->
-    Ember.Logger.debug('CDV Menu')
+    Logger.debug('CDV Menu')
   )
 
 
   mailFile: (subject, name, body, data) ->
-    new Ember.RSVP.Promise((resolve, reject) =>
+    new RSVP.Promise((resolve, reject) =>
       if @get('hasMail')
         cordova.plugins.email.open({
           subject: subject
@@ -100,9 +107,9 @@ CdvDeviceSupport = Ember.Service.extend(Ember.Evented,
           attachments: "base64:" + name + '//' + window.btoa(data)
         }, (-> resolve()))
       else
-        Ember.Logger.warn('CDV Mail is not available')
+        Logger.warn('CDV Mail is not available')
         reject('no-mail')
     )
 )
 
-`export default CdvDeviceSupport`
+export default CdvDeviceSupport

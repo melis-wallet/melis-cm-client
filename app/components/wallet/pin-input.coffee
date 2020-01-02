@@ -1,9 +1,16 @@
-`import Ember from 'ember'`
-`import PinInputMixin from '../../mixins/pin-input'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import Fpa from 'melis-cm-client/mixins/fingerprint-auth'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { get } from '@ember/object'
+import { schedule, later } from '@ember/runloop'
+
+import PinInputMixin from '../../mixins/pin-input'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import Fpa from 'melis-cm-client/mixins/fingerprint-auth'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 Validations = buildValidations(
   pin: [
@@ -12,11 +19,11 @@ Validations = buildValidations(
   ]
 )
 
-PinInput = Ember.Component.extend(Validations, ValidationsHelper, Fpa,
+PinInput = Component.extend(Validations, ValidationsHelper, Fpa,
 
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
-  routing: Ember.inject.service('-routing')
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
+  routing: service('-routing')
 
   apiOps: taskGroup().drop()
 
@@ -50,8 +57,8 @@ PinInput = Ember.Component.extend(Validations, ValidationsHelper, Fpa,
   ).property('lowAttempts')
 
   setup: (->
-    Ember.run.schedule 'afterRender', this, (->
-      @.$('input#pin_input').focus()
+    schedule 'afterRender', this, (->
+      later(this, (-> @.$('input#' + @get('inputId'))?.focus()), 500)
     )
   ).on('didInsertElement')
 
@@ -64,13 +71,15 @@ PinInput = Ember.Component.extend(Validations, ValidationsHelper, Fpa,
     try
       res = yield @get('cm').deviceGetPassword(pin)
       if !res
-        @set 'locked', true
-        @set 'pin', null
+        @setProperties
+          pinError: 'Server Error'
       else if res.password
         @set 'devicePass', res.password
         @sendAction('on-valid-pin', @get('pin'), @get('devicePass'))
       else if res.attemptsLeft
-        @set 'pinError', "Wrong Pin"
+        @setProperties
+          pinError: "Wrong Pin"
+          pin: null
         @sendAction('on-wrong-pin')
     catch error
       if error.ex == 'CmInvalidDeviceException'
@@ -78,18 +87,18 @@ PinInput = Ember.Component.extend(Validations, ValidationsHelper, Fpa,
           @set 'pinError', "Wrong Pin"
           @sendAction('on-wrong-pin')
         else
-          @set 'locked', true
-          @set 'pin', null
+          @setProperties
+            locked: true
+            pin: null
+          @get('cm').resetApp()
       else
-        Ember.Logger.error('Enter failed: ', error)
+        Logger.error('Enter failed: ', error)
   )
 
   actions:
     enterPIN: ->
       if pin = @get('pin')
         @get('enterPIN').perform(pin)
-
-
 )
 
-`export default PinInput`
+export default PinInput

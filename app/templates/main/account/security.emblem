@@ -7,5 +7,10 @@
 
 .row
   .col-md-12
-    = prefs/change-limits account=account
+    = if account.isLite
+      = leaf-note type='info'
+        h4 = t 'account.maint.lite.title'
+        p = t 'account.maint.lite.caption'
+    = else
+      = prefs/change-limits account=account
 

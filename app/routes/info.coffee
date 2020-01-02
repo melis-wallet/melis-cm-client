@@ -1,5 +1,5 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
 
-InfoRoute = Ember.Route.extend()
+InfoRoute = Route.extend()
 
-`export default InfoRoute`
+export default InfoRoute

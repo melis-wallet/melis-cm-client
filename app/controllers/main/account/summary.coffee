@@ -1,10 +1,11 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-MainDashboardController = Ember.Controller.extend(
+MainDashboardController = Controller.extend(
 
-  media: Ember.inject.service('responsive-media')
-  account: Ember.computed.alias('cm.currentAccount')
-
+  media: service('responsive-media')
+  account: alias('cm.currentAccount')
 )
 
-`export default MainDashboardController`
+export default MainDashboardController

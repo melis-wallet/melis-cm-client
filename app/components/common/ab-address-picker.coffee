@@ -1,15 +1,18 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, sort } from '@ember/object/computed'
 
-AbPicker = Ember.Component.extend(
+AbPicker = Component.extend(
 
-  ab: Ember.inject.service('cm-addressbook')
-  modalId: Ember.computed.alias('cm.modalId')
+  ab: service('cm-addressbook')
+  modalId: alias('cm.modalId')
 
   entriesSorting: ['name:asc']
-  entriesSorted: Ember.computed.sort('addrs', 'entriesSorting')
+  entriesSorted: sort('addrs', 'entriesSorting')
 
   setup: (->
-
     @set('addrs', @get('ab').findAll())
   ).on('init')
 )
+
+export default AbPicker

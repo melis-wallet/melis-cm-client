@@ -1,14 +1,24 @@
-`import Ember from 'ember'`
-`import Alertable from 'ember-leaf-core/mixins/leaf-alertable'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, notEmpty } from '@ember/object/computed'
+import { get, set, computed } from '@ember/object'
+import { isEmpty } from '@ember/utils'
+import { A } from '@ember/array'
+import RSVP from 'rsvp'
 
-AdvancedSend = Ember.Component.extend(Alertable,
+import Alertable from 'ember-leaf-core/mixins/leaf-alertable'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
-  ptxsvc: Ember.inject.service('cm-ptxs')
-  accInfo: Ember.inject.service('cm-account-info')
+AdvancedSend = Component.extend(Alertable,
+
+
+  cm: service('cm-session')
+  aa: service('aa-provider')
+  ptxsvc: service('cm-ptxs')
+  accInfo: service('cm-account-info')
 
 
   account: null
@@ -35,7 +45,7 @@ AdvancedSend = Ember.Component.extend(Alertable,
   feesEstValuePerByte: null
 
   # actual fees
-  fees: Ember.computed.alias('preparedTx.cmo.fees')
+  fees: alias('preparedTx.cmo.fees')
 
   # other options
   optRBF: true
@@ -45,12 +55,12 @@ AdvancedSend = Ember.Component.extend(Alertable,
   sources: null
   sourcesAmount: null
 
-  coin: Ember.computed.alias('account.unit')
+  coin: alias('account.unit')
 
   #state
   addMode: true
 
-  paymentReady: Ember.computed.notEmpty('preparedTx')
+  paymentReady: notEmpty('preparedTx')
 
   #
   prepareOps: taskGroup().enqueue()
@@ -69,7 +79,8 @@ AdvancedSend = Ember.Component.extend(Alertable,
     ) * size)
   ).property('feesEstValuePerByte', 'feesPerByte', 'account', 'sources.[]', 'recipients.[]', 'autoFees')
 
-  autoRemainder: Ember.computed.not('remainderAddr')
+
+  autoRemainder: computed.not('remainderAddr')
 
   computedRemainder: ( ->
     if !@get('remainderAddr') && @get('sourcesAmount')
@@ -77,13 +88,13 @@ AdvancedSend = Ember.Component.extend(Alertable,
   ).property('remainderAddr', 'sourcesAmount', 'totalAmount')
 
   valid: ( ->
-    !@get('insuffSources') && !Ember.isEmpty(@get('recipients'))
+    !@get('insuffSources') && !isEmpty(@get('recipients'))
   ).property('insuffSources', 'recipients.[]')
 
   totalAmount: ( ->
     recipients = @get('recipients')
     recipients.reduce ((sum, row) ->
-        sum += Ember.get(row, 'fullAmount')
+        sum += get(row, 'fullAmount')
       ), 0
   ).property('recipients.[]')
 
@@ -101,30 +112,41 @@ AdvancedSend = Ember.Component.extend(Alertable,
   #
   #
   #
-  signingProgress: Ember.computed.alias('preparedTx.signingProgress')
-  signing: Ember.computed.alias('preparedTx.signing')
+  signingProgress: alias('preparedTx.signingProgress')
+  signing: alias('preparedTx.signing')
 
 
   accountChanged: ( ->
-    @set('ptx', null)
+    console.error "acct changed"
+    @setProperties
+      ptx: null
+      feeEstimate: null
+      feesEstData: null
+      feesEstValuePerByte: null
+      feesPerByte: null
   ).observes('account')
 
   coinChanged: ( ->
-    @set('optRBF', @get('coin.features.rbf'))
-  ).observes('coin').on('init')
+    @setProperties
+      optRBF: @get('coin.features.rbf')
+      allowUnconfirmed: @get('coin.features.defaultUncf') || false
+      feesEstData: null
+      feesEstValuePerByte: null
+  ).observes('coin.unit').on('init')
 
   setup: (->
-    @get('account')
-    if Ember.isEmpty(@get('feesEstData'))
+    @getProperties('account', 'coin')
+
+    if isEmpty(@get('feesEstData'))
       @get('getFeeEstimate').perform()
   ).on('init')
 
   accountChanged: ( -> @reset()).on('init').observes('account')
 
-  showAdd: Ember.computed.alias('addMode')
+  showAdd: alias('addMode')
 
   showSummaryPanel: ( ->
-    !Ember.isEmpty(@get('recipients')) || (!@get('autoSource') && !Ember.isEmpty(@get('sources')))
+    !isEmpty(@get('recipients')) || (!@get('autoSource') && !isEmpty(@get('sources')))
   ).property('recipients.[]', 'sources.[]', 'autoSource')
 
   remainderAddr: ( ->
@@ -145,25 +167,34 @@ AdvancedSend = Ember.Component.extend(Alertable,
 
   insuffSources: (-> !@get('autoSource') && (@get('sourcesAmount') <= @get('totalAmount'))).property('totalAmount', 'sourcesAmount', 'autoSource')
 
-  getFeeEstimate: task(->
+
+  getFeeEstimate: task( ->
+    return unless (coin = @get('coin.unit'))
+
     try
-      val = yield @get('cm.api').updateNetworkFeesFromExternalProviders()
-      if val
-        @set('feesEstData', val)
-        value = Ember.get(val, 'fastestFee')
-        @set('feesEstValuePerByte', value) if value
-        @sendAction('on-change', value)
+      provs = yield @get('cm.api').feeApi.getProviderNames(coin)
+      Logger.debug('Fee provs:', provs)
+      if provs
+        p = provs[Math.floor(Math.random() * provs.length)]
+        val = yield @get('cm.api').feeApi.getFeesByProvider(coin, p)()
+        Logger.debug('Fee est:', val)
+        if val
+          @set('feesEstData', val)
+          value = get(val, 'fastestFee')
+          @set('feesEstValuePerByte', value) if value
+          @sendAction('on-change', value)
+
     catch error
-      Ember.Logger.error('Unable to hit fees: ', error)
+       Logger.error('Unable to hit fees: ', error)
   )
 
-  backToAutoSource: ( -> @set('sources', Ember.A()) if @get('autoSource')).observes('autoSource')
+  backToAutoSource: ( -> @set('sources', A()) if @get('autoSource')).observes('autoSource')
 
   reset: ->
     @closeAllAlerts()
     @setProperties
       preparedTx: null
-      recipients: Ember.A()
+      recipients: A()
       addMode: true
       sources: null
       autoSource: true
@@ -193,7 +224,7 @@ AdvancedSend = Ember.Component.extend(Alertable,
         @set 'preparedTx', null
         @reset()
       catch err
-        Ember.Logger.error '[SEND] cancelPayment error', err
+        Logger.error '[SEND] cancelPayment error', err
   )
 
 
@@ -213,7 +244,7 @@ AdvancedSend = Ember.Component.extend(Alertable,
         yield @get('proposePayment').perform()
         @clearState()
       catch err
-        Ember.Logger.error '[SEND] proposePayment error', err
+        Logger.error '[SEND] proposePayment error', err
   )
 
   #
@@ -227,7 +258,7 @@ AdvancedSend = Ember.Component.extend(Alertable,
       try
         res = yield ptxsvc.ptxPropose(preparedTx)
       catch err
-        Ember.Logger.error('error: ', err)
+        Logger.error('error: ', err)
         @alertWarning "#{@get('i18n').t('paysend.err.occurred', error: err.msg)}", true
   ).group('confirmOps')
 
@@ -262,7 +293,7 @@ AdvancedSend = Ember.Component.extend(Alertable,
 
 
     params =
-      selectAllUnspents: (isEntireBalance && Ember.isEmpty(unspents))
+      selectAllUnspents: (isEntireBalance && isEmpty(unspents))
       unspents: unspents
       disableRbf: optRBF,
       allowUnconfirmed: allowUnconfirmed,
@@ -272,7 +303,7 @@ AdvancedSend = Ember.Component.extend(Alertable,
     else
       params.satoshisPerByte = feesPerByte || feesEstValuePerByte
 
-    if !Ember.isEmpty(recipients)
+    if !isEmpty(recipients)
       @closeAllAlerts()
 
       op = (tfa) ->
@@ -285,7 +316,7 @@ AdvancedSend = Ember.Component.extend(Alertable,
         unless ptx.get('isMultisig')
           return yield @get('proposePayment').perform()
       catch err
-        Ember.Logger.error('error: ', err)
+        Logger.error('error: ', err)
         if err.ex is 'CmInsufficientFundsException'
           @alertWarning "<b>#{@get('i18n').t('paysend.err.prepare-fail')}:</b> #{@get('i18n').t('paysend.err.no-funds')}", true
         else
@@ -304,13 +335,16 @@ AdvancedSend = Ember.Component.extend(Alertable,
     if preparedTx && preparedTx.get('hasFieldsSignature')
       try
         res = yield ptxsvc.ptxSign(preparedTx)
-        @alertSuccess  "<b>#{@get('i18n').t('paysend.success')}:</b> #{@get('i18n').t('paysend.tx-done')}", true
+        if @get('preparedTx.cosignRequired')
+          @alertSuccess  "<b>#{@get('i18n').t('paysend.success')}:</b> #{@get('i18n').t('paysend.tx-success')}", true
+        else
+          @alertSuccess  "<b>#{@get('i18n').t('paysend.success')}:</b> #{@get('i18n').t('paysend.tx-done')}", true
         @reset()
       catch err
         @alertWarning @get('i18n').t('paysend.err.occurred', error: @get('i18n').t_ex(err)), true
     else
-      Ember.Logger.error '[SEND] prepared has no fields signatures.', preparedTx, preparedTx.get('hasFieldsSignature')
-      Ember.RSVP.reject('invalid prepared tx')
+      Logger.error '[SEND] prepared has no fields signatures.', preparedTx, preparedTx.get('hasFieldsSignature')
+      RSVP.reject('invalid prepared tx')
   ).group('confirmOps')
 
 
@@ -324,7 +358,7 @@ AdvancedSend = Ember.Component.extend(Alertable,
         yield @get('proposePayment').perform()
         @reset()
       catch err
-        Ember.Logger.error '[SEND] proposePayment error', err
+        Logger.error '[SEND] proposePayment error', err
   )
 
   #
@@ -339,14 +373,14 @@ AdvancedSend = Ember.Component.extend(Alertable,
         else
           yield @get('confirmPayment').perform()
       catch err
-        Ember.Logger.error '[SEND] proposePayment error', err
+        Logger.error '[SEND] proposePayment error', err
   )
 
   actions:
     feesChanged: (mult, value) ->
       @setProperties
         feesMult: mult
-        feesLabel: Ember.get(value, 'label')
+        feesLabel: get(value, 'label')
 
     preparePayment: ->
       if @get('valid')
@@ -377,7 +411,7 @@ AdvancedSend = Ember.Component.extend(Alertable,
     deleteRecipient: (recp) ->
       r = @get('recipients')
       r.removeObject(recp)
-      @set('addMode', true) if Ember.isEmpty(r)
+      @set('addMode', true) if isEmpty(r)
 
     selectSources: (amount, srcs) ->
       @setProperties
@@ -389,4 +423,4 @@ AdvancedSend = Ember.Component.extend(Alertable,
 
 )
 
-`export default AdvancedSend`
+export default AdvancedSend

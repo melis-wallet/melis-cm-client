@@ -1,7 +1,5 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
 
-AccountController = Ember.Controller.extend(
+AccountController = Controller.extend()
 
-)
-
-`export default AccountController`
+export default AccountController

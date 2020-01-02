@@ -1,13 +1,16 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-StreamEvt = Ember.Component.extend(
 
-  cm: Ember.inject.service('cm-session')
+StreamEvt = Component.extend(
+
+  cm: service('cm-session')
   entry: null
 
   classNames: ['stream-entry', 'row', 'animated', 'fadeIn']
 
-  event: Ember.computed.alias('entry.content')
+  event: alias('entry.content')
 
   label: ( ->
     @get('event.cmo.name') || @get('event.cmo.deviceId')
@@ -15,5 +18,4 @@ StreamEvt = Ember.Component.extend(
 
 )
 
-
-`export default StreamEvt`
+export default StreamEvt

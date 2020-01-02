@@ -1,7 +1,7 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
 
-SignedOk = Ember.Component.extend(
+SignedOk = Component.extend(
   noAccounts: false
 )
 
-`export default SignedOk`
+export default SignedOk

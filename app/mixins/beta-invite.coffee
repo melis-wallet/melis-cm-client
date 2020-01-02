@@ -1,6 +1,12 @@
-`import Ember from 'ember'`
-`import config from '../config/environment';`
-`import {isAjaxError, isNotFoundError, isForbiddenError} from 'ember-ajax/errors'`
+import Mixin from '@ember/object/mixin'
+import { inject as service } from '@ember/service'
+import { get, set } from '@ember/object'
+import RSVP from 'rsvp'
+
+import config from '../config/environment'
+import {isAjaxError, isNotFoundError, isForbiddenError} from 'ember-ajax/errors'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 INVITE_URIS= {
   regtest: 'https://www-regtest.melis.io/scripts/check.php'
@@ -10,9 +16,9 @@ INVITE_URIS= {
 
 TESTTOKEN = '12345678'
 
-BetaInvite = Ember.Mixin.create(
+BetaInvite = Mixin.create(
 
-  ajax: Ember.inject.service()
+  ajax: service()
 
   _inviteUrl: ( ->
     INVITE_URIS[@get('cm.network')]
@@ -27,7 +33,7 @@ BetaInvite = Ember.Mixin.create(
       data:
         token: token
     ).catch((e) ->
-      Ember.Logger.error "Invite check failed: ", e
+      Logger.error "Invite check failed: ", e
       if isNotFoundError(e)
         throw {ex: 'TokenFailure', msg: @get('i18n').t('aa.error.token-failure')}
       if isAjaxError(e)
@@ -38,22 +44,22 @@ BetaInvite = Ember.Mixin.create(
 
   validateInvite: (token) ->
     if @get('cm.testMode') && token == TESTTOKEN
-      return Ember.RSVP.resolve(true)
+      return RSVP.resolve(true)
 
     @_doInviteRequest(token, false).then((res) ->
-      if Ember.get(res, 'status') == 'ok' then true else false
+      if get(res, 'status') == 'ok' then true else false
     ).catch((e) -> throw(e))
 
   confirmInvite: (token) ->
     if @get('cm.testMode') && token == TESTTOKEN
-      return Ember.RSVP.resolve(true)
+      return RSVP.resolve(true)
     @_doInviteRequest(token, true)
 
   #
   # Ask a token to complete the operation
   #
   checkInvite: (operation)->
-    pending = Ember.RSVP.defer()
+    pending = RSVP.defer()
 
     if request = @get('pendingRequest')
       pending.reject(ex: 'TfaBusy', msg: @get('i18n').t('aa.error.busy'))
@@ -78,9 +84,9 @@ BetaInvite = Ember.Mixin.create(
     self = @
 
     if operation
-      if !Ember.get(operation, 'running')
+      if !get(operation, 'running')
         @validateInvite(token).then((res) ->
-          Ember.set(operation, 'running', true)
+          set(operation, 'running', true)
           if res
             operation(token: token)
           else
@@ -93,15 +99,12 @@ BetaInvite = Ember.Mixin.create(
         ).catch((e) ->
           self.rejectPending(e)
         ).finally(->
-          Ember.set(operation, 'running', false)
+          set(operation, 'running', false)
         )
 
     else
       @dismissAndResolve(null)
 
-
-
-
 )
 
-`export default BetaInvite`
+export default BetaInvite

@@ -1,11 +1,17 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
-`import Configuration from 'melis-cm-svcs/utils/configuration'`
-`import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'`
-`import TrackEvents from '../../mixins/track-events'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { get } from '@ember/object'
+
+import CMCore from 'npm:melis-api-js'
+import Configuration from 'melis-cm-svcs/utils/configuration'
+import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
+import TrackEvents from '../../mixins/track-events'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 C = CMCore.C
 
@@ -17,11 +23,11 @@ Validations = buildValidations(
 )
 
 
-PairExportWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper, TrackEvents,
+PairExportWizard = Component.extend(AsWizard, Validations, ValidationsHelper, TrackEvents,
 
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
-  resp: Ember.inject.service('responsive-media')
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
+  resp: service('responsive-media')
 
 
   apiOps: taskGroup().drop()
@@ -55,7 +61,7 @@ PairExportWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
         deviceId: res.deviceId
 
     catch e
-      Ember.Logger.error "Error: ", e
+      Logger.error "Error: ", e
   ).group('apiOps')
 
   pairCompleted: ->
@@ -68,7 +74,7 @@ PairExportWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
 
 
   deviceDeleted: (data) ->
-    if Ember.get(data, 'id') == @get('deviceId')
+    if get(data, 'id') == @get('deviceId')
       @pairCompleted()
 
 
@@ -99,4 +105,4 @@ PairExportWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
 
 )
 
-`export default PairExportWizard`
+export default PairExportWizard

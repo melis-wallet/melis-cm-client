@@ -1,19 +1,21 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-AAModal = Ember.Component.extend(
+AAModal = Component.extend(
 
-  provider: Ember.inject.service('aa-provider')
+  provider: service('aa-provider')
 
-  modalId: Ember.computed.alias('provider.modalId')
-  aComponent: Ember.computed.alias('provider.aComponent')
-  type: Ember.computed.alias('provider.modalType')
+  modalId: alias('provider.modalId')
+  aComponent: alias('provider.aComponent')
+  type: alias('provider.modalType')
 
 
-  currentError: Ember.computed.alias('provider.currentError')
-  currentPrompt: Ember.computed.alias('provider.currentPrompt')
+  currentError: alias('provider.currentError')
+  currentPrompt: alias('provider.currentPrompt')
 
-  componentData: Ember.computed.alias('provider.componentData')
-  running:  Ember.computed.alias('provider.tfaOperation.running')
+  componentData: alias('provider.componentData')
+  running:  alias('provider.tfaOperation.running')
 
 
   actions:
@@ -31,4 +33,4 @@ AAModal = Ember.Component.extend(
 
 )
 
-`export default AAModal`
+export default AAModal

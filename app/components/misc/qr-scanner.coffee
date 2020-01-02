@@ -1,14 +1,27 @@
-`import Ember from 'ember'`
-`import Scheduler from 'ember-leaf-tools/utils/scheduler'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { bool } from '@ember/object/computed'
+import { isEmpty, isBlank } from '@ember/utils'
+import { scheduleOnce, later } from '@ember/runloop'
+import Scheduler from 'ember-leaf-tools/utils/scheduler'
 
-QrScanner = Ember.Component.extend(
+import Instascan from 'npm:instascan'
+import { task } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
+
+QrScanner = Component.extend(
 
 
   # stop scanning when a valid code is found
   stopOnFound: true
 
-  # show play controls
+  # show camera controls
   showControls: true
+
+  # show media controls
+  showMediaControls: false
 
   # show grid
   showGrid: true
@@ -18,19 +31,6 @@ QrScanner = Ember.Component.extend(
 
   # actively scanning for a barcode
   scanning: false
-
-  # geometry of the video source
-  width: null
-  height: null
-
-  # video element, and canvas
-  video: null
-  canvas: null
-  ctx: null
-
-  # getUserMedia
-  gum: Ember.K
-  hasMediaStreamTrackSources: false
 
   # timer
   scheduler: Scheduler.create(interval: 500)
@@ -45,269 +45,172 @@ QrScanner = Ember.Component.extend(
   lastFound: null
 
   # last found code is valid
-  valid: Ember.computed.bool('lastFound')
+  valid: bool('lastFound')
+
+  scanner: null
+
+  cameras: null
+  currentCamera: null
+  flip: false
 
 
-  setup: (->
-
-    canvas = @.$('#qr-canvas')[0]
-    video  = @.$('#camera-video')[0]
-
-    ctx = canvas.getContext('2d')
-
-    qrcode.callback = (data) =>
-      try
-        if(data)
-          Ember.Logger.info('== Barcode Scanner: ', data)
-
-          if @get('stopOnFound')
-            @disableVideoCapture()
-
-          @set('lastFound', data)
-          @sendAction('on-valid-code', data)
-      catch e
-        Ember.Logger.error e
+  didInsertElement: ->
+    @_super(arguments...)
+    @initScanner.perform()
 
 
-
-    if gum = @getUserMedia()
-
-      @setProperties(
-        video: video
-        canvas: canvas
-        ctx: ctx
-
-        gum: gum
-        hasEnumDevices: (typeof navigator.mediaDevices != "undefined" && navigator.mediaDevices != null) && navigator.mediaDevices.enumerateDevices
-        hasMediaStreamTrackSources: (typeof MediaStreamTrack != "undefined" && MediaStreamTrack != null) && MediaStreamTrack.getSources
-      )
-
-      if @get('autostart')
-        Ember.run.scheduleOnce('afterRender', this, ->
-          @enableVideoCapture()
-        )
-
-  # changeme? different callback?
-  ).on('didInsertElement')
+  willDestroyElement: ->
+    @_super(arguments...)
+    @cleanupScanner.perform()
 
 
-  teardown: (->
-    console.debug('+ tearing scanner down')
-    if scheduler = @get('scheduler')
-      scheduler.stop()
-    @disableVideoCapture()
-  ).on('willDestroyElement')
-
-  #
-  # (kind of) portable getUserMedia
-  #
-  getUserMedia: ->
-    gum = navigator.getUserMedia || navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia || navigator.msGetUserMedia
-
-    unless gum
-      @set('userMediaFailed', true)
-    gum
+  multipleSources: ( ->
+    @cameras?.length > 1
+  ).property('cameras.[]')
 
 
-  #
-  # prepares the destination canvas
-  #
-  prepareCanvas: ->
-    v = @getProperties('video', 'canvas', 'ctx')
-    $video = $(v.video)
-    width = $video.width()
-    height = $video.height()
+  defaultCamera: ( ->
 
-    v.canvas.width = width
-    v.canvas.height = height
-
-    v.ctx.clearRect(0, 0, width, height)
-    @setProperties(width: width, height: height)
+    @cameras.firstObject
+  ).property('cameras.[]')
 
 
-  #
-  # mediastream has changed
-  #
-  changedHasEnumDevices: (->
-    mediaSource = null
-    hasEnumDevices = @get('hasEnumDevices')
+  initScanner: task(->
 
-
-    self = @
-
-    if(hasEnumDevices)
-      navigator.mediaDevices.enumerateDevices().then((devices) =>
-        #console.error "devs: ", devices
-        # TODO, there seems not to be any way to select an environment facing source? wtf?
-      )
-
-  ).observes('hasEnumDevices')
-
-
-
-  #
-  # mediastream has changed
-  #
-  changedHasMediaStreamTrack: (->
-    mediaSource = null
-    hasSources = @get('hasMediaStreamTrackSources') && !@get('hasEnumDevices')
-
-    self = @
-
-    if (hasSources)
-      MediaStreamTrack.getSources( (sources) ->
-        sources.forEach( (source) ->
-          if(source.kind == 'video' && source.facing == 'environment')
-              mediaSource = source.id
-        )
-
-        self.set('mediaSource', mediaSource)
-      )
-  ).observes('hasMediaStreamTrackSources')
-
-
-  #
-  # start scheduling decoder
-  #
-  startScheduler: ->
-    @set('lastFound', null)
-    @cleanUpQR()
-    @get('scheduler').schedule( =>
-      @captureQR()
+    scanner = new Instascan.Scanner(
+      continuos: true
+      mirror: false
+      video: document.getElementById('camera-video')
     )
 
-  #
-  # stop scheduling
-  #
-  stopScheduler: ->
-    #
-    # Not sure why it is necessary to delay the stop, just stopping caused the timer to
-    # reschedule when a valid code was scanned
-    #
-    Ember.run.later(this, (->
-      @get('scheduler').stop()
-    ), 100)
+    scanner.addListener('scan', (content) =>
+      console.log "[scanner] data: ", content
+      @validData(content)
+    )
 
-  #
-  #
-  #
-  scanningChanged: (->
-    scanning = @get('scanning')
-    if scanning
-      @startScheduler()
-    else
-      @stopScheduler()
-  ).observes('scanning')
+    @set('scanner', scanner)
 
 
-  #
-  #
+    yield @detectCameras.perform()
 
-  enableVideoCapture: ->
-    # platform doesn't support user media
-    return if @get('userMediaFailed')
-
-    @set('mediaError', false)
-    @prepareCanvas()
-
-    props = @getProperties('width', 'height', 'video', 'canvas', 'ctx', 'gum', 'hasMediaStreamTrackSources')
-    video = props.video
-
-    gumCfg = {
-      video: true
-      audio: false
-    }
-
-    if props.hasMediaStreamTrackSources
-      gumCfg.video = {
-        optional: [{
-          sourceId: @get('mediaSource')
-        }]
-      }
-
-    self = @
-    usermedia = (stream) =>
-      @set('stream', stream)
-
-      if ((typeof MediaStream != "undefined" && MediaStream != null) && stream instanceof MediaStream)
-        video.srcObject = stream
-        video.mozSrcObject = stream
-        play = video.play()
-
-        if play != undefined
-          play.then( ->
-            self.set('scanning', true)
-          ).catch( (e) ->
-            Ember.Logger.error('Scanner: play failed: ', e)
-          )
-        else
-          @set('scanning', true)
-      else
-        vendorURL = window.URL || window.webkitURL
-        video.src = if vendorURL
-          vendorURL.createObjectURL(stream)
-        else
-          stream
-        @set('scanning', true)
+    if @get('autostart') && !isEmpty(@cameras)
+      yield @enableVideoCapture.perform()
+  ).drop()
 
 
-      video.onerror = (err) =>
-        #@disableVideoCapture()
-        Ember.Logger.error('Scanner: onerror')
-        track = stream.getVideoTracks()[0]
-        track.stop() if track
-        @set('scanning', false)
-        @sendAction('on-media-error', err)
+  changeSource: task((source) ->
+
+    yield @stopScanner.perform()
+    unless @scanning
+      yield @startScanner.perform(source)
+  )
+
+
+  enableVideoCapture: task( ->
+    if !isEmpty(@cameras)
+      @setProperties
+        currentCamera: @defaultCamera
+      yield @startScanner.perform(@currentCamera)
+  ).drop()
 
 
 
-    error = (err) =>
-      Ember.Logger.error("Scanner: Get UM: ", err)
-      @set('mediaError', true)
-      @sendAction('on-media-error', err)
+  cleanupScanner: task( ->
+    yield @stopScanner.perform()
 
-    props.gum.call(navigator, gumCfg, usermedia, error)
-
-  disableVideoCapture: ->
-    stream = @get('stream')
-    video = @get('video')
-
-    if stream
-      video.pause()
-      track = stream.getVideoTracks()[0]
-      track.stop() if track
-      @set('scanning', false)
+  ).drop()
 
 
 
-  cleanUpQR: ->
-    ctx = @get('ctx')
-    canvas = @get('canvas')
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+  detectCameras: task( ->
+    try
+      cameras = yield Instascan.Camera.getCameras()
+      console.debug cameras
+      @set('cameras', cameras)
+    catch error
+      console.error "[scanner] detect error: ", error
+      @set('userMediaFailed', true)
+  )
 
-  captureQR: ->
-    video = @get('video')
-    canvas = @get('canvas')
-    ctx = @get('ctx')
 
-    #ctx.fillRect(0, 0, canvas.width, canvas.height)
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+  startScanner: task((camera) ->
+
+    return if isEmpty(@cameras)
+
+    camera ||= @currentCamera || @defaultCamera
+    return unless camera
+
+    console.log('[scanner] start on: ', camera)
+    @setProperties
+      currentCamera: camera
+      mediaError: false
 
     try
-      qrcode.decode()
-    catch e
+      yield @scanner.start(camera)
+      console.log('camera started')
+      @set('scanning', true)
+    catch error
+      console.error "[scanner] start error: ", error
+      @set('mediaError', true)
+  ).drop()
+
+  stopScanner: task( ->
+
+    try
+      yield @scanner.stop()
+      console.debug('[scanner] camera stopped')
+      @set('scanning', false) unless @isDestroyed
+    catch error
+      console.error "[scanner] stop error: ", error
+
+  ).drop()
+
+
+  getNextSource: ( ->
+    return @defaultCamera if (!@multipleSources || isBlank(@currentCamera))
+    console.error "HERE", @multipleSources, @currentCamera
+
+    cameraIndex = @cameras.indexOf(@currentCamera)
+    console.error "index", cameraIndex
+
+    cameraIndex += 1
+    if cameraIndex > (@cameras.length - 1)
+      cameraIndex = 0
+
+    console.error 'new', cameraIndex, @cameras[cameraIndex]
+    @cameras[cameraIndex]
+
+  )
+
+
+  validData: (data) ->
+    @set('lastFound', data)
+    @get('on-data')(data, this) if @get('on-data')
+
+    if @stopOnFound
+      @stopScanner.perform().then(=>
+        @get('on-valid-code')(data, this) if @get('on-valid-code')
+        @get('on-dismiss')(data) if @get('on-dismiss')
+      )
+
+
 
 
   actions:
     stopScan: ->
-      @disableVideoCapture()
+      @stopScanner.perform()
 
     startScan: ->
-      @enableVideoCapture()
+      @startScanner.perform()
+
+    nextSource: ->
+      if (src = @getNextSource())
+        @changeSource.perform(src)
+
+    flipSource: ->
 
 
 
 )
 
-`export default QrScanner`
+export default QrScanner

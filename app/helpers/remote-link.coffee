@@ -1,10 +1,12 @@
-`import Ember from 'ember'`
-`import config from '../config/environment'`
+import Helper from '@ember/component/helper'
+import { inject as service } from '@ember/service'
+
+import config from '../config/environment'
 
 
-RemoteLink = Ember.Helper.extend(
+RemoteLink = Helper.extend(
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   compute: (params, hash) ->
     routeName = params[0]
@@ -12,4 +14,4 @@ RemoteLink = Ember.Helper.extend(
     @get('cm').webUrlFor(routeName, model, hash)
 )
 
-`export default RemoteLink`
+export default RemoteLink

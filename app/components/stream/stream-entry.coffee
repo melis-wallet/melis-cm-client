@@ -1,13 +1,11 @@
-`import Ember from 'ember'`
-`import InViewportMixin from 'ember-in-viewport'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import InViewportMixin from 'ember-in-viewport'
 
-StreamEntry = Ember.Component.extend(InViewportMixin,
+StreamEntry = Component.extend(InViewportMixin,
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
   entry: null
-
-
 )
 
-
-`export default StreamEntry`
+export default StreamEntry

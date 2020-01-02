@@ -1,11 +1,12 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
 
-HistoryDetailRoute = Ember.Route.extend(
+HistoryDetailRoute = Route.extend(
 
-  txsvc: Ember.inject.service('cm-tx-infos')
+  txsvc: service('cm-tx-infos')
 
   model: (params)->
     @get('cm').waitForReady().then( => if (id = params.txinfo_id) then @get('txsvc').findById(id))
 )
 
-`export default HistoryDetailRoute`
+export default HistoryDetailRoute

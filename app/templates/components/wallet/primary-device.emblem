@@ -14,7 +14,7 @@
   p = leaf-note
     h4 = t 'wallet.devices.prchange.title'
     p = t 'wallet.devices.prchange.caption'
-    p = x-range-input min=1 max=maxRecoveryDays step=1 value=recoveryDays
+    p = x-range-input min=1 max=maxRecoveryDays step=1 value=recoveryDays action=(action (mut recoveryDays))
     p = t 'wallet.devices.prchange.days' count=recoveryDays
     = if recoveryConfirm
       p = leaf-button icon='fa fa-check' block=true on-click='updateRecovery'

@@ -21,16 +21,18 @@
                 = if currentAddress.cmo.amount
                   tr
                     td = t 'stream.address.amount'
-                    td = = format-unit currentAddress.cmo.amount account=currentAddress.account
+                    td = format-unit currentAddress.cmo.amount account=currentAddress.account
 
                 = if currentAddress.cmo.meta.info
                   tr
                     td colspan='2': b = currentAddress.cmo.meta.info
                 tr
                   td colspan='2'
-                    span.pull-right
-                      = leaf-clipboard size='xs' block=true outline=true content=currentAddress.cmo.address tooltip=(t 'newaddr.a.clip')
-                    = liquid-bind currentAddress.cmo.address use='toLeft' as |a|
+                    span.pull-right style='padding-left: 3px;'
+                      = if showToggle
+                        = leaf-button on-click='toggleFormat' size='xs' outline=true icon='fa fa-low-vision' style='padding-bottom: 2px;' tooltip=(t 'newaddr.a.alternate') active=isStandard
+                      = leaf-clipboard size='xs' block=true outline=true content=currentAddress.displayAddress tooltip=(t 'newaddr.a.clip')
+                    = liquid-bind currentAddress.displayAddress use='toLeft' as |a|
                       span.code-label = a
         .row
           = if error

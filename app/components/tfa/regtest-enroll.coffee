@@ -1,6 +1,10 @@
-`import Ember from 'ember'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
 Validations = buildValidations(
@@ -10,11 +14,10 @@ Validations = buildValidations(
   ]
 )
 
-RegtestEnroll = Ember.Component.extend(Validations, ValidationsHelper,
+RegtestEnroll = Component.extend(Validations, ValidationsHelper,
 
-
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
+  cm: service('cm-session')
+  aa: service('aa-provider')
 
   enrollError: null
   identifier: null
@@ -32,22 +35,23 @@ RegtestEnroll = Ember.Component.extend(Validations, ValidationsHelper,
         op = (tfa) ->
           api.tfaEnrollStart({name: 'regtest', value: identifier, code: identifier}, tfa.payload)
 
-        @set 'busy', true
-        @set 'btnstate', 'executing'
+        @setProperties
+          busy: true
+          btnstate: 'executing'
 
         @get('aa').tfaAuth(op, "Add Email TFA").then((res) =>
-
           @set('btnstate', 'resolved')
           @sendAction('on-new-complete-enroll')
         ).catch((err) =>
 
-          Ember.Logger.error "error enrolling regtest: ", err
-          @set('btnstate', 'rejected')
-          @set 'enrollError', err.msg
+          Logger.error "error enrolling regtest: ", err
+          @setProperties
+            btnstate: 'rejected'
+            enrollError, err.msg
         ).finally( =>
           @set 'busy', false
         )
 
 )
 
-`export default RegtestEnroll`
+export default RegtestEnroll

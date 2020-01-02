@@ -1,22 +1,28 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-StreamEvt = Ember.Component.extend(
+import { task, taskGroup } from 'ember-concurrency'
 
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
+import Logger from 'melis-cm-svcs/utils/logger'
+
+
+StreamEvt = Component.extend(
+
+  cm: service('cm-session')
+  aa: service('aa-provider')
 
   entry: null
 
   classNames: ['stream-entry', 'row', 'animated', 'fadeIn']
 
-  event: Ember.computed.alias('entry.content')
+  event: alias('entry.content')
 
   label: ( ->
     @get('event.cmo.name') || @get('event.cmo.deviceId')
   ).property('event.cmo.name', 'event.cmo.deviceId')
 
-  canceled: Ember.computed.alias('event.cmo.canceled')
+  canceled: alias('event.cmo.canceled')
 
   cancelRecovery: task( ->
     api = @get('cm.api')
@@ -29,7 +35,7 @@ StreamEvt = Ember.Component.extend(
       res = yield @get('aa').tfaAuth(op, "Reset TFA Devices")
       @set 'doneRequest', true
     catch error
-      Ember.Logger.error('Error resetting TFA', error)
+      Logger.error('Error resetting TFA', error)
       @set 'error', true
   )
 
@@ -39,4 +45,4 @@ StreamEvt = Ember.Component.extend(
 )
 
 
-`export default StreamEvt`
+export default StreamEvt

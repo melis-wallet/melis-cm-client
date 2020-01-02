@@ -1,7 +1,14 @@
-`import Ember from 'ember'`
-`import Configuration from 'melis-cm-svcs/utils/configuration'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { isBlank } from '@ember/utils'
+
+import Configuration from 'melis-cm-svcs/utils/configuration'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 Validations = buildValidations(
   signinPin: [
@@ -10,10 +17,10 @@ Validations = buildValidations(
   ]
 )
 
-SignInWidget = Ember.Component.extend(Validations, ValidationsHelper,
+SignInWidget = Component.extend(Validations, ValidationsHelper,
 
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
 
   signingIn: false
   signInError: null
@@ -22,7 +29,7 @@ SignInWidget = Ember.Component.extend(Validations, ValidationsHelper,
 
   tryLastAttempt: false
 
-  ready: Ember.computed.alias('cm.ready')
+  ready: alias('cm.ready')
 
   setup: (->
     @set 'pin', ( Configuration.testPin )
@@ -63,7 +70,7 @@ SignInWidget = Ember.Component.extend(Validations, ValidationsHelper,
 
         cm.deviceGetPassword(pin).then((res) =>
 
-          if Ember.isBlank(res)
+          if isBlank(res)
             @set 'pin', null
           else if res.password
             cm.walletReOpen(pin)
@@ -75,11 +82,11 @@ SignInWidget = Ember.Component.extend(Validations, ValidationsHelper,
             @set 'signInError', 'Invalid Device'
             @set 'invalidDevice', true
 
-          Ember.Logger.error err
+          Logger.error err
         ).finally( =>
           @set 'signingIn', false
         )
 
 )
 
-`export default SignInWidget`
+export default SignInWidget

@@ -1,7 +1,7 @@
-`import Ember from 'ember'`
-`import InViewportMixin from 'ember-in-viewport'`
+import Component from '@ember/component'
+import InViewportMixin from 'ember-in-viewport'
 
-ScrollerGuard = Ember.Component.extend(InViewportMixin,
+ScrollerGuard = Component.extend(InViewportMixin,
 
   didEnterViewport: ->
     @sendAction('on-enter')
@@ -13,8 +13,6 @@ ScrollerGuard = Ember.Component.extend(InViewportMixin,
   setup: ( ->
     @set 'viewportSpy', true
   ).on('didInsertElement')
-
 )
 
-
-`export default ScrollerGuard`
+export default ScrollerGuard

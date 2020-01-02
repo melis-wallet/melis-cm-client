@@ -1,10 +1,10 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
 
-ProfileRoute = Ember.Route.extend(
 
+ProfileRoute = Route.extend(
 
-  cm: Ember.inject.service('cm-session')
-
+  cm: service('cm-session')
 
   model: (params) ->
 
@@ -14,4 +14,4 @@ ProfileRoute = Ember.Route.extend(
     )
 )
 
-`export default ProfileRoute`
+export default ProfileRoute

@@ -1,8 +1,6 @@
-`import Ember from 'ember'`
-`import { mergedProperty } from 'melis-cm-svcs/utils/misc'`
+import Controller from '@ember/controller'
 
-MainAddressDtController = Ember.Controller.extend(
-
+MainAddressDtController = Controller.extend(
 
   txInfos: null
 
@@ -13,4 +11,4 @@ MainAddressDtController = Ember.Controller.extend(
 
 )
 
-`export default MainAddressDtController`
+export default MainAddressDtController

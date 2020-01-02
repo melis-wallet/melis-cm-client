@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
-`import { task } from 'ember-concurrency'`
-`import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'`
+import Component from '@ember/component'
 
-ExcitedState = Ember.Component.extend(
+import { task } from 'ember-concurrency'
+import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'
+
+ExcitedState = Component.extend(
 
   tagName: 'span'
   excited: false
@@ -30,10 +31,7 @@ ExcitedState = Ember.Component.extend(
     excite: ->
       @get('excite').perform()
 
-
-
-
 )
 
 
-`export default ExcitedState`
+export default ExcitedState

@@ -1,7 +1,14 @@
-`import Ember from 'ember'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, readOnly } from '@ember/object/computed'
+import { isEmpty, isBlank } from '@ember/utils'
+import { get, set, getProperties } from '@ember/object'
+
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
 Validations = buildValidations(
@@ -11,16 +18,16 @@ Validations = buildValidations(
   ]
 )
 
-CmSelector = Ember.Component.extend(Validations, ValidationsHelper,
+CmSelector = Component.extend(Validations, ValidationsHelper,
 
-  cm: Ember.inject.service('cm-session')
-  accounts: Ember.computed.alias('cm.accounts')
+  cm: service('cm-session')
+  accounts: alias('cm.accounts')
 
 
   apiOps: taskGroup().drop()
 
 
-  formError: Ember.computed.readOnly('validations.attrs.newValue.message')
+  formError: readOnly('validations.attrs.newValue.message')
   infoError: null
 
   accountInfo: null
@@ -36,12 +43,12 @@ CmSelector = Ember.Component.extend(Validations, ValidationsHelper,
 
   lookupInfo: task( ->
     @set('lookupError', false)
-    if !Ember.isBlank(id = @get('newValue'))
+    if !isBlank(id = @get('newValue'))
       api = @get('cm.api')
       try
         res = yield api.accountGetPublicInfo(name: id)
-        Ember.Logger.debug('found:', res)
-        if !(coin = @get('coin')) || (Ember.get(res, 'coin') == coin)
+        Logger.debug('found:', res)
+        if !(coin = @get('coin')) || (get(res, 'coin') == coin)
           @set('accountInfo', res)
 
       catch err
@@ -51,7 +58,7 @@ CmSelector = Ember.Component.extend(Validations, ValidationsHelper,
             lookupError: 'Alias not found'
           @set('accountInfo', null)
         else
-          Ember.Logger.error "Error: ", err
+          Logger.error "Error: ", err
           @setProperties
             accountInfo: null
             lookupError: 'Generic error'
@@ -67,7 +74,7 @@ CmSelector = Ember.Component.extend(Validations, ValidationsHelper,
 
     confirmInfo: ->
       if info = @get('accountInfo')
-        @sendAction('on-valid-value', Ember.getProperties(info, 'alias', 'pubId'))
+        @sendAction('on-valid-value', getProperties(info, 'alias', 'pubId'))
 
     deleteValue: ->
       @sendAction('on-valid-value', null)
@@ -75,6 +82,6 @@ CmSelector = Ember.Component.extend(Validations, ValidationsHelper,
 
 )
 
-`export default CmSelector`
+export default CmSelector
 
 

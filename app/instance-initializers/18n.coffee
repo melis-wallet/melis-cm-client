@@ -10,4 +10,4 @@ I18nInitializer = {
       session.set('locale', session.get('defaultLocale'))
 }
 
-`export default I18nInitializer`
+export default I18nInitializer

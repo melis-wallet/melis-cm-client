@@ -1,5 +1,5 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
 
-MainAddressController = Ember.Controller.extend()
+MainAddressController = Controller.extend()
 
-`export default MainAddressController`
+export default MainAddressController

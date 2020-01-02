@@ -1,8 +1,11 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
 
-WalletSignInRoute = Ember.Route.extend(
+import Logger from 'melis-cm-svcs/utils/logger'
 
-  credentials: Ember.inject.service('cm-credentials')
+WalletSignInRoute = Route.extend(
+
+  credentials: service('cm-credentials')
 
   beforeModel: (transition) ->
     superResult = @_super(transition)
@@ -24,7 +27,7 @@ WalletSignInRoute = Ember.Route.extend(
 
   actions:
     successSignIn: ->
-      Ember.Logger.debug '= success sign-in'
+      Logger.debug '= success sign-in'
       if (transition = @get('cm.attemptedTransition'))
         transition.retry();
         @set('cm.attemptedTransition', null)

@@ -1,15 +1,19 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-JoinController = Ember.Controller.extend(
+import Logger from 'melis-cm-svcs/utils/logger'
 
-  credentials: Ember.inject.service('cm-credentials')
+JoinController = Controller.extend(
+
+  credentials: service('cm-credentials')
 
   error: null
   success: null
 
   enrolling: false
 
-  joinCode: Ember.computed.alias('model.code')
+  joinCode: alias('model.code')
 
   actions:
     confirmJoin: ->
@@ -42,10 +46,10 @@ JoinController = Ember.Controller.extend(
         ).then((res) =>
           @set 'success',  i18n.t('public.join.success')
         ).catch( (err) ->
-          Ember.Logger.error "enroll failed: ", err
+          Logger.error "enroll failed: ", err
           @set 'error', err.msg
         )
 
 )
 
-`export default JoinController`
+export default JoinController

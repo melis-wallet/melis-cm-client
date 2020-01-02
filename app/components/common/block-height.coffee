@@ -1,10 +1,14 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { get, set } from '@ember/object'
 
-BlockHeight = Ember.Component.extend(
+BlockHeight = Component.extend(
 
-  coinsvc: Ember.inject.service('cm-coin')
+  coinsvc: service('cm-coin')
+  cm: service('cm-session')
 
-  value: Ember.computed.alias('etx.blockMature')
+  value: alias('etx.blockMature')
   threshold: 6
   cutoff: 9
 
@@ -19,21 +23,20 @@ BlockHeight = Ember.Component.extend(
   account: null
 
   etx: ( ->
-    if (tx = @get('tx')) && (cmo = Ember.get(tx, 'cmo')) then cmo else tx
+    if (tx = @get('tx')) && (cmo = get(tx, 'cmo')) then cmo else tx
   ).property('tx', 'tx.cmo')
 
   coin: ( ->
     account = if (a = @get('tx.account')) then a else @get('account')
     account?.get('coin')
-  ).property('tx', 'account')
+  ).property('tx.account', 'account')
 
   unit: ( ->
     @get('coinsvc.coins')?.findBy('unit', @get('coin'))
   ).property('coin')
 
-  block: Ember.computed.alias('unit.block')
+  block: alias('unit.block')
 
-  cm:  Ember.inject.service('cm-session')
 
   hide: false
 
@@ -61,4 +64,4 @@ BlockHeight = Ember.Component.extend(
 
 )
 
-`export default BlockHeight`
+export default BlockHeight

@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
+import Helper from '@ember/component/helper'
+import { inject as service } from '@ember/service'
 
-CoSigner = Ember.Helper.extend(
+CoSigner = Helper.extend(
 
-  cm:  Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   compute: (params, hash) ->
     id = params[0]
@@ -13,4 +14,4 @@ CoSigner = Ember.Helper.extend(
     cA.cosignerName(id, {you: hash.you, idIsFine: true})
 )
 
-`export default CoSigner`
+export default CoSigner

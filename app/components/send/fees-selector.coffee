@@ -1,7 +1,8 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { get } from '@ember/object'
+import { isEmpty } from '@ember/utils'
 
-
-FeesSelector = Ember.Component.extend(
+FeesSelector = Component.extend(
 
   greaterThan: 0
 
@@ -24,7 +25,7 @@ FeesSelector = Ember.Component.extend(
   ).property('feesOptions', 'feesMult')
 
   checkSelection: (->
-    if Ember.isEmpty(@get('feesOption'))
+    if isEmpty(@get('feesOption'))
       if (mult = @get('feesOptions.firstObject.value'))
         @set('feesMult', mult)
         @sendAction('onchange', mult)
@@ -32,12 +33,11 @@ FeesSelector = Ember.Component.extend(
 
   actions:
     setFees: (option) ->
-      if (v = Ember.get(option, 'value'))
+      if (v = get(option, 'value'))
         @set('feesMult', v)
         @sendAction('onchange', v, @get('allFeesOptions').findBy('value', v))
-
 )
 
-`export default FeesSelector`
+export default FeesSelector
 
 

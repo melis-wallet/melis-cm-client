@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
+import Helper from '@ember/component/helper'
+import { inject as service } from '@ember/service'
 
-TfaDeviceFiter = Ember.Helper.extend(
+TfaDeviceFiter = Helper.extend(
 
-  aa: Ember.inject.service('aa-provider')
+  aa: service('aa-provider')
 
   compute: (params, hash) ->
     driver = params[0]
@@ -10,4 +11,4 @@ TfaDeviceFiter = Ember.Helper.extend(
 
 )
 
-`export default TfaDeviceFiter`
+export default TfaDeviceFiter

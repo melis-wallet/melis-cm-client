@@ -1,12 +1,19 @@
-`import Ember from 'ember'`
-`import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { get, set } from '@ember/object'
 
-AdvancedRecp = Ember.Component.extend(ModelFactory,
+import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'
 
-  cm: Ember.inject.service('cm-session')
-  currencySvc: Ember.inject.service('cm-currency')
-  scanner: Ember.inject.service('scanner-provider')
-  curr: Ember.inject.service('cm-currency')
+import Logger from 'melis-cm-svcs/utils/logger'
+
+
+AdvancedRecp = Component.extend(ModelFactory,
+
+  cm: service('cm-session')
+  currencySvc: service('cm-currency')
+  scanner: service('scanner-provider')
+  curr: service('cm-currency')
 
   account: null
   recipients: null
@@ -18,7 +25,7 @@ AdvancedRecp = Ember.Component.extend(ModelFactory,
 
   abOpened: false
 
-  currency: Ember.computed.alias('cm.globalCurrency')
+  currency: alias('currencySvc.currency')
   currencies: ( ->
     curr = @get('currency')
     unit = @get('account.subunit.symbol')
@@ -45,20 +52,30 @@ AdvancedRecp = Ember.Component.extend(ModelFactory,
   openScanner: ->
     @get('scanner').independentScan().then((data) =>
       if (addr = @get('scanner').getAddressFromData(data))
-        Ember.set(@get('recipient'), 'type', 'address')
-        Ember.set(@get('recipient'), 'value', addr)
-        if (amount = Ember.get(data, 'queries.amount'))
+        set(@get('recipient'), 'type', 'address')
+        set(@get('recipient'), 'value', addr)
+        if (amount = get(data, 'queries.amount'))
           scaled = @get('curr').scaleBtc(amount * SATOSHI)
-          Ember.set(@get('recipient'), 'amount', scaled)
+          set(@get('recipient'), 'amount', scaled)
     ).catch((err) ->
-      Ember.Logger.error "Scanner aborted", err
+      Logger.error "Scanner aborted", err
     )
 
+  canToggleEntireBalance: ( ->
+    @get('recipient.entireBalance') || @get('recipient.allowUnconfirmed') || !@get('account.balance.amUnconfirmed')
+  ).property('account.balance.amUnconfirmed', 'recipient.entireBalance', 'recipient.allowUnconfirmed')
+
+
+  watchUnconfirmed: ( ->
+    @set('recipient.allowUnconfirmed', @get('parent.allowUnconfirmed'))
+    @set('recipient.entireBalance', false)
+  ).observes('parent.allowUnconfirmed')
 
   reset: ->
     @setProperties
       recipient: @createSimpleModel('payment-recipient', account: @get('account'))
       abOpened: false
+    @set('recipient.allowUnconfirmed', @get('parent.allowUnconfirmed'))
 
   actions:
     submitRecipient: ->
@@ -83,18 +100,18 @@ AdvancedRecp = Ember.Component.extend(ModelFactory,
       @set 'abOpened', false
 
     addRecipientFromAb: (type, value, entry) ->
-      Ember.Logger.info "Adding recp: ", {type: type, value: value, entry: entry}
+      Logger.info "Adding recp: ", {type: type, value: value, entry: entry}
       @set 'abOpened', false
       if (r = @get('recipient'))
         # do not coalesce into setProperties, setting type clears value
         r.set('type', type)
         r.set('value', value)
-        if name = Ember.get(entry, 'meta.name')
+        if name = get(entry, 'meta.name')
           r.set('info', "[#{name}]")
-        if (alias = Ember.get(entry, 'meta.alias'))
-          r.setMeta('toAlias', alias)
+        if (cmalias = get(entry, 'meta.alias'))
+          r.setMeta('toAlias', cmalias)
 
 
 )
 
-`export default AdvancedRecp`
+export default AdvancedRecp

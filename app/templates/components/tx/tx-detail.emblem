@@ -17,15 +17,20 @@
       .text-lg.text-default
         strong = format-unit tx.cmo.amount compact=false abs=true account=tx.account
         span.text-bg.text-slim.lowercase = unit-id account=tx.account
-    = else
+    = else 
       .text-xlg.text-default
         strong = format-unit tx.cmo.amount compact=false abs=true fullPrecision=true account=tx.account
         span.text-lg.text-slim.lowercase = unit-id account=tx.account
       .text-lg.text-default
         strong = to-currency tx.cmo.amount compact=false abs=true account=tx.account
-        span.text-bg.text-slim.lowercase = cm.globalCurrency
-      .small.lowercase.light-gray
-        = t 'tx.detail.orig-currency' amount=(format-money  tx.cmo.meta.currencyData.amount) unit=tx.cmo.meta.currencyData.currency when=(live-moment-from-now tx.time)
+        span.text-bg.text-slim.lowercase = currency-unit
+      = if tx.cmo.meta.currencyData.amount
+        .small.lowercase.light-gray
+          = t 'tx.detail.orig-currency' amount=(format-money  tx.cmo.meta.currencyData.amount) unit=tx.cmo.meta.currencyData.currency when=(live-moment-from-now tx.time)
+      = else if tx.cmo.meta.currencyData.usdVal
+        .small.lowercase.light-gray
+          = t 'tx.detail.orig-currency' amount=(to-currency-from-usd tx.cmo.amount tx.cmo.meta.currencyData.usdVal account=tx.account) unit=(currency-unit) when=(live-moment-from-now tx.time)
+
 
 .row
   .col-md-3

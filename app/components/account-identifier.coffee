@@ -1,11 +1,12 @@
-import Ember from 'ember'
+import Component from '@ember/component'
+import { alias } from '@ember/object/computed'
 
-AccountIdentifier = Ember.Component.extend(
+AccountIdentifier = Component.extend(
 
   tagName: null
 
   account: null
-  icon: Ember.computed.alias('account.cmo.meta.icon')
+  icon: alias('account.cmo.meta.icon')
 
 
 )

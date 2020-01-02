@@ -1,7 +1,10 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { notEmpty } from '@ember/object/computed'
+import { isNone } from '@ember/utils'
 
-MainReceiveController = Ember.Controller.extend(
-  service: Ember.inject.service('cm-address-provider')
+MainReceiveController = Controller.extend(
+  service: service('cm-address-provider')
 
   # Query params for redrect payment
   queryParams: ['active']
@@ -10,10 +13,10 @@ MainReceiveController = Ember.Controller.extend(
   activeCode: null
 
 
-  showActive: Ember.computed.notEmpty('activeCode')
+  showActive: notEmpty('activeCode')
 
   showCurrent: ( ->
-    Ember.isNone(@get('activeCode')) && @get('currentCode')
+    isNone(@get('activeCode')) && @get('currentCode')
   ).property('activeCode', 'currentCode')
 
 
@@ -26,8 +29,6 @@ MainReceiveController = Ember.Controller.extend(
 
     setActive: (addr) ->
       @set('activeAddress', addr)
-
-
 )
 
-`export default MainReceiveController`
+export default MainReceiveController

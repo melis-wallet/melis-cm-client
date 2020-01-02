@@ -1,10 +1,8 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
 
-NewAbsController = Ember.Controller.extend(
+NewAbsController = Controller.extend(
 
   queryParams: ['newaddr']
-
-
 )
 
-`export default NewAbsController`
+export default NewAbsController

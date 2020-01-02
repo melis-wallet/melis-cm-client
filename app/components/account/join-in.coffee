@@ -1,9 +1,12 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { get } from '@ember/object'
 
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 Validations = buildValidations(
   joinCode: [
@@ -12,9 +15,9 @@ Validations = buildValidations(
   ]
 )
 
-JoinIn = Ember.Component.extend(Validations, ValidationsHelper,
+JoinIn = Component.extend(Validations, ValidationsHelper,
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   joinCode: null
   joinError: null
@@ -35,16 +38,16 @@ JoinIn = Ember.Component.extend(Validations, ValidationsHelper,
     try
       accountInfo = yield  @get('cm.api').joinCodeGetInfo(code)
       @set('accountInfo', accountInfo)
-      Ember.Logger.debug accountInfo
+      Logger.debug accountInfo
 
-      if (name = Ember.get(accountInfo, 'joinCode.masterPubMeta.name'))
+      if (name = get(accountInfo, 'joinCode.masterPubMeta.name'))
         @set('accountName', name)
       else
         @set('accountName', @get('i18n').t('account.multi.join.default-name').toString())
 
 
     catch err
-      Ember.Logger.error err
+      Logger.error err
       if err.ex == 'CmInvalidJoinCodeException'
         @set('invalidCode', true)
       else
@@ -68,7 +71,7 @@ JoinIn = Ember.Component.extend(Validations, ValidationsHelper,
       @sendAction('on-done', account)
 
     catch err
-      Ember.Logger.error err
+      Logger.error err
       if err.ex == 'CmInvalidJoinCodeException'
         @set('invalidCode', true)
       else
@@ -90,8 +93,6 @@ JoinIn = Ember.Component.extend(Validations, ValidationsHelper,
       code = @get('accountInfo.joinCode.code')
       if code
         @get('doJoin').perform(code)
-
-
-
 )
-`export default JoinIn`
+
+export default JoinIn

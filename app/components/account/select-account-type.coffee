@@ -1,5 +1,5 @@
-`import Ember from 'ember'`
-
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
 ACCOUNT_TYPES = [
   { id: C.TYPE_PLAIN_HD, label: 'plain', canCreate: true }
@@ -11,13 +11,13 @@ ACCOUNT_TYPES = [
 ]
 
 
-SelectAccountType = Ember.Component.extend(
+SelectAccountType = Component.extend(
 
-  acct: Ember.inject.service('cm-account-info')
+  acct: service('cm-account-info')
 
   accountType: null
   accountTypes: ACCOUNT_TYPES.filterBy('canCreate', true)
 
 )
 
-`export default SelectAccountType`
+export default SelectAccountType

@@ -42,8 +42,8 @@ export default {
   },
   "validations": {
     "insfunds": "Fondi insufficienti.",
-    "notbitcoin": "Non è un indirizzo bitcoin valido",
-    "not-bitcoin": "Non è un indirizzo bitcoin",
+    "notbitcoin": "Non è un indirizzo valido per la coin",
+    "not-coin": "Non è un indirizzo della coin",
     "not-pubid": "Non è un public id Melis",
     "not-pubid-a": "Non è un public id o un alias Melis",
     "duplicate-alias": "Questo alias non è disponibile",
@@ -69,12 +69,26 @@ export default {
   },
   "coins": {
     "unit": {
+      "nocoin": "Nessuna Coin",
+      "allcoins": "Tutte le Coin",
       "btc": "Bitcoin",
       "bch": "Bitcoin Cash",
+      "ltc": "Litecoin",
+      "grs": "Groestlcoin",
+      "bsv": "Satoshi Vision",
+      "doge": "Doge",
       "tbtc": "Testnet Bitcoin",
       "tbch": "Testnet Bitcoin Cash",
+      "tltc": "Testnet Litecoin",
+      "tgrs": "Testnet Groestlcoin",
+      "tbsv": "Testnet Satoshi Vision",
+      "tdog": "Testnet Doge",
       "rbtc": "Regtest Bitcoin",
-      "rbch": "Regtest Bitcoin Cash"
+      "rbch": "Regtest Bitcoin Cash",
+      "rltc": "Regtest Litecoin",
+      "rgrs": "Regtest Groestlcoin",
+      "rbsv": "Regtest Satoshi Vision",
+      "rdog": "Regtest Doge"
     }
   },
   "acct": {
@@ -159,7 +173,7 @@ export default {
   "ab": {
     "empty": {
       "title": "La rubrica è vuota",
-      "caption": "Utilizza la rubrica per registrare altri utenti Melis o indirizzi bitcoin"
+      "caption": "Utilizza la rubrica per registrare altri utenti Melis o normali indirizzi"
     },
     "nomatch": {
       "title": "La ricerca non ha dato risultati",
@@ -167,7 +181,7 @@ export default {
     },
     "types": {
       "cm": "Un altro utente Melis",
-      "address": "Un indirizzo Bitcoin generico"
+      "address": "Un indirizzo Coin generico"
     },
     "table": {
       "pubid": "Identità pubblica:",
@@ -177,7 +191,8 @@ export default {
     },
     "form": {
       "type": {
-        "label": "Tipo di contatto"
+        "label": "Tipo di contatto",
+        "coin": "Coin"
       },
       "name": {
         "label": "Nome",
@@ -189,10 +204,14 @@ export default {
       },
       "address": {
         "label": "Indirizzo",
-        "ph": "Inserisci un indirizzo bitcoin per questo contatto..."
+        "ph": "Inserisci un indirizzo per questo contatto..."
       },
       "labels": {
         "label": "Etichette"
+      },
+      "t": {
+        "melis": "Altro utente Melis",
+        "addr": "Indirizzo Generico"
       }
     },
     "state": {
@@ -206,6 +225,7 @@ export default {
   },
   "account": {
     "secure": "sicuro",
+    "lite": "lite",
     "defaults": {
       "name": "Il mio primo conto"
     },
@@ -227,6 +247,10 @@ export default {
     "maint": {
       "title": "Operazioni di Manutenzione",
       "caption": "Operazioni di manutenzione avanzate per il tuo conto",
+      "lite": {
+        "title": "Lite account",
+        "caption": "Questo è un account lite. Alcune opzioni e funzioni non sono disponibili sugli account lite, oppure vengono eseguite dalla versione lite del wallet."
+      },
       "hide": {
         "title": "Nascondi questo conto",
         "caption": "I conti nascosti scompaiono dal menu su <b>questo</b> dispositivo ma continuano a funzionare normalmente. E' possibile renderli nuovamente visibili in qualunqune momento."
@@ -258,6 +282,11 @@ export default {
           "title": "Cancella conto",
           "caption": "Cancellare un conto lo renderà inaccessibile. <b>Sei sicuro di volere cancellare questo conto?</b>"
         }
+      },
+      "xpub": {
+        "title": "Exporta T/XPUB",
+        "caption": "",
+        "clip": "copia in clipboard"
       }
     },
     "cosigners": {
@@ -302,7 +331,8 @@ export default {
         "joined": "unito",
         "clip": "Copia il codice di adesione negli appunti",
         "incomplete": "In attesa che i cofirmatari aderiscano",
-        "delete": "Cancella questo conto"
+        "delete": "Cancella questo conto",
+        "lite": "Account Lite"
       },
       "join": {
         "code": {
@@ -331,7 +361,7 @@ export default {
       },
       "payto": {
         "title": "URL per i pagamenti pubblici",
-        "caption": "Ricevi pagamenti o donazioni da qualsiasi altro utente Melis o chiunque abbia un wallet bitcoin"
+        "caption": "Ricevi pagamenti o donazioni da qualsiasi altro utente Melis o chiunque abbia un wallet per cryptocurrencies"
       }
     },
     "wizard": {
@@ -346,7 +376,7 @@ export default {
       },
       "t-multi": {
         "title": "Conto Multiutente",
-        "caption": "<b>Un conto Bitcoin avanzato condiviso con altri utenti.</b> I conti condivisi richiedono un numero predefinito di firme da parte dei cofirmatari al fine di autorizzare le operazioni. <i>Durante la definizione del conto deciderai chi sono i cofirmatari e quante sono le firme necessarie."
+        "caption": "<b>Un conto coin avanzato condiviso con altri utenti.</b> I conti condivisi richiedono un numero predefinito di firme da parte dei cofirmatari al fine di autorizzare le operazioni. <i>Durante la definizione del conto deciderai chi sono i cofirmatari e quante sono le firme necessarie."
       },
       "server": {
         "title": "Abilita la protezione del server",
@@ -537,7 +567,7 @@ export default {
       },
       "mnemo": {
         "title": "Mnemonics",
-        "caption": "Inserisci le parole mnemoniche del tuo backup. Se si tratta di un backup criptato verrà richiesta la passphrase per sbloccarlo"
+        "caption": "Inserisci le parole mnemoniche del tuo backup (e premi invio). Se si tratta di un backup criptato verrà richiesta la passphrase per sbloccarlo"
       },
       "or-qr": {
         "title": "Oppure scansiona il codice nella backup card",
@@ -584,7 +614,7 @@ export default {
       },
       "type": {
         "caption": "Digita",
-        "descr": "Selezione un tipo di conto."
+        "descr": "Seleziona un tipo di conto."
       },
       "pin": {
         "caption": "Pin",
@@ -596,6 +626,11 @@ export default {
       }
     },
     "tabspanel": {
+      "coin": {
+        "title": "Coin iniziale",
+        "caption": "Seleziona la <b>coin</b> su cui sarà basato il tuo primo account",
+        "notice": "Potrai creare ulteriori account basati sulla stessa, o altre coin, più tardi."
+      },
       "backup": {
         "title": "Questo dispositivo ha già le credenziali per un wallet",
         "caption": "Se tu sottoscrivi un nuovo wallet perderai le credenziali su questo dispositivo. Se dovrai accedere di nuovo al wallet dovrai utilizzare il backup. Verifica di avere il backup.",
@@ -625,19 +660,19 @@ export default {
     },
     "success": {
       "title": "Sottoscrizione completata",
-      "caption": "Ora puoi accedere al tuo wallet ti consigliamo come prima cosa di fare un backup. Puoi decidere di fare il backup in un secondo momento ma ricordati di farlo prima di iniziare a ricevere bitcoin.",
-      "warning": "Se dimentichi il codice PIN o perdi le credenziali e non disponi di un backup perderai l'accesso al wallet ed ai tuoi bitcoin.",
+      "caption": "Ora puoi accedere al tuo wallet ti consigliamo come prima cosa di fare un backup. Puoi decidere di fare il backup in un secondo momento ma ricordati di farlo alla tua prima transazione in ingresso.",
+      "warning": "Se dimentichi il codice PIN o perdi le credenziali e non disponi di un backup perderai l'accesso al wallet ed a tutte le tue cryptovalute.",
       "backup": "Fai il backup del tuo wallet",
       "skip": "Salta il backup e continua"
     },
     "walletok": {
       "title": "Il tuo wallet è stato creato",
-      "caption": "Alla sottoscrizione si è scelto di non creare un accont. A questo punto è necessario creare il tuo primo conto Bitcoin.",
+      "caption": "Alla sottoscrizione si è scelto di non creare un accont. A questo punto è necessario creare il tuo primo conto.",
       "createacct": "Crea un nuovo conto"
     },
     "complete": {
       "title": "Attenzione: importante",
-      "caption": "Il Bitcoin è una valuta interisecamente crittografica. Se le credenziali del wallet vengono smarrite o sottratte si possono verificare situazioni in cui sia impossibile recuperare i fondi. <b>Esercita la dovuta diligenza, fai i backup e conservali in un luogo sicuro</b>."
+      "caption": "Le coin sono valute interisecamente crittografiche. Se le credenziali del wallet vengono smarrite o sottratte si possono verificare situazioni in cui sia impossibile recuperare i fondi. <b>Esercita la dovuta diligenza, fai i backup e conservali in un luogo sicuro</b>."
     }
   },
   "dash": {
@@ -698,6 +733,7 @@ export default {
   },
   "newaddr": {
     "a": {
+      "alternate": "Altro formato",
       "renew": "Ottieni un nuovo indirizzo",
       "make-active": "Crea una richiesta di pagamento",
       "clip": "Copia negli appunti",
@@ -726,7 +762,7 @@ export default {
       "title": "Richiesta di pagamento",
       "caption": "Questo indirizzo sarà accantonato per una specifica richiesta di pagamento. Quando il pagamento sarà effettuato le informazioni inserite qui saranno associate al pagamento.",
       "type": {
-        "bitcoin": "Indirizzo bitcoin",
+        "bitcoin": "Indirizzo coin",
         "melis": "Melis URL"
       },
       "default-ph": "Richiesta di pagamento"
@@ -754,7 +790,15 @@ export default {
     },
     "txs": {
       "label": "Transazioni ricevute",
-      "none": "Nessuna"
+      "none": "Nessuna",
+      "chain": "Chain",
+      "hdindex": "HD Index",
+      "table": {
+        "txs": "TXs",
+        "amount": "amount",
+        "address": "address",
+        "date": "data"
+      }
     }
   },
   "notif": {
@@ -769,19 +813,22 @@ export default {
       "has-contributed": "{{source}} ha ccontribuito ad un pagamento in sospeso"
     },
     "evt": {
-      "has-joined": "<b>{{subject}}</b> ha aderito con successo al conto ''<span class='text-warning'>{{account}}</span>' {{time}}"
+      "has-joined": "<b>{{subject}}</b> ha aderito con successo al conto ''<span class='text-warning'>{{account}}</span>' {{time}}",
+      "wall": "{{text}}",
+      "wall-title": "Notifica dal servizio"
     }
   },
   "paysend": {
     "tx-done": "Transazione completata con successo.",
+    "tx-success": "Transazione inviata con successo.",
     "sources": {
-      "auto": "Selezione gli input automaticamente"
+      "auto": "Selezione automatica degli input"
     },
     "remainder": {
       "auto": "Gestisci automaticamente il resto"
     },
     "fees": {
-      "auto": "Imposta automaticamente le fees migliori"
+      "auto": "Imposta automaticamente le fees"
     },
     "funds": {
       "title": "Fondi non confermati",
@@ -791,7 +838,7 @@ export default {
     },
     "no-coins": {
       "title": "non hai fondi",
-      "caption": "Questo conto non ha fondi per cui non puoi inviare bitcoin fino a quando non ne avrai."
+      "caption": "Questo conto non ha fondi per cui non puoi inviare ancora nulla."
     },
     "prompts": {
       "prepare": "Prepara un pagamento.",
@@ -852,7 +899,7 @@ export default {
     },
     "form": {
       "a": {
-        "confirm": "Conferma Transaczione",
+        "confirm": "Conferma Transazione",
         "discard": "Cancella Transazione",
         "recpconf": "Conferma Destinatario",
         "recpdisc": "Annulla Destinatario",
@@ -865,7 +912,7 @@ export default {
         "options": "Opzioni"
       },
       "insuff-funds": "Fondi insufficienti.",
-      "not-bitcoin": "Non è un indirizzo bitcoin.",
+      "not-bitcoin": "Non è un indirizzo della coin.",
       "entire-balance": "Tutti i fondi",
       "entire-balance-r": "Tutti i fondi restanti",
       "entire-source": "Tutti gli input",
@@ -904,9 +951,10 @@ export default {
       "unc": "Unconfirmed",
       "rbf": "RBF",
       "fees": "Commissioni",
-      "feesperbyte": "Commissioni per byte: (satoshi)",
+      "feesperbyte": "Commissioni per byte: (satoshi, {{unit}})",
       "fees-provider": "Ottenute da {{provider}}",
       "feesrefresh": "Aggiorna",
+      "feesnr": "Stima non disponibile",
       "entire-sources": "Selected inputs",
       "entire-sources-r": "Remaining inputs",
       "feesrefresg": "refresh"
@@ -949,7 +997,7 @@ export default {
     },
     "payto": {
       "app": "PAGA A",
-      "caption": "Invia Bitcoin <br>facilmente<br> ad un altro conto Melis",
+      "caption": "Invia coin <br>facilmente<br> ad un altro conto Melis",
       "total": "Totale ({{unit}}):",
       "showcode": "Mostra l'indirizzo di pagamento",
       "error": {
@@ -969,11 +1017,14 @@ export default {
       "sign": {
         "title": "Accedi at tuo wallet",
         "caption": "In questo dispositivo ci sono le tue credenziali Melis salvate. Puoi accedere ora ed effettuare rapidamente il pagamento."
+      },
+      "curr": {
+        "enter": "Inserisci il valore in valuta"
       }
     },
     "join": {
       "app": "ADERISCI",
-      "caption": "Invia Bitcoin <br>facilmente<br> ad un conto Melis",
+      "caption": "Invia coin <br>facilmente<br> ad un conto Melis",
       "explain": {
         "title": "Ti è stato chiesto di aderire ad un conto condiviso",
         "caption": "Accedi al tuo wallet per creare automaticamente un nuovo conto multiutente con l'utente che ti ha dato il codice d'adesione"
@@ -995,7 +1046,7 @@ export default {
     },
     "profile": {
       "app": "PROFILO",
-      "caption": "Invia Bitcoin <br>facilmente<br>ad un conto Melis",
+      "caption": "Invia coin <br>facilmente<br>ad un conto Melis",
       "no-profile": "questo conto esiste ma non ha rilasciato nessun profilo pubblico."
     },
     "error": {
@@ -1013,7 +1064,20 @@ export default {
         "no-perms": "<b>Melis non ha potuto accedere alla videcamera per acquisire un'immagine.</b> Verifica di avere fornito i permessi necessari. Se così fosse potresti avere una videocamera o una piattaforma non compatibile"
       },
       "accept": "ok",
-      "dismiss": "Respinto"
+      "dismiss": "Respinto",
+      "scan": "Scan",
+      "upload": "Upload"
+    }
+  },
+  "qrupload": {
+    "action": {
+      "drag": "Trascina un immagie di un codice QR per acquisirlo",
+      "valid": "Deposita l'immagine in questo riquadro",
+      "invalid": "Formato non supporttato"
+    },
+    "btn": {
+      "cancel": "Cancella indirizzo",
+      "ok": "Conferma indirizzo"
     }
   },
   "quicksend": {
@@ -1093,9 +1157,14 @@ export default {
         "one": "C'è un <b>nuovo evento</b>.",
         "other": "Ci sono <b>{{count}} nuovi eventi</b>."
       },
-      "show": "Mostra."
+      "show": "Mostra.",
+      "outdated": {
+        "title": "Ci potrebbe essere una nuova versione",
+        "caption": "Potrebbe essere disponibile una nuova versione di questa applicazione. A seconda della piattaforma puoi controllare se sono disponibili update, o visitare il sito."
+      }
     },
     "evt": {
+      "wall": "Notifica dal servizio",
       "has-joined": "<b>{{subject}}</b> ha aderito con successo al conto ''<span class='text-warning'>{{account}}</span>' {{time}}",
       "tfad": {
         "title": "E' stato richiesto il reset dell'autenticazione a due fattori!",
@@ -1201,7 +1270,8 @@ export default {
     "actions": {
       "token-sent": "Token Inviato.",
       "enable": "Abilita",
-      "enroll": "Aggiungi"
+      "enroll": "Aggiungi",
+      "error": "Si è verificare un errore"
     },
     "devices": {
       "email": "Email",
@@ -1312,7 +1382,11 @@ export default {
       "wrong": "PIN errato",
       "left": "ancora {{count}} tentativi",
       "ph": "Inserisci il tuo PIN",
-      "last-attempt": "Ultimo tentativo!"
+      "last-attempt": "Ultimo tentativo!",
+      "nocreds": {
+        "title": "Credenziali assenti sul dispositivo",
+        "caption": "Per motivi di sicurezza il dispositivo è stato invalidato e le credenziali rimosse."
+      }
     }
   },
   "toasts": {
@@ -1501,7 +1575,7 @@ export default {
       },
       "transaction": {
         "title": "Conferma della transazione",
-        "caption": "La rotazione delle transazioni non spese è soggetta ad un costo da parte della rete Bitcoin, in quanto è una normale transazione:",
+        "caption": "La rotazione delle transazioni non spese è soggetta ad un costo da parte della rete della coin, in quanto è una normale transazione:",
         "fees": "Commissioni:",
         "error": "Si è verificato un errore durante la transazione."
       },
@@ -1523,6 +1597,10 @@ export default {
         "3mo": "3 mesi",
         "6mo": "6 mesi",
         "disabled": "disattivato"
+      },
+      "url": {
+        "title": "Applicazione di recovery",
+        "caption": "Nel caso questa applicazione diventasse indisponibile, è possibile recuperare i fondi con l'applicazione (statica) raggiungibile a questi indirizzi"
       }
     },
     "prefs": {
@@ -1725,7 +1803,7 @@ export default {
     "signed": {
       "noacct": {
         "title": "Non hai ancora conti",
-        "caption": "Devi creare il tuo primo conto per iniziare a ricevere bitcoin"
+        "caption": "Devi creare il tuo primo conto per iniziare a ricevere fondi"
       },
       "create": "Crea il tuo primo conto",
       "success": {
@@ -1854,6 +1932,11 @@ export default {
           "title": "Si è verificato un errore importando il wallet",
           "caption": ""
         },
+        "noacc": {
+          "title": "Questo wallet non ha accounts",
+          "caption": "Il wallet che hai appena aperto non ha account visibili. E' possibile crearne uno ora"
+        },
+        "createacct": "Crea un nuovo account",
         "summary": "Il tuo wallet"
       }
     },
@@ -2005,7 +2088,7 @@ export default {
   "info": {
     "backup": {
       "title": "Scheda Backup",
-      "caption": "Questa scheda backup viene utilizzata per ripristinare l'accesso al tuo wallet in caso il tuo dispositivo venga perso o nel caso le credenziali dentro al dispositivo siano cancellate. Questo foglio contiene tutte le informazioni necessarie ad accedere al tuo wallet ed ai tuoi fondi. <b>Se hai scelto di criptare il backup serà necessaria anche la passphrase per sbloccare le informazioni contenute nel backup.</b> Se smarrisci il backup o dimentichi la passphrase perderai l'accesso ai fondi contenuti nel wallet. Non c'è alcun altro modo di recuperarli.",
+      "caption": "Questa scheda backup viene utilizzata per ripristinare l'accesso al tuo wallet in caso il tuo dispositivo venga perso o nel caso le credenziali dentro al dispositivo siano cancellate. Questo foglio contiene tutte le informazioni necessarie ad accedere al tuo wallet ed ai tuoi fondi. <b>Se hai scelto di criptare il backup sarà necessaria anche la passphrase per sbloccare le informazioni contenute nel backup.</b> Se smarrisci il backup o dimentichi la passphrase perderai l'accesso ai fondi contenuti nel wallet. Non c'è alcun altro modo di recuperarli.",
       "warn": "mantieni questo foglio segreto",
       "instructions": "Chiunque abbia accesso a questa scheda puo accedere al tuo wallet trasferire i tuoi fondi e impersonarti nei conti a firma multipla.",
       "additional": "Puoi recuperare questo backup mediante la procedura con la fotocamera scandendo il QR code o digitando le parole mnemoniche nel box in fondo",

@@ -1,2 +1,0 @@
-= power-select options=explorers selected=currentExplorer searchField='label' onchange=(action 'changeExplorer') as |cur|
-  b = cur.label

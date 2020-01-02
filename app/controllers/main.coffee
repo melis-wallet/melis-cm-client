@@ -1,21 +1,22 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
 
-MainController = Ember.Controller.extend(
+MainController = Controller.extend(
 
-  media: Ember.inject.service('responsive-media')
-  coin:  Ember.inject.service('cm-coin')
-  stream:  Ember.inject.service('cm-stream')
-  toastsSvc: Ember.inject.service('cm-toasts-provider')
-  accountInfo: Ember.inject.service('cm-account-info')
-  accountEvts: Ember.inject.service('cm-account-events')
-  walletsvc: Ember.inject.service('cm-wallet')
-  addrSvc: Ember.inject.service('cm-address-provider')
-  txinfo: Ember.inject.service('cm-tx-infos')
-  ptxsvc: Ember.inject.service('cm-ptxs')
-  glbNotif: Ember.inject.service('global-notifications')
+  media: service('responsive-media')
+  coin:  service('cm-coin')
+  stream:  service('cm-stream')
+  toastsSvc: service('cm-toasts-provider')
+  accountInfo: service('cm-account-info')
+  accountEvts: service('cm-account-events')
+  walletsvc: service('cm-wallet')
+  addrSvc: service('cm-address-provider')
+  txinfo: service('cm-tx-infos')
+  ptxsvc: service('cm-ptxs')
+  glbNotif: service('global-notifications')
 
-  app_state: Ember.inject.service('app-state')
-  scanner: Ember.inject.service('scanner-provider')
+  app_state: service('app-state')
+  scanner: service('scanner-provider')
 
   setup: ( ->
     # force preloading of services
@@ -43,4 +44,4 @@ MainController = Ember.Controller.extend(
 
 )
 
-`export default MainController`
+export default MainController

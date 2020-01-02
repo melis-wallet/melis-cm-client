@@ -1,44 +1,43 @@
-`import Ember from 'ember'`
-`import ResizeAware from 'ember-resize/mixins/resize-aware'`
+import Component from '@ember/component'
+import { A } from '@ember/array'
+import { scheduleOnce } from '@ember/runloop'
 
-SparkLine = Ember.Component.extend( ResizeAware,
+import ResizeAware from 'ember-resize/mixins/resize-aware'
 
-  #tagName: 'span'
-  values: Ember.A()
+SparkLine = Component.extend( ResizeAware,
+
+  values: A()
 
   options: {
-		type: 'line'
-		width: '100%'
-		height: '45px'
-		fillColor: ''
-		lineColor: '#fff'
-		lineWidth: 2
-		spotColor: '#ffffff'
-		minSpotColor: '#ffffff'
-		maxSpotColor: '#ffffff'
-		highlightSpotColor: '#ffffff'
-		highlightLineColor: '#ffffff'
-		spotRadius: 4
+    type: 'line'
+    width: '100%'
+    height: '45px'
+    fillColor: ''
+    lineColor: '#fff'
+    lineWidth: 2
+    spotColor: '#ffffff'
+    minSpotColor: '#ffffff'
+    maxSpotColor: '#ffffff'
+    highlightSpotColor: '#ffffff'
+    highlightLineColor: '#ffffff'
+    spotRadius: 4
   }
 
   sparkline: null
 
-  setup: (->
-    @_redrawLine()
-  ).on('didInsertElement')
+  setup: (-> @_redrawLine()).on('didInsertElement')
 
   _redrawLine: ->
     if values = @get('values')
       @set('sparkline', @.$().sparkline(values, @get('options')))
 
   debouncedDidResize: ->
-    Ember.run.scheduleOnce 'afterRender', this, @_redrawLine
+    scheduleOnce 'afterRender', this, @_redrawLine
 
-	shouldRedraw: (->
-		Ember.run.scheduleOnce 'afterRender', this, @_redrawLine
+
+  shouldRedraw: (->
+    scheduleOnce 'afterRender', this, @_redrawLine
   ).observes('values')
-
 )
 
-
-`export default SparkLine`
+export default SparkLine

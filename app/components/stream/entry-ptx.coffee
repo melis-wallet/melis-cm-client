@@ -1,12 +1,16 @@
-`import Ember from 'ember'`
-`import StreamEntry from './stream-entry'`
-`import InViewportMixin from 'ember-in-viewport'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { get, getWithDefault } from '@ember/object'
+
+import StreamEntry from './stream-entry'
+import InViewportMixin from 'ember-in-viewport'
+import { task, taskGroup } from 'ember-concurrency'
 
 StreamPtx = StreamEntry.extend(InViewportMixin,
 
-  ptxsvc: Ember.inject.service('cm-ptxs')
-  i18n: Ember.inject.service()
+  ptxsvc: service('cm-ptxs')
+  i18n: service()
 
   classNames: ['stream-entry', 'row', 'animated', 'zoomIn', 'quick']
   #classNameBindings: [ 'viewportEntered:zoomIn' ]
@@ -14,9 +18,9 @@ StreamPtx = StreamEntry.extend(InViewportMixin,
   entry: null
   error: null
 
-  tx: Ember.computed.alias('entry.content')
+  tx: alias('entry.content')
 
-  isRespent:  Ember.computed.alias('tx.isRespent')
+  isRespent:  alias('tx.isRespent')
 
   missingSigs: (->
     # TODO POC algo, not taking mandatory sigs into account
@@ -41,7 +45,7 @@ StreamPtx = StreamEntry.extend(InViewportMixin,
     try
       yield @get('ptxsvc').ptxCancel(tx)
     catch error
-      @set 'error', Ember.getWithDefault(error, 'msg', error)
+      @set 'error', getWithDefault(error, 'msg', error)
   ).group('apiOps')
 
 
@@ -50,7 +54,7 @@ StreamPtx = StreamEntry.extend(InViewportMixin,
     try
       yield @get('ptxsvc').ptxReissue(tx)
     catch error
-      @set 'error', Ember.getWithDefault(error, 'msg', error)
+      @set 'error', getWithDefault(error, 'msg', error)
   ).group('apiOps')
 
   actions:
@@ -67,5 +71,4 @@ StreamPtx = StreamEntry.extend(InViewportMixin,
         @get('cancelTx').perform(tx)
 )
 
-
-`export default StreamPtx`
+export default StreamPtx

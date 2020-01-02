@@ -20,7 +20,7 @@
       p = t 'account.utils.donate.caption'
 
       p: a href="{{remote-link 'public.payto' encodedUniqueId}}" target="_blank"
-        img src='images/donate-180x70.png'
+        img src='images/donate-{{coin}}-180x70.png'
 
       hr
       p = t 'account.utils.donate.explain'

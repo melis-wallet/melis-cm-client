@@ -9,3 +9,13 @@
     hr
 
     = prefs/manage-nlock account=cm.currentAccount
+
+  .col-md-12
+    .note.note-info
+      h4 = t 'view.nlock.url.title'
+      p = t 'view.nlock.url.caption'
+      hr
+      ul.nav.nav-pills.nav-stacked
+        = each recoveryUrls as |u|
+          li: a href=u target='_blank'
+            = u

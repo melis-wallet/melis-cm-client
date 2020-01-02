@@ -1,20 +1,23 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, notEmpty } from '@ember/object/computed'
 
-StreamHwm = Ember.Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  stream: Ember.inject.service('cm-stream')
-  wallet: Ember.inject.service('cm-wallet')
+StreamHwm = Component.extend(
+
+  cm: service('cm-session')
+  stream: service('cm-stream')
+  wallet: service('cm-wallet')
   classNames: ['row', 'animated', 'fadeIn']
-
 
   mystream: ( ->
     @get('entry.account.stream')  || @get('wallet.stream')
   ).property('entry.account')
 
-  newCount: Ember.computed.alias('mystream.newer.length')
-  show: Ember.computed.notEmpty('mystream.newer')
+  newCount: alias('mystream.newer.length')
+  show: notEmpty('mystream.newer')
 
+  warnOutdated: alias('cm.outdatedClient')
 
   actions:
     showNew: ->
@@ -24,9 +27,6 @@ StreamHwm = Ember.Component.extend(
       else
         @get('stream').setLowWater(@get('wallet'), @get('entry.updated'))
         @get('stream').setHighWater(@get('wallet'), moment.now())
-
-
 )
 
-
-`export default StreamHwm`
+export default StreamHwm

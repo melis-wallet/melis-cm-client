@@ -1,7 +1,12 @@
-`import Ember from 'ember'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import { task, timeout } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import { task, timeout } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 Validations = buildValidations(
   newAlias: [
@@ -13,15 +18,15 @@ Validations = buildValidations(
 
 )
 
-ChangeAccountAlias = Ember.Component.extend(Validations, ValidationsHelper,
+ChangeAccountAlias = Component.extend(Validations, ValidationsHelper,
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
 
   aliasInfo: null
   newAlias: null
 
 
-  canSubmit:Ember.computed.alias('isValid')
+  canSubmit: alias('isValid')
 
   changeAlias: task((newAlias) ->
     api = @get('cm.api')
@@ -32,7 +37,7 @@ ChangeAccountAlias = Ember.Component.extend(Validations, ValidationsHelper,
       @set('cm.currentAccount.cmo.alias', newAlias)
       @set('changingAlias', false)
     catch error
-      Ember.Logger.error "Error changing alias: ",  error
+      Logger.error "Error changing alias: ",  error
   )
 
   getUpdatedInfo: task( ->
@@ -42,7 +47,7 @@ ChangeAccountAlias = Ember.Component.extend(Validations, ValidationsHelper,
         data = yield api.aliasGetInfo(account)
         @set('aliasInfo', data)
       catch error
-        Ember.Logger.error "Error getting alias-info: ",  error
+        Logger.error "Error getting alias-info: ",  error
   ).drop()
 
 
@@ -63,4 +68,4 @@ ChangeAccountAlias = Ember.Component.extend(Validations, ValidationsHelper,
 
 )
 
-`export default ChangeAccountAlias`
+export default ChangeAccountAlias

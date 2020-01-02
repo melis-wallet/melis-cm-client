@@ -1,10 +1,12 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { sort } from '@ember/object/computed'
 
-TxsList = Ember.Component.extend(
 
-  cm:  Ember.inject.service('cm-session')
-  txsvc: Ember.inject.service('cm-tx-infos')
+TxsList = Component.extend(
+
+  cm:  service('cm-session')
+  txsvc: service('cm-tx-infos')
 
 
   classNames: ['zhistory-container']
@@ -16,7 +18,7 @@ TxsList = Ember.Component.extend(
   account: null
 
   txsSorting: ['cd:desc']
-  txsSorted: Ember.computed.sort('txs', 'txsSorting')
+  txsSorted: sort('txs', 'txsSorting')
 
 
   actions:
@@ -25,5 +27,5 @@ TxsList = Ember.Component.extend(
 
 )
 
-`export default TxsList`
+export default TxsList
 

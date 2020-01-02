@@ -1,14 +1,18 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-InfoWidget = Ember.Component.extend(
+import Logger from 'melis-cm-svcs/utils/logger'
+
+InfoWidget = Component.extend(
 
   sent: 132
   balance: 950
   received: 56
 
-  cm: Ember.inject.service('cm-session')
-  coinsvc: Ember.inject.service('cm-coin')
-  account: Ember.computed.alias('cm.currentAccount')
+  cm: service('cm-session')
+  coinsvc: service('cm-coin')
+  account: alias('cm.currentAccount')
 
 
   accountName: (->
@@ -37,9 +41,9 @@ InfoWidget = Ember.Component.extend(
     createTestUser: ->
       cm = @get('cm')
       cm.fxCreateTestWallet().catch((err) =>
-        Ember.Logger.error "Create test user. Error: ", err
+        Logger.error "Create test user. Error: ", err
       )
 
 )
 
-`export default InfoWidget`
+export default InfoWidget

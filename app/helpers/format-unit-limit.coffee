@@ -1,8 +1,11 @@
-`import Ember from 'ember'`
+import Helper from '@ember/component/helper'
+import { inject as service } from '@ember/service'
+import { copy } from 'ember-copy'
 
-formatUnitLimit = Ember.Helper.extend(
-  coinsvc: Ember.inject.service('cm-coin')
-  i18n: Ember.inject.service()
+
+formatUnitLimit = Helper.extend(
+  coinsvc: service('cm-coin')
+  i18n: service()
   account: null
 
   compute: (params, options) ->
@@ -16,14 +19,13 @@ formatUnitLimit = Ember.Helper.extend(
       @get('i18n').t('account.limits.always')
     else
       try
-        @get('coinsvc').formatUnit(account, amount, Ember.copy(options))
+        @get('coinsvc').formatUnit(account, amount, copy(options))
       catch
         '---'
-
 
   hasChanged: (-> @recompute()).observes('account.subunit')
 )
 
-`export default formatUnitLimit`
+export default formatUnitLimit
 
 

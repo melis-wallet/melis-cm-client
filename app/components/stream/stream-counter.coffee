@@ -1,10 +1,12 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-StreamCounter = Ember.Component.extend(
+StreamCounter = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  stream: Ember.inject.service('cm-stream')
-  wallet: Ember.inject.service('cm-wallet')
+  cm: service('cm-session')
+  stream: service('cm-stream')
+  wallet: service('cm-wallet')
 
   tagName: ''
 
@@ -14,9 +16,9 @@ StreamCounter = Ember.Component.extend(
     @get('account.stream')  || @get('wallet.stream')
   ).property('account')
 
-  urgent:  Ember.computed.alias('mystream.urgentCurrent.length')
-  urgentNewer: Ember.computed.alias('mystream.urgentNewer.length')
-  newer: Ember.computed.alias('mystream.newer.length')
+  urgent: alias('mystream.urgentCurrent.length')
+  urgentNewer: alias('mystream.urgentNewer.length')
+  newer: alias('mystream.newer.length')
 
   property: 'urgent'
 
@@ -26,4 +28,4 @@ StreamCounter = Ember.Component.extend(
 
 )
 
-`export default StreamCounter`
+export default StreamCounter

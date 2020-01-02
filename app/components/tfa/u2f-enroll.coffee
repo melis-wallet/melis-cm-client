@@ -1,12 +1,15 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, notEmpty } from '@ember/object/computed'
 
+import Logger from 'melis-cm-svcs/utils/logger'
 
 APPID='http://localhost:4200'
 
-U2FEnroll = Ember.Component.extend(
+U2FEnroll = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
+  cm: service('cm-session')
+  aa: service('aa-provider')
 
   provisioningId: (->
     @get('cm.currentWallet.pubKey').substring(0, 16)
@@ -34,7 +37,7 @@ U2FEnroll = Ember.Component.extend(
 
     ).catch((err) =>
       @set 'enrollError', err.msg
-      console.error "error enrolling email: ", err
+      Logger.error "error enrolling email: ", err
     )
 
 
@@ -44,4 +47,4 @@ U2FEnroll = Ember.Component.extend(
 
 )
 
-`export default U2FEnroll`
+export default U2FEnroll

@@ -64,7 +64,7 @@
             .col-xs-8.text-right
               = send/fees-selector feesMult=feesMult onchange='feesChanged'
       = else
-        = send/fees-input account=account value=feesPerByte feesData=feesData on-change=(action (mut feesPerByte))
+        = send/fees-input account=account coin=coin value=feesPerByte feesData=feesData on-change=(action (mut feesPerByte))
 
 
       .well.no-margin-b

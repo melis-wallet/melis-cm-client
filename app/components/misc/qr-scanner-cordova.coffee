@@ -1,12 +1,5 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
 
-QrScannerCordova = Ember.Component.extend(
+QrScannerCordova = Component.extend()
 
-
-  setup: (->
-  
-  )
-
-)
-
-`export default QrScannerCordova`
+export default QrScannerCordova

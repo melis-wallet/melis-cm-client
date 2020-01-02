@@ -8,5 +8,5 @@
       .row
         .col-xs-3
         .col-xs-8.col-xs-offset-1
-          = t 'stream.evt.has-joined' subject=code.name account=event.account.name time=(live-moment-from-now  entry.updated)
+          = t 'stream.evt.has-joined' subject=event.data.identifier account=event.account.name time=(live-moment-from-now  entry.updated)
 

@@ -33,7 +33,7 @@
               /= if cm.testMode
               = leaf-tab parent=control idx='utilities' title=(t 'view.tabs.utilities') icon='fa fa-cog'
               = if account.isMultisig
-                = leaf-tab parent=control idx='vitals' title=(t 'view.tabs.vitals') icon='fa fa-bitcoin'
+                = leaf-tab parent=control idx='vitals' title=(t 'view.tabs.vitals') icon='fa fa-database'
               = leaf-tab parent=control idx='limits' title=(t 'view.tabs.limits') icon='fa fa-key'
               = leaf-tab parent=control idx='nlock' title=(t 'view.tabs.nlock') icon='fa fa-cog'
               = leaf-tab parent=control idx='maintenance' title=(t 'view.tabs.maintenance') icon='fa fa-cog'
@@ -65,7 +65,7 @@
               = leaf-tab parent=control idx='preferences' title=(t 'view.tabs.preferences') icon='fa fa-cog'
               = if cm.testMode
                 = leaf-tab parent=control idx='utilities' title=(t 'view.tabs.utilities') icon='fa fa-cog'
-              = leaf-tab parent=control idx='vitals' title=(t 'view.tabs.vitals')  icon='fa fa-bitcoin'
+              = leaf-tab parent=control idx='vitals' title=(t 'view.tabs.vitals')  icon='fa fa-database'
               = leaf-tab parent=control idx='maintenance' title=(t 'view.tabs.maintenance') icon='fa fa-cog'
 
             = leaf-navs-content  bordered=true class='panel-padding' selected-idx=tab as |content|
@@ -80,3 +80,5 @@
 
               = leaf-navs-panel parent=content idx='maintenance'
                 = partial 'main/account/maintenance'
+
+

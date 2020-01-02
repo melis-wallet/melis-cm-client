@@ -26,16 +26,20 @@
             strong = format-unit amount compact=true account=account
           '
           span.text-lg.hidden-xs
-            span.text-bg.text-slim.lowercase = cm.globalCurrency
+            span.text-bg.text-slim.lowercase = currency-unit
             strong = to-currency amount compact=true account=account
   .subline.visible-xs
-    span.text-slim.lowercase = cm.globalCurrency
+    span.text-slim.lowercase = currency-unit
     strong = to-currency account.amSummary compact=true account=account
 
 .content-wrapper.no-padding-t id='content-wrapper'
-  /= content-wrapper class='no-padding-t' id='content-wrapper'
-  .stream-cnt.row
-    = stream/urgent-box class='col-sm-2' account=account
+  = misc/smooth-scroller class='stream-cnt row' as |scroll|
+    = stream/urgent-box [
+      class='col-sm-2'
+      account=account
+      scroller=scroll
+      onmoveto=(action 'scrollTo' target=scroll) onresetposition=(action 'resetScroll' target=scroll)
+    ]
     .col-sm-10
       = wallet/backup-reminder
       = if account.hasServer
@@ -43,7 +47,7 @@
 
       = if (not account.isComplete)
         = stream/incomplete-account account=account
-      = stream/main-view account=account
+      = stream/main-view account=account onmoveto=(action 'scrollTo' target=scroll)
 
   .row.footer
 

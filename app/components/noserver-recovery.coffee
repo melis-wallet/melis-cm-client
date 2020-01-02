@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
+import Component  from '@ember/component'
+import { get } from '@ember/object'
 
 STORAGE_PREFIX = 'storage:recovery-info:cm-account:'
 
-NoserverRecovery = Ember.Component.extend(
+NoserverRecovery = Component.extend(
 
   entries: []
   filenameBase: '-recovery.json'
@@ -12,7 +13,7 @@ NoserverRecovery = Ember.Component.extend(
     for i in [0..localStorage.length]
       key = localStorage.key(i)
       if key && key.startsWith(STORAGE_PREFIX)
-        val = Ember.get(JSON.parse(localStorage[key]), 'current')
+        val = get(JSON.parse(localStorage[key]), 'current')
         entries.pushObject(val)
     entries
 
@@ -21,4 +22,4 @@ NoserverRecovery = Ember.Component.extend(
   ).on('init')
 )
 
-`export default NoserverRecovery`
+export default NoserverRecovery

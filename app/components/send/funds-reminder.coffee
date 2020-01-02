@@ -1,9 +1,10 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
-FundsReminder = Ember.Component.extend(
+FundsReminder = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
   account: null
 )
 
-`export default FundsReminder`
+export default FundsReminder

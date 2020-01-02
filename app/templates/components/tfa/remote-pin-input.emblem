@@ -18,7 +18,7 @@
           = leaf-label type=attemptsType class='animated shake' type='warning'
             = t 'tfa.pin.last-attempt'
         '
-    = f.input property='pin' type='password' label=(t 'tfa.pin.label') placeholder=(t 'tfa.pin.ph') cid='pin_input'
+    = f.input property='pin' type='password' label=(t 'tfa.pin.label') placeholder=(t 'tfa.pin.ph') cid=inputId
 
   br
   = if isValid

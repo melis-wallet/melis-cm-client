@@ -27,6 +27,9 @@
 
 = else
   = em-form model=currentRecipient submitButton=false action='submitRecipient' as |f|
+    // dummy button as a workaround to a bug with forms sending stray clicks
+    span style="display: none;"
+      = leaf-button outline=true  
     .panel-body
       .row
         .col-xs-8
@@ -45,6 +48,7 @@
 
         .col-xs-4
           .pull-right.xr-top-sp
+
             = leaf-tooltip class='value' tooltip=(t 'paysend.form.type') tooltip-placement='left'
               = send/destination-type dst-type=currentRecipient.type size='sm' class='xr-bt-sp' on-type-change=(action (mut currentRecipient.type))
             '
@@ -91,49 +95,51 @@
       .row
         .col-xs-12
           = misc/more-info prompt=(t 'paysend.form.more') class='no-padding-t'
-            = label-picker selection=currentRecipient.labels label=(t 'paysend.form.labels.label') labelsSet='txLabels'
             = f.input property='info'  label=(t 'paysend.form.info.label') placeholder=(t 'paysend.form.info.ph')
+            = label-picker selection=currentRecipient.labels label=(t 'paysend.form.labels.label') labelsSet='txLabels'
             .well.no-margin-b
               .row.hidden-sm.hidden-xs
                 .col-xs-6
+                  = if coin.features.rbf
+                    .row
+                      .form-group
+                        .col-xs-8
+                          label.control-label = t 'paysend.form.rbf'
+                        .col-xs-4.text-right
+                          p  = leaf-switcher checked=optRBF size='sm' theme='modern' disabled=(not coin.features.rbf)
+                  = if coin.features.unconfirmed
+                    .row
+                      .form-group
+                        .col-xs-8
+                          label.control-label = t 'paysend.form.unc'
+                        .col-xs-4.text-right
+                          p = leaf-switcher checked=allowUnconfirmed size='sm' theme='modern'
 
+                .col-xs-6
+                  .row
+                    label.control-label = t 'paysend.form.fees'
+                    = send/fees-selector feesMult=feesMult onchange=(action (mut feesMult))
+              .hidden-md.hidden-lg
+                = if coin.features.rbf
                   .row
                     .form-group
                       .col-xs-8
                         label.control-label = t 'paysend.form.rbf'
                       .col-xs-4.text-right
                         p  = leaf-switcher checked=optRBF size='sm' theme='modern' disabled=(not coin.features.rbf)
+                = if coin.features.unconfirmed
                   .row
                     .form-group
                       .col-xs-8
                         label.control-label = t 'paysend.form.unc'
                       .col-xs-4.text-right
                         p = leaf-switcher checked=allowUnconfirmed size='sm' theme='modern'
-
-                .col-xs-6
-                  = if coin.features.rbf
-                    label.control-label = t 'paysend.form.fees'
-                    = send/fees-selector feesMult=feesMult onchange=(action (mut feesMult))
-              .hidden-md.hidden-lg
                 .row
                   .form-group
-                    .col-xs-8
-                      label.control-label = t 'paysend.form.rbf'
-                    .col-xs-4.text-right
-                      p  = leaf-switcher checked=optRBF size='sm' theme='modern' disabled=(not coin.features.rbf)
-                .row
-                  .form-group
-                    .col-xs-8
-                      label.control-label = t 'paysend.form.unc'
-                    .col-xs-4.text-right
-                      p = leaf-switcher checked=allowUnconfirmed size='sm' theme='modern'
-                .row
-                  = if coin.features.rbf
-                    .form-group
-                      .col-xs-4
-                        label.control-label = t 'paysend.form.fees'
-                      .col-xs-8.text-right
-                        = send/fees-selector feesMult=feesMult onchange=(action (mut feesMult))
+                    .col-xs-4
+                      label.control-label = t 'paysend.form.fees'
+                    .col-xs-8.text-right
+                      = send/fees-selector feesMult=feesMult onchange=(action (mut feesMult))
 
     = liquid-if (and (not hasRecipients) currentRecipient.isValid) class='ll-down-up'
       .panel-footer

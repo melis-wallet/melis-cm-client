@@ -1,19 +1,55 @@
-/* global require, module */
+'use strict';
 
-var EmberApp = require('ember-cli/lib/broccoli/ember-app');
+const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 
 module.exports = function(defaults) {
 
-  var app = new EmberApp(defaults, {
+  let app = new EmberApp(defaults, {
     /*
     "ember-cli-babel": {
       includePolyfill: true,
     }, */
 
+    'ember-bootstrap': {
+      whitelist: ['bs-collapse', 'bs-popover', 'bs-tooltip'],
+      'bootstrapVersion': 3,
+      'importBootstrapCSS': false,
+      'importBootstrapFont': true
+    },
+
     SRI: {
       enabled: true
     },
+
+    sassOptions: {implementation: require("node-sass")},
+
+    'ember-cli-image-transformer': {
+      images: [
+        {
+          inputFilename: 'public/images/melis-badger-r.svg',
+          outputFileName: 'appicon-',
+          convertTo: 'png',
+          destination: 'assets/icons/',
+          sizes: [32, 128, 192, 280, 512]
+        }
+      ]
+    },
+
+    'asset-cache': {
+      include: [
+        'assets/**/*',
+        'images/**/*',
+        'coins/**/*',
+        'fonts/**/*'
+      ]
+    },
+
+    'esw-cache-fallback': {
+      patterns: [ '/' ],
+      version: '1' // Changing the version will bust the cache
+    },
+
 
     minifyJS: {
       // test!
@@ -30,10 +66,16 @@ module.exports = function(defaults) {
       }
 
     },
+
     minifyCSS: {
       options: {
         processImport: false
       }
+    },
+
+    fingerprint: {
+      extensions: ['js', 'css', 'png', 'jpg', 'gif', 'map'],
+      exclude: ['donate-']
     }
   });
 

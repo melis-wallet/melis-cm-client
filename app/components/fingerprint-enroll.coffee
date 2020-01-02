@@ -1,11 +1,13 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
 
-FingerPrintEnroll = Ember.Component.extend(
+FingerPrintEnroll = Component.extend(
 
-  cm: Ember.inject.service('cm-session')
-  fpa: Ember.inject.service('fingerprint-auth')
-  aaProvider: Ember.inject.service('aa-provider')
+  cm: service('cm-session')
+  fpa: service('fingerprint-auth')
+  aaProvider: service('aa-provider')
 
   setup: ( ->
     @get('fpa')
@@ -27,8 +29,6 @@ FingerPrintEnroll = Ember.Component.extend(
         @doEnroll()
       else
         @doRemove()
-
-
 )
 
-`export default FingerPrintEnroll`
+export default FingerPrintEnroll

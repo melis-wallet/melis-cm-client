@@ -1,6 +1,6 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
 
-MainPtxController = Ember.Controller.extend(
+MainPtxController = Controller.extend(
 
   activePtx: null
 
@@ -12,4 +12,4 @@ MainPtxController = Ember.Controller.extend(
 
 )
 
-`export default MainPtxController`
+export default MainPtxController

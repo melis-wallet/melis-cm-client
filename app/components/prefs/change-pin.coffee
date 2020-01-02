@@ -1,15 +1,20 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { filterBy } from '@ember/object/computed'
 
-ChangePin = Ember.Component.extend(
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
+ChangePin = Component.extend(
 
   changing: false
   success: false
   error: false
 
-  cm: Ember.inject.service('cm-session')
-  aaProvider: Ember.inject.service('aa-provider')
-  fpa: Ember.inject.service('fingerprint-auth')
+  cm: service('cm-session')
+  aaProvider: service('aa-provider')
+  fpa: service('fingerprint-auth')
 
   apiOps: taskGroup().drop()
 
@@ -33,7 +38,7 @@ ChangePin = Ember.Component.extend(
       @set('changing', false)
     catch error
       @set('error', true)
-      Ember.Logger.error('Set pin failed: ', error)
+      Logger.error('Set pin failed: ', error)
 
   ).group('apiOps')
 
@@ -47,4 +52,4 @@ ChangePin = Ember.Component.extend(
 
 )
 
-`export default ChangePin`
+export default ChangePin

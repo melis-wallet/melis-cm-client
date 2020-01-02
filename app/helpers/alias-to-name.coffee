@@ -1,12 +1,13 @@
-`import Ember from 'ember'`
+import Helper from '@ember/component/helper'
+import { inject as service } from '@ember/service'
 
-AliasToName = Ember.Helper.extend(
 
-  cm:  Ember.inject.service('cm-session')
+AliasToName = Helper.extend(
 
+  cm: service('cm-session')
 
   compute: (params, hash) ->
-    alias = params[0]
+    cmalias = params[0]
 
     cA =
       if hash.account
@@ -14,16 +15,16 @@ AliasToName = Ember.Helper.extend(
       else
         @get('cm.currentAccount')
 
-    return alias unless cA
+    return cmalias unless cA
 
     if cosigners = cA.get('info.cosigners')
       if z = cosigners.findBy('alias', alias)
         z.name
       else
-        alias
+        cmalias
     else
-      alias
+      cmalias
 
 )
 
-`export default AliasToName`
+export default AliasToName

@@ -1,11 +1,9 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
 
-
-IndexRoute = Ember.Route.extend(
+IndexRoute = Route.extend(
 
   beforeModel: (transition) ->
     @transitionTo('wallet.sign-in')
-
 )
 
-`export default IndexRoute`
+export default IndexRoute

@@ -1,7 +1,13 @@
-`import Ember from 'ember'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { get } from '@ember/object'
+
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 Validations = buildValidations(
   telegramAddress: [
@@ -11,11 +17,11 @@ Validations = buildValidations(
   ]
 )
 
-TelegramEnroll = Ember.Component.extend(Validations, ValidationsHelper,
+TelegramEnroll = Component.extend(Validations, ValidationsHelper,
 
 
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
+  cm: service('cm-session')
+  aa: service('aa-provider')
 
   enrollError: null
   telegramAddress: null
@@ -38,7 +44,7 @@ TelegramEnroll = Ember.Component.extend(Validations, ValidationsHelper,
       res = yield api.tfaEnrollFinish(name: device.name, value: device.value, code: token)
       @sendAction('on-new-complete-enroll', res.device)
     catch error
-      Ember.Logger.error "Error doing enroll finish: ", error
+      Logger.error "Error doing enroll finish: ", error
       @set 'enrollError', error.msg
 
   ).group('apiOps')
@@ -59,16 +65,15 @@ TelegramEnroll = Ember.Component.extend(Validations, ValidationsHelper,
         res = yield @get('aa').tfaAuth(op, "Add Telegram TFA")
         @set('btnstate', 'resolved')
         #@sendAction('on-new-enroll')
-        console.error "response", res
-        @set 'currentDevice', Ember.get(res, 'device')
-        if (rawvalue = Ember.get(res, 'value'))
+        @set 'currentDevice', get(res, 'device')
+        if (rawvalue = get(res, 'value'))
           @set 'currentResponse', JSON.parse(rawvalue)
       catch error
         if error.ex == 'CmInvalidTfaException'
           @set  'enrollError', @get('i18n').t('tfa.telegram.invalid')
         else
           @set 'enrollError', error.msg
-        Ember.Logger.error "error enrolling xmpp: ", error
+        Logger.error "error enrolling xmpp: ", error
         @set('btnstate', 'rejected')
 
       @set 'busy', false
@@ -90,4 +95,4 @@ TelegramEnroll = Ember.Component.extend(Validations, ValidationsHelper,
 
 )
 
-`export default TelegramEnroll`
+export default TelegramEnroll

@@ -1,18 +1,25 @@
-`import Ember from 'ember'`
-`import { mergedProperty } from 'melis-cm-svcs/utils/misc'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import CMCore from 'npm:melis-api-js'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias, sort } from '@ember/object/computed'
+import { get, set } from '@ember/object'
+
+import { mergedProperty } from 'melis-cm-svcs/utils/misc'
+import { task, taskGroup } from 'ember-concurrency'
+import CMCore from 'npm:melis-api-js'
+
+import Logger from 'melis-cm-svcs/utils/logger'
+
 
 C = CMCore.C
 
-MainAddressIdxController = Ember.Controller.extend(
+MainAddressIdxController = Controller.extend(
 
 
-  allAddresses: Ember.computed.alias('model.list')
-  hasNext: Ember.computed.alias('model.hasNext')
+  allAddresses: alias('model.list')
+  hasNext: alias('model.hasNext')
 
   addressesSorting: ['lastRequested:desc']
-  addresses: Ember.computed.sort('allAddresses', 'addressesSorting')
+  addresses: sort('allAddresses', 'addressesSorting')
 
   currentPage: 0
 
@@ -23,12 +30,11 @@ MainAddressIdxController = Ember.Controller.extend(
     try
       res = yield @get('cm.api').addressesGet(@get('cm.currentAccount.cmo'), page: page, sortField: 'lastRequested', sortDir: C.DIR_DESCENDING)
       @set('hasNext', res.hasNext)
-      newAddrs = Ember.get(res, 'list')
+      newAddrs = get(res, 'list')
       if newAddrs
-        console.error newAddrs
         @get('model.list').pushObjects(newAddrs)
     catch error
-      Ember.Logger.error "Error: ", error
+      Logger.error "Error: ", error
   ).group('pageOps')
 
   actions:
@@ -38,4 +44,4 @@ MainAddressIdxController = Ember.Controller.extend(
 
 )
 
-`export default MainAddressIdxController`
+export default MainAddressIdxController

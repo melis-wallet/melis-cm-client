@@ -1,13 +1,11 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { schedule } from '@ember/runloop'
 
-ApplicationController = Ember.Controller.extend(
-
+ApplicationController = Controller.extend(
 
   removeSpinner: (->
-    Ember.run.schedule 'afterRender', this, (->
-      $(".preloading").remove()
-    )
+    schedule 'afterRender', this, (-> $(".preloading").remove())
   ).on('init')
 )
 
-`export default ApplicationController`
+export default ApplicationController

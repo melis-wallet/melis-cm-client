@@ -1,17 +1,19 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { computed } from '@ember/object'
 
 
-BackupReminder = Ember.Component.extend(
+BackupReminder = Component.extend(
 
   tagName: null
-  creds: Ember.inject.service('cm-credentials')
-  cm: Ember.inject.service('cm-session')
+  creds: service('cm-credentials')
+  cm: service('cm-session')
 
 
   showBackupWizard: false
   showBackupChecker: false
 
-  showCredWarning: Ember.computed.not('creds.backupConfirmed')
+  showCredWarning: computed.not('creds.backupConfirmed')
 
   showBackupNagger: ( ->
     (@get('creds.backupConfirmed') && !@get('creds.backupChecked') && @get('cm.currentAccount.amSummary'))
@@ -37,5 +39,4 @@ BackupReminder = Ember.Component.extend(
 
 )
 
-
-`export default BackupReminder`
+export default BackupReminder

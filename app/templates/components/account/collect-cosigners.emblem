@@ -17,7 +17,7 @@
 
     .row.padding-sm-vr
       .col-xs-12
-        = x-range-input min=1 max=totalSignatures step=1 value=minSignatures
+        = x-range-input min=1 max=totalSignatures step=1 value=minSignatures action=(action (mut minSignatures))
         p
           h4 = t 'account.wizard.cosigners.requiredSigsTitle'
           = t 'account.wizard.cosigners.requiredSigsCaption'
@@ -51,7 +51,7 @@
             = f.input property='name' label=(t 'account.cosigners.form.name.label') placeholder=(t 'account.cosigners.form.name.ph') tabindex='0'
 
             p: b Mandatory
-            = leaf-switcher checked=currentCosigner.mandatory size='sm' on-toggle='setMandatory' target=currentCosigner disabled=cannotSetMandatory
+            = leaf-switcher checked=currentCosigner.mandatory size='sm' item=currentCosigner on-toggle='setMandatory' disabled=cannotSetMandatory
 
         = if readonlyCs
           .alert.alert-warning.alert-dark

@@ -1,4 +1,3 @@
-`import Ember from 'ember'`
 
 #kind of naive
 URL_REGEXP = /^([A-Za-z0-9\+]+):([A-Za-z0-9\-\.]+)(?:\?(.*))?$/
@@ -22,6 +21,4 @@ parseURI = (data) ->
 
   res
 
-
-
-`export { parseURI }`
+export { parseURI }

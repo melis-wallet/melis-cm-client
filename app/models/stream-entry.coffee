@@ -1,4 +1,4 @@
-`import StreamEntry from 'melis-cm-svcs/models/stream-entry'`
+import StreamEntry from 'melis-cm-svcs/models/stream-entry'
 
 ClientStreamEntry = StreamEntry.extend(
 
@@ -28,9 +28,7 @@ ClientStreamEntry = StreamEntry.extend(
         else
           'cm-icon cmi-acc-sing'
 
-
   ).property('subclass', 'content')
-
 )
 
-`export default ClientStreamEntry`
+export default ClientStreamEntry

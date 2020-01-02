@@ -1,11 +1,12 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
-LinkToExplorer = Ember.Component.extend(
+LinkToExplorer = Component.extend(
 
   tagName: 'span'
 
-  cm: Ember.inject.service('cm-session')
-  coinsvc: Ember.inject.service('cm-coin')
+  cm: service('cm-session')
+  coinsvc: service('cm-coin')
 
   account: null
 
@@ -18,4 +19,4 @@ LinkToExplorer = Ember.Component.extend(
 
 )
 
-`export default LinkToExplorer`
+export default LinkToExplorer

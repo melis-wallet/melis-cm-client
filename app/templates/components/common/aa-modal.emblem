@@ -10,7 +10,7 @@
             = leaf-note type='warning'
               h4 = t 'aa.modal.pin.title'
               p = t 'aa.modal.pin.caption'
-            = component aComponent on-valid-pin='validPin' running=running data=componentData
+            = component aComponent on-valid-pin='validPin' running=running data=componentData inputId='aa_pin'
 
     = else if (eq type 'remotepin')
       = leaf-modal-body
@@ -21,7 +21,7 @@
             = leaf-note type='warning'
               h4 = t 'aa.modal.pin.title'
               p = t 'aa.modal.pin.caption'
-            = component aComponent on-valid-pin='validRemotePin' running=running data=componentData
+            = component aComponent on-valid-pin='validRemotePin' running=running data=componentData inputId='aa_pin'
             /= if currentError
               = leaf-alert type='danger' dark=true
                 = currentError

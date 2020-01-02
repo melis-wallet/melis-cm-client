@@ -1,32 +1,33 @@
-`import Ember from 'ember'`
-`import ScrollHandler from '../../mixins/scroll-handler'`
-`import ResizeAware from 'ember-resize/mixins/resize-aware'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+import { isEmpty } from '@ember/utils'
+import $ from 'jquery'
 
-SCROLL_OPTIONS = {
-    speed: 500                # Integer. How fast to complete the scroll in milliseconds
-    easing: 'easeInOutCubic'  # Easing pattern to use
-    offset: 100               # Integer. How far to offset the scrolling anchor location in pixels
-    updateURL: true           # Boolean. If true, update the URL hash on scroll
-}
+import ScrollHandler from '../../mixins/scroll-handler'
+import ResizeAware from 'ember-resize/mixins/resize-aware'
 
 
-UrgentStreamBox = Ember.Component.extend(ScrollHandler, ResizeAware,
+UrgentStreamBox = Component.extend(ScrollHandler, ResizeAware,
 
-  cm: Ember.inject.service('cm-session')
-  svc: Ember.inject.service('cm-stream')
-  media: Ember.inject.service('responsive-media')
+  cm: service('cm-session')
+  svc: service('cm-stream')
+  media: service('responsive-media')
 
-  inited: Ember.computed.alias('svc.inited')
-  streamEntries: Ember.computed.alias('account.stream.urgentCurrent')
-  newEntries: Ember.computed.alias('account.stream.urgentNewer')
+  inited: alias('svc.inited')
+  streamEntries: alias('account.stream.urgentCurrent')
+  newEntries: alias('account.stream.urgentNewer')
 
   affix: false
   scrollTimeout: 10
 
   account: null
 
+  scroller: null
+  scrollOffset: alias('scroller.offset')
+
   displayed: ( ->
-    !Ember.isEmpty(@get('streamEntries')) || !Ember.isEmpty(@get('newEntries'))
+    !isEmpty(@get('streamEntries')) || !isEmpty(@get('newEntries'))
   ).property('streamEntries', 'newEntries')
 
   displayTicker: ( ->
@@ -41,48 +42,32 @@ UrgentStreamBox = Ember.Component.extend(ScrollHandler, ResizeAware,
     if @get('media.isMobile')
       @setProperties(affix: false, _fixTop: null)
     else
-      scrollTop  = Ember.$(document).scrollTop()
+      scrollTop  = $(document).scrollTop()
 
       if scrollTop <= @get('_fixTop') && @get('affix')
         @setProperties(affix: false, _fixTop: null)
         @.$('.affix-panel').css(top: '', width: '')
 
-      else if (rect.top < SCROLL_OPTIONS.offset) && !@get('affix')
+      else if (rect.top <  @get('scrollOffset')) && !@get('affix')
         @setProperties(affix: true, _fixTop: scrollTop)
-        @.$('.affix-panel').css(top: SCROLL_OPTIONS.offset + 'px', width: @.$().width())
-
-
-  setupScroll: (->
-    Ember.run.scheduleOnce('afterRender', this, ->
-      smoothScroll.init(SCROLL_OPTIONS)
-    )
-  ).on('didInsertElement')
-
-  tearoffScroll: ( ->
-    smoothScroll.destroy()
-  ).on('willDestroyElement')
+        @.$('.affix-panel').css(top: @get('scrollOffset') + 'px', width: @.$().width())
 
 
   accountChanged: (->
-    smoothScroll.animateScroll(0)
+    @get('scroll')?.animateScroll(0)
   ).observes('account')
 
   actions:
-    scrollTo: (entry) ->
-      smoothScroll.animateScroll('#' + entry.id)
+    moveTo: (entry) ->
+      @sendAction('onmoveto', entry)
 
-    resetScroll: ->
-      smoothScroll.animateScroll(0)
+    resetPosition: ->
+      @sendAction('onresetposition')
 
     showNewer: ->
       account = @get('account')
       @get('svc').setLowWater(account, @get('entry.updated'), account)
       @get('svc').setHighWater(account, moment.now(), account)
-
-
-
-
-
 )
 
-`export default UrgentStreamBox`
+export default UrgentStreamBox

@@ -1,9 +1,11 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-AccountOpsController = Ember.Controller.extend(
+AccountOpsController = Controller.extend(
 
-  account: Ember.computed.alias('cm.currentAccount')
-  media: Ember.inject.service('responsive-media')
+  media: service('responsive-media')
+  account: alias('cm.currentAccount')
 )
 
-`export default AccountOpsController`
+export default AccountOpsController

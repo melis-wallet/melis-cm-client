@@ -1,15 +1,22 @@
-`import Ember from 'ember'`
-`import InviteMixin from '../mixins/beta-invite'`
-`import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'`
+import Service, { inject as service } from '@ember/service'
+import { alias, filterBy, notEmpty } from '@ember/object/computed'
+import { get, set } from '@ember/object'
+import { A } from '@ember/array'
+import RSVP from 'rsvp'
+
+import InviteMixin from '../mixins/beta-invite'
+import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
-AAProvider = Ember.Service.extend(InviteMixin,
+AAProvider = Service.extend(InviteMixin,
 
-  cm: Ember.inject.service('cm-session')
-  creds: Ember.inject.service('cm-credentials')
-  modalManager: Ember.inject.service('modals-manager')
-  routing: Ember.inject.service('-routing')
-  i18n: Ember.inject.service()
+  cm: service('cm-session')
+  creds: service('cm-credentials')
+  modalManager: service('modals-manager')
+  routing: service('-routing')
+  i18n: service()
 
 
   #
@@ -31,7 +38,7 @@ AAProvider = Ember.Service.extend(InviteMixin,
   #
   # TFA
   #
-  tfaDrivers: Ember.computed.alias('cm.config.tfaDrivers')
+  tfaDrivers: alias('cm.config.tfaDrivers')
 
   tfaConfig: null
 
@@ -55,12 +62,12 @@ AAProvider = Ember.Service.extend(InviteMixin,
   #
   # devices that are enabled and ready to use
   #
-  tfaValidDevices: Ember.computed.filterBy('tfaDevices', 'verified', true)
+  tfaValidDevices: filterBy('tfaDevices', 'verified', true)
 
   #
   # at least one device is enabled
   #
-  tfaIsEnabled: Ember.computed.notEmpty('tfaValidDevices')
+  tfaIsEnabled: notEmpty('tfaValidDevices')
 
   #
   # TFA devices, grouped by name
@@ -70,7 +77,7 @@ AAProvider = Ember.Service.extend(InviteMixin,
     devices = @get('tfaDevices')
 
     @get('tfaDrivers').forEach((d) ->
-      allDevs[d] = devices.filterBy('name', Ember.get(d, 'name'))
+      allDevs[d] = devices.filterBy('name', get(d, 'name'))
     )
 
     allDevs
@@ -97,7 +104,7 @@ AAProvider = Ember.Service.extend(InviteMixin,
   # wraps a an operation requiring TFA authentication. The operation block must return a promise
   #
   tfaAuth: (operation, prompt, hintpin)  ->
-    pending = Ember.RSVP.defer()
+    pending = RSVP.defer()
     if operation
 
       operation(payload: null, valid: false).then((res) =>
@@ -155,7 +162,7 @@ AAProvider = Ember.Service.extend(InviteMixin,
   # mandatory means the pin gets asked even if it was recently asked
   #
   askLocalPin: (operation, prompt, mandatory, immediate)->
-    pending = Ember.RSVP.defer()
+    pending = RSVP.defer()
 
     if request = @get('pendingRequest')
       pending.reject(ex: 'TfaBusy', msg:  @get('i18n').t('aa.error.busy'))
@@ -180,8 +187,8 @@ AAProvider = Ember.Service.extend(InviteMixin,
     @set('currentError', null)
     operation = @get('tfaOperation')
 
-    if operation && !Ember.get(operation, 'running')
-      Ember.set(operation, 'running', true)
+    if operation && !get(operation, 'running')
+      set(operation, 'running', true)
       operation(type: 'tfa', payload: data, valid: true).then((res) =>
         @dismissAndResolve(res)
       ).catch((err) =>
@@ -192,7 +199,7 @@ AAProvider = Ember.Service.extend(InviteMixin,
           # failed for another reason
           @dismissAndReject(err)
       ).finally( ->
-        Ember.set(operation, 'running', false)
+        set(operation, 'running', false)
       )
     else
       @dismissAndResolve(null)
@@ -205,8 +212,8 @@ AAProvider = Ember.Service.extend(InviteMixin,
 
     operation = @get('tfaOperation')
 
-    if operation && !Ember.get(operation, 'running')
-      Ember.set(operation, 'running', true)
+    if operation && !get(operation, 'running')
+      set(operation, 'running', true)
       operation(type: 'remotepin', payload: {pin: pin}, valid: true).then((res) =>
         @dismissAndResolve(res)
       ).catch((err) =>
@@ -233,7 +240,7 @@ AAProvider = Ember.Service.extend(InviteMixin,
           # failed for another reason
           @dismissAndReject(err)
       ).finally( ->
-        Ember.set(operation, 'running', false)
+        set(operation, 'running', false)
       )
     else
       @dismissAndResolve(null)
@@ -243,13 +250,13 @@ AAProvider = Ember.Service.extend(InviteMixin,
     if @get('immediatePin')
       operation = @get('tfaOperation')
       if operation
-        if !Ember.get(operation, 'running')
-          Ember.set(operation, 'running', true)
+        if !get(operation, 'running')
+          set(operation, 'running', true)
           operation(type: 'pin', pin: pin, devicePass: devicePass, payload: null, valid: true).then((res) =>
             @set('lastPinRequest', Date.now())
             @dismissAndResolve(res)
           ).finally( ->
-            Ember.set(operation, 'running', false)
+            set(operation, 'running', false)
           )
       else
         @dismissAndResolve(null)
@@ -284,27 +291,26 @@ AAProvider = Ember.Service.extend(InviteMixin,
   refreshTfaState: ->
     api = @get('cm.api')
     api.tfaGetWalletConfig().then((res) =>
-      Ember.Logger.debug "TFA wallet config: ", res
+      Logger.debug "TFA wallet config: ", res
       if res.devices
-        @set 'tfaDevices', Ember.A(res.devices)
+        @set 'tfaDevices', A(res.devices)
 
     ).catch((err) ->
-      Ember.Logger.error "Error fetching TFA config: ", err
+      Logger.error "Error fetching TFA config: ", err
     )
 
   setup: ( ->
-    @set('tfaDevices', Ember.A())
+    @set('tfaDevices', A())
     @set('modalManager.exclusiveModals', false)
     if @get('cm.ready')
       @initalizeTfaConfig().then( =>
         @refreshTfaState()
       ).catch((err) ->
-        Ember.Logger.error('- AA: failed initialization', err)
+        Logger.error('- AA: failed initialization', err)
       )
 
   ).observes('cm.ready').on('init')
-
 )
 
-`export default AAProvider`
+export default AAProvider
 

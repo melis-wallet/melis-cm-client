@@ -1,9 +1,17 @@
-`import Ember from 'ember'`
-`import CMCore from 'npm:melis-api-js'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
-`import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, equal } from '@ember/object/computed'
+import { get } from '@ember/object'
+import { A } from '@ember/array'
+
+import CMCore from 'npm:melis-api-js'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
+import { task, taskGroup } from 'ember-concurrency'
+
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 C = CMCore.C
 
@@ -19,10 +27,10 @@ Validations = buildValidations(
   ]
 )
 
-NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelper,
+NewAccountWizard = Component.extend(AsWizard, Validations, ValidationsHelper,
 
-  cm: Ember.inject.service('cm-session')
-  coinsvc: Ember.inject.service('cm-coin')
+  cm: service('cm-session')
+  coinsvc: service('cm-coin')
 
   apiOps: taskGroup().drop()
 
@@ -34,7 +42,7 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
   accountName: null
 
   type: null
-  isMulti: Ember.computed.equal('type', 'multi')
+  isMulti: equal('type', 'multi')
 
   wantsServer: true
 
@@ -43,7 +51,7 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
 
   coin: null
 
-  cosignersCnt: Ember.computed.alias('cosigners.length')
+  cosignersCnt: alias('cosigners.length')
 
   totalSignatures: ( ->
     @get('cosignersCnt') + 1
@@ -65,7 +73,7 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
   ).property('isMulti')
 
 
-  availableCoins: Ember.computed.alias('coinsvc.coins')
+  availableCoins: alias('coinsvc.enabledCoins')
 
   selectedCoin: ( ->
     if c = @get('coin')
@@ -99,7 +107,7 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
       account = yield @get('cm').accountCreate(data)
       @set('newAccount', account)
     catch error
-      Ember.Logger.error("Create Account failed:", error)
+      Logger.error("Create Account failed:", error)
       if error.ex == 'CmServerLockedException'
         @set('serverLocked', true)
       else
@@ -140,7 +148,7 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
 
   setup: ( ->
     @setProperties
-      cosigners: Ember.A()
+      cosigners: A()
       #coin: @get('availableCoins.firstObject.unit')
   ).on('init')
 
@@ -155,7 +163,7 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
 
   actions:
     selectCoin: (c) ->
-      if unit = Ember.get(c, 'unit')
+      if unit = get(c, 'unit')
         @set('coin', unit)
 
     destroyWizard: ->
@@ -211,4 +219,5 @@ NewAccountWizard = Ember.Component.extend(AsWizard, Validations, ValidationsHelp
     withServer: ->
       @set('wantsServer', true)
 )
-`export default NewAccountWizard`
+
+export default NewAccountWizard

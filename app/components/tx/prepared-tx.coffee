@@ -1,10 +1,13 @@
-`import Ember from 'ember'`
-`import { task } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { get, getWithDefault } from '@ember/object'
 
-PreparedTx = Ember.Component.extend(
+import { task } from 'ember-concurrency'
 
-  cm: Ember.inject.service('cm-session')
-  ptxsvc: Ember.inject.service('cm-ptxs')
+PreparedTx = Component.extend(
+
+  cm: service('cm-session')
+  ptxsvc: service('cm-ptxs')
   tx: null
   view: 'detailed'
 
@@ -22,7 +25,7 @@ PreparedTx = Ember.Component.extend(
     try
       yield @get('ptxsvc').ptxSign(tx)
     catch error
-      @set 'error', Ember.getWithDefault(error, 'msg', error)
+      @set 'error', getWithDefault(error, 'msg', error)
   ).drop()
 
   cancelTx: task((tx) ->
@@ -30,7 +33,7 @@ PreparedTx = Ember.Component.extend(
     try
       yield @get('ptxsvc').ptxCancel(tx)
     catch error
-      @set 'error', Ember.getWithDefault(error, 'msg', error)
+      @set 'error', getWithDefault(error, 'msg', error)
   ).drop()
 
 
@@ -48,4 +51,4 @@ PreparedTx = Ember.Component.extend(
 
 )
 
-`export default PreparedTx`
+export default PreparedTx

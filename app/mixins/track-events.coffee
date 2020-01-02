@@ -1,6 +1,7 @@
-`import Ember from 'ember'`
+import Mixin from '@ember/object/mixin'
+import { A } from '@ember/array'
 
-TrackEvents = Ember.Mixin.create
+TrackEvents = Mixin.create
 
   _events: null
 
@@ -14,9 +15,9 @@ TrackEvents = Ember.Mixin.create
       event: event
       method: method
     }
-    @set('_events',  Ember.A()) if !@get('_events')
+    @set('_events',  A()) if !@get('_events')
     @get('cm.api').on(e.event, e.method)
     @get('_events').pushObject(e)
 
 
-`export default TrackEvents`
+export default TrackEvents

@@ -1,6 +1,6 @@
-`import Ember from 'ember'`
+import Component from '@ember/component'
 
-MainNavigation = Ember.Component.extend(
+MainNavigation = Component.extend(
 
   tagName: 'ul'
   classNames: ['navigation']
@@ -16,4 +16,4 @@ MainNavigation = Ember.Component.extend(
 
 )
 
-`export default MainNavigation`
+export default MainNavigation

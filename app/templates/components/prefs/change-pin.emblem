@@ -1,10 +1,10 @@
 = if success
   = leaf-alert type='success' dark=true
-    | Pin changed with success
+    = t 'prefs.pin.changed'
 
 = if error
   = leaf-alert type='danger' dark=true
-    | Pin was not changed
+    = t 'prefs.pin.failure'
 
 = if changing
   .row

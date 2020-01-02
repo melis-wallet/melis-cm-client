@@ -1,15 +1,13 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
 
+MainAccountIndexRoute = Route.extend(
 
-MainAccountIndexRoute = Ember.Route.extend(
-
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
-
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
 
   model: (params) ->
-    cm = @get('cm')
-    cm.waitForReady()
+    @get('cm').waitForReady()
 )
 
-`export default MainAccountIndexRoute`
+export default MainAccountIndexRoute

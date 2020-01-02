@@ -1,14 +1,15 @@
-`import Ember from 'ember'`
+import Controller from '@ember/controller'
+import { inject as service } from '@ember/service'
+import { alias, sort } from '@ember/object/computed'
 
-MainDashboardController = Ember.Controller.extend(
+MainDashboardController = Controller.extend(
 
-  media: Ember.inject.service('responsive-media')
-  coinsvc: Ember.inject.service('cm-coin')
+  media: service('responsive-media')
+  coinsvc: service('cm-coin')
 
   accountsSorting: ['cmo.cd:asc'],
-  accounts: Ember.computed.sort('cm.visibleAccts', 'accountsSorting')
-
+  accounts: sort('cm.visibleAccts', 'accountsSorting')
 
 )
 
-`export default MainDashboardController`
+export default MainDashboardController

@@ -1,20 +1,23 @@
-`import Ember from 'ember'`
-`import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
+
+import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'
 
 LABELS = ['initial']
 INFO = 'Startup Widget'
 
-StreamEvt = Ember.Component.extend(ModelFactory,
+StreamEvt = Component.extend(ModelFactory,
 
-  cm: Ember.inject.service('cm-session')
+  cm: service('cm-session')
+  service: service('cm-address-provider')
+
   classNames: ['row', 'animated', 'fadeIn']
 
-  service: Ember.inject.service('cm-address-provider')
-  currentAddress: Ember.computed.alias('service.current.currentAddress')
-
+  currentAddress: alias('service.current.currentAddress')
 
   setup: ( -> @get('service').ensureCurrent() ).on('init')
 )
 
 
-`export default StreamEvt`
+export default StreamEvt

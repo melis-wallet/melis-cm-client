@@ -1,19 +1,23 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias } from '@ember/object/computed'
 
-IncompleteAccount = Ember.Component.extend(
+import { task, taskGroup } from 'ember-concurrency'
 
-  cm: Ember.inject.service('cm-session')
+import Logger from 'melis-cm-svcs/utils/logger'
+
+
+IncompleteAccount = Component.extend(
+
+  cm: service('cm-session')
+  acctInfo: service('cm-account-info')
 
   apiOps: taskGroup().drop()
 
   account: null
-
-  cosigners: Ember.computed.alias('account.info.cosigners')
-  acctInfo: Ember.inject.service('cm-account-info')
+  cosigners: alias('account.info.cosigners')
 
   classNames: ['row', 'animated', 'fadeIn']
-
 
   deleteAcct: task( ->
     cm = @get('cm')
@@ -24,10 +28,9 @@ IncompleteAccount = Ember.Component.extend(
 
 
       catch error
-        Ember.Logger.error 'Error: ', error
+        Logger.error 'Error: ', error
 
   ).group('apiOps')
-
 
   actions:
     deleteAcct: ->
@@ -35,5 +38,4 @@ IncompleteAccount = Ember.Component.extend(
 
 )
 
-
-`export default IncompleteAccount`
+export default IncompleteAccount

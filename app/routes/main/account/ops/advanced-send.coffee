@@ -1,6 +1,6 @@
-`import Ember from 'ember'`
+import Route from '@ember/routing/route'
 
-MainAccountAdvSendRoute = Ember.Route.extend(
+MainAccountAdvSendRoute = Route.extend(
 
   beforeModel: (transition) ->
     if !@get('cm.currentAccount.isComplete')
@@ -8,4 +8,4 @@ MainAccountAdvSendRoute = Ember.Route.extend(
 
 )
 
-`export default MainAccountAdvSendRoute`
+export default MainAccountAdvSendRoute

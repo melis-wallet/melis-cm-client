@@ -1,18 +1,26 @@
-`import Ember from 'ember'`
-`import Configuration from 'melis-cm-svcs/utils/configuration'`
-`import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'`
-`import BackButton from '../../mixins/backbutton-support'`
-`import CMCore from 'npm:melis-api-js'`
-`import { translationMacro as t } from "ember-i18n"`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
+import { alias, notEmpty } from '@ember/object/computed'
+import { get, set } from '@ember/object'
+
+import Configuration from 'melis-cm-svcs/utils/configuration'
+import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
+import BackButton from '../../mixins/backbutton-support'
+import CMCore from 'npm:melis-api-js'
+import { translationMacro as t } from "ember-i18n"
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 C = CMCore.C
 
-EnrollWizard = Ember.Component.extend(AsWizard, BackButton,
 
-  cm: Ember.inject.service('cm-session')
-  credentials: Ember.inject.service('cm-credentials')
-  aa: Ember.inject.service('aa-provider')
+EnrollWizard = Component.extend(AsWizard, BackButton,
+
+  cm: service('cm-session')
+  credentials: service('cm-credentials')
+  aa: service('aa-provider')
+  coinsvc: service('cm-coin')
 
   defaultAccountName: t('account.defaults.name')
 
@@ -37,8 +45,17 @@ EnrollWizard = Ember.Component.extend(AsWizard, BackButton,
 
   doInviteCheck: false
 
+  availableCoins: alias('coinsvc.enabledCoins')
+
+  selectedCoin: ( ->
+    if c = @get('coin')
+      @get('availableCoins').findBy('unit', c)
+  ).property('coin', 'availableCoins')
+
+  coin: null
 
   setup: (->
+    @set('coin', @get('availableCoins.firstObject.unit'))
     if !@get('credentials.validCredentials')
       @set('skipBackup', true)
       @markCompleted(1, 2)
@@ -48,14 +65,14 @@ EnrollWizard = Ember.Component.extend(AsWizard, BackButton,
   closeWallet: task( ->
     return unless @get('cm.currentWallet')
 
-    Ember.Logger.warn "Wallet is already open during enroll"
+    Logger.warn "Wallet is already open during enroll"
     try
       yield @get('cm').walletClose()
     catch err
-      Ember.Logger.error "failed closing wallet: ", err
+      Logger.error "failed closing wallet: ", err
   )
 
-  enrollWalletWithInvite: task((pin)->
+  enrollWalletWithInvite: task((pin, coin)->
     cm = @get('cm')
     @get('credentials').reset()
 
@@ -71,27 +88,27 @@ EnrollWizard = Ember.Component.extend(AsWizard, BackButton,
         @updateState 100, 'enroll.state.done'
         @set 'enrollDone', true
       catch err
-        Ember.Logger.error "enroll failed: ", err
+        Logger.error "enroll failed: ", err
         @set 'genFailed', err.msg
 
     else
       try
         yield @get('aa').checkInvite( (token) -> cm.enrollWallet(pin) )
         @updateState 60, 'enroll.state.acreate'
-        account = yield cm.accountCreate(type: @get('simpleAccount'), meta: {name: @get('defaultAccountName').toString()})
+        account = yield cm.accountCreate(coin: coin, type: @get('simpleAccount'), meta: {name: @get('defaultAccountName').toString()})
         if account
           cm.selectAccount(account.get('pubId'))
         @updateState 100, 'enroll.state.done'
         @set 'enrollDone', true
       catch err
-        Ember.Logger.error "Enroll failed: ", err
+        Logger.error "Enroll failed: ", err
         if err.ex == 'CmServerLockedException'
           @set 'serverLocked', true
         else
           @set 'genFailed', (err.msg || err)
   ).group('apiOps')
 
-  enrollWallet: task((pin)->
+  enrollWallet: task((pin, coin)->
     cm = @get('cm')
     @get('credentials').reset()
 
@@ -106,20 +123,20 @@ EnrollWizard = Ember.Component.extend(AsWizard, BackButton,
         @updateState 100, 'enroll.state.done'
         @set 'enrollDone', true
       catch err
-        Ember.Logger.error "enroll failed: ", err
+        Logger.error "enroll failed: ", err
         @set 'genFailed', err.msg
 
     else
       try
         yield cm.enrollWallet(pin)
         @updateState 60, 'enroll.state.acreate'
-        account = yield cm.accountCreate(type: @get('simpleAccount'), meta: {name: @get('defaultAccountName').toString()})
+        account = yield cm.accountCreate(coin: coin, type: @get('simpleAccount'), meta: {name: @get('defaultAccountName').toString()})
         if account
           cm.selectAccount(account.get('pubId'))
         @updateState 100, 'enroll.state.done'
         @set 'enrollDone', true
       catch err
-        Ember.Logger.error "Enroll failed: ", err
+        Logger.error "Enroll failed: ", err
         if err.ex == 'CmServerLockedException'
           @set 'serverLocked', true
         else
@@ -131,7 +148,23 @@ EnrollWizard = Ember.Component.extend(AsWizard, BackButton,
     @set 'genProgress', progress
     @set 'genState', state
 
+  performEnroll:  ->
+    # Always skip while in beta
+    if true #  @get('skipAccount')
+      if @get('doInviteCheck')
+        @get('enrollWalletWithInvite').perform(@get('chosenPin'), @get('coin'))
+      else
+        @get('enrollWallet').perform(@get('chosenPin'), @get('coin'))
+
   actions:
+    coinSelected: ->
+      @markCompleted(3, 4)
+      @performEnroll()
+
+    selectCoin: (c) ->
+      if unit = get(c, 'unit')
+        @set('coin', unit)
+
     startOver: ->
       @setProperties
         step: 2
@@ -147,30 +180,20 @@ EnrollWizard = Ember.Component.extend(AsWizard, BackButton,
 
     typeSelected: ->
       @markCompleted(3, 4)
-      if @get('doInviteCheck')
-        @get('enrollWalletWithInvite').perform(@get('chosenPin'))
-      else
-        @get('enrollWallet').perform(@get('chosenPin'))
+      @performEnroll()
 
     confirmEnroll: ->
       @markCompleted(1, 2)
 
     doneSetPIN: (pin)->
       @set 'chosenPin', pin
-      # Always skip while in beta
-      if true #  @get('skipAccount')
-        @markCompleted(2, 3)
+      @markCompleted(2, 3)
+      if @get('skipAccount')
         @markCompleted(3, 4)
-        if @get('doInviteCheck')
-          @get('enrollWalletWithInvite').perform(@get('chosenPin'))
-        else
-          @get('enrollWallet').perform(@get('chosenPin'))
-      else
-        @markCompleted(2, 3)
+        @performEnroll()
 
     completeEnroll: ->
       @markCompleted(4)
-
 )
 
-`export default EnrollWizard`
+export default EnrollWizard

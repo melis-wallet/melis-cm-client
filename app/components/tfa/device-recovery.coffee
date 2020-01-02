@@ -1,11 +1,15 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
-DeviceRecovery = Ember.Component.extend(
+import { task, taskGroup } from 'ember-concurrency'
+
+import Logger from 'melis-cm-svcs/utils/logger'
 
 
-  cm: Ember.inject.service('cm-session')
-  aa: Ember.inject.service('aa-provider')
+DeviceRecovery = Component.extend(
+
+  cm: service('cm-session')
+  aa: service('aa-provider')
 
   recovering: false
   doneRequest: false
@@ -23,7 +27,7 @@ DeviceRecovery = Ember.Component.extend(
       res = yield @get('aa').askLocalPin(op, "Reset TFA Devices", true, true)
       @set 'doneRequest', true
     catch error
-      Ember.Logger.error('Error resetting TFA', error)
+      Logger.error('Error resetting TFA', error)
       @set 'error', true
   )
 
@@ -42,4 +46,4 @@ DeviceRecovery = Ember.Component.extend(
 
 )
 
-`export default DeviceRecovery`
+export default DeviceRecovery

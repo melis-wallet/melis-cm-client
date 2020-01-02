@@ -1,8 +1,9 @@
-`import Ember from 'ember'`
-`import { task, taskGroup } from 'ember-concurrency'`
-`import { validator, buildValidations } from 'ember-cp-validations'`
-`import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'`
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
+import { task, taskGroup } from 'ember-concurrency'
+import { validator, buildValidations } from 'ember-cp-validations'
+import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 
 Validations = buildValidations(
@@ -12,9 +13,9 @@ Validations = buildValidations(
   ]
 )
 
-TokenInput = Ember.Component.extend(Validations, ValidationsHelper,
+TokenInput = Component.extend(Validations, ValidationsHelper,
 
-  aa: Ember.inject.service('aa-provider')
+  aa: service('aa-provider')
 
   validateError: false
   invalidToken: false
@@ -43,4 +44,4 @@ TokenInput = Ember.Component.extend(Validations, ValidationsHelper,
 
 )
 
-`export default TokenInput`
+export default TokenInput

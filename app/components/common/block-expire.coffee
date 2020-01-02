@@ -1,16 +1,15 @@
-`import Ember from 'ember'`
-
-
+import Component from '@ember/component'
+import { inject as service } from '@ember/service'
 
 CUTOFF = 7*24*6
 
-BlockExpire = Ember.Component.extend(
+BlockExpire = Component.extend(
 
   tagName: 'span'
   classNames: ['label']
   classNameBindings: ['labelClass']
 
-  cm:  Ember.inject.service('cm-session')
+  cm: service('cm-session')
   value: null
 
   expired: (->
@@ -30,4 +29,4 @@ BlockExpire = Ember.Component.extend(
   ).property('expired', 'expiring')
 )
 
-`export default BlockExpire`
+export default BlockExpire
