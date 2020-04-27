@@ -15,8 +15,12 @@ You will need the following things properly installed on your computer.
 
 ## Installation
 
+To be able to build a working application you will need to download and unpack the `ember-leaf-theme-basic` package from https://github.com/melis-wallet/melis-cm-client/releases. 
+
+Please note that the content of this page is subject to a separate license (see `ASSETS-LICENSE.md`), and can not be redistributed totally or in part. 
+
 * enter the melis-cm-client directory
-* `npm install`
+* `yarn`
 * `bower install`
 
 ## Running / Development
@@ -25,14 +29,6 @@ You will need the following things properly installed on your computer.
 * `ember server`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
-
-### Running Tests
-
-* `ember test`
-* `ember test --server`
 
 ### Building
 
@@ -43,7 +39,7 @@ Make use of the many generators for code, try `ember help generate` for more det
 
 ### Deploying
 
-Specify what it takes to deploy your app.
+The built application can be deployed with any web server. Do not use `ember serve` as a production server.
 
 
 ## Electron App
@@ -56,6 +52,7 @@ Specify what it takes to deploy your app.
 ### Building
 
 * DEPLOY_TARGET='<target>' ember electron:package  --platform=[linux|win32|darwin|all] --name '<app-name>'
+
 
 ## Android App
 
@@ -79,6 +76,9 @@ Build an android app for live reload
 
 ###  Building a production app
 
+Building for android assumes a Cordova environment has been set-up, and the Android SDK is correctly configured.
+Also the `build-android.sh` script makes assumptions about the directory layout and the presence of a keystore.
+
 * build/build-android.sh <target> <version-number> <signing-key-password>
 
 or
@@ -95,6 +95,3 @@ or
   * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
   * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
 
-
-
-----1.1.3+d0f7c245
