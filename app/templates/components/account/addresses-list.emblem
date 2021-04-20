@@ -4,6 +4,8 @@
     .row
       .col-md-6
       .col-md-6.text-right
+        = leaf-button icon='fa fa-download' outline='true' on-click='exportKeys' tooltip='Export Keys'
+        '
         = leaf-button icon='fa fa-pencil-square' outline='true' on-click='doSignature'
         '
         = leaf-button label=(t 'sign.check.button') outline='true' on-click='chkSignature'

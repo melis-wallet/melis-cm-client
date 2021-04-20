@@ -1,7 +1,7 @@
 import Component from '@ember/component'
 import { A } from '@ember/array'
 
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 
 
 SimpleAccSelector = Component.extend(

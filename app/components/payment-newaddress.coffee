@@ -51,10 +51,10 @@ PaymentNewaddress = Component.extend(Alertable,
   ).drop()
 
   newActiveAddress: task( ->
-    service = @get('service')
+    svc = @get('service')
 
     try
-      yield service.createActiveAddr('New Special address')
+      yield svc.createActiveAddr('New Special address')
     catch error
       Logger.error "Error: ", error
   ).drop()

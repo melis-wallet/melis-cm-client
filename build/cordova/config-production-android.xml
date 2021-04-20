@@ -21,7 +21,7 @@
         <icon src="res/melis-badger.png" />
         <allow-intent href="market:*" />
     </platform>
-    <engine name="android" spec="~7.1.4" />
+    <engine name="android" spec="~9.0.0" />
     <preference name="loadUrlTimeoutValue" value="90000" />
     <preference name="AppendUserAgent" value="Melis" />
     <preference name="android-minSdkVersion" value="24" />

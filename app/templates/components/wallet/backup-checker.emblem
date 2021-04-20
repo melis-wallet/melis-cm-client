@@ -79,8 +79,11 @@
             p = leaf-note type='info'
               h4 = t 'backup.ck.cmnemo.title'
               p = t 'backup.ck.cmnemo.caption'
-          p = em-form model=this submitButton=false action='submitPassphrase' as |f|
-            = f.input property='passphrase' type='password' label=(t 'wallet.mnemo.pass.label')  placeholder=(t 'wallet.mnemo.pass.ph')
+          p
+            % BsForm @model=this @onSubmit={ action 'submitPassphrase' } as |f|
+              % f.element @controlType='password' @property="passphrase" @label={ t 'wallet.mnemo.pass.label' } as |el|
+                % el.control placeholder={ t 'wallet.mnemo.pass.ph' } 
+
 
           = if failed
             .row
@@ -89,5 +92,5 @@
               .col-sm-4
                 p = leaf-button btype='button' type='primary' block=true icon='fa fa-check' on-click='submitPassphrase'
 
-          = else if isValid
+          = else if validations.isValid
             p = leaf-button btype='button' type='primary' block=true icon='fa fa-check' on-click='submitPassphrase'

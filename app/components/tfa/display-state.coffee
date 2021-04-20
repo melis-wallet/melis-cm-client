@@ -8,7 +8,7 @@ import { task, taskGroup } from 'ember-concurrency'
 import Logger from 'melis-cm-svcs/utils/logger'
 
 
-SUPPORTED_DRIVERS=['email', 'telegram', 'rfc6238', 'xmpp', 'regtest']
+SUPPORTED_DRIVERS=['email', 'telegram', 'matrix', 'rfc6238', 'xmpp', 'regtest']
 
 DisplayState = Component.extend(
 
@@ -70,6 +70,22 @@ DisplayState = Component.extend(
 
   ).group('apiOps')
 
+  cancelRecovery: task( ->
+    api = @get('cm.api')
+    @set 'error', false
+
+    op = (tfa) ->
+      api.tfaAuthValidate(tfa.payload)
+
+    try
+      res = yield @get('aa').tfaAuth(op, "Cancel Reset TFA Devices")
+      @get('refreshState').perform()
+    
+    catch error
+      Logger.error('Error cancel reset TFA', error)
+      @set 'error', true
+  )
+
   actions:
 
     disableDevice: (device) ->
@@ -83,6 +99,9 @@ DisplayState = Component.extend(
 
     enrollFinish: (device, token) ->
       @get('enrollFinish').perform(device, token)
+
+    cancelRecovery: (device) ->
+      @get('cancelRecovery').perform()
 )
 
 export default DisplayState

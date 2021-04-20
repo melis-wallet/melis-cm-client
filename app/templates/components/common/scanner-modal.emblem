@@ -11,7 +11,7 @@
         = if mediaError
           .alert.alert-dark = t 'qr.scan.errors.media-error'
         = else if mod.did-open
-          = misc/qr-scanner on-valid-code='successAcquire' on-media-error='mediaError' autostart=true showControls=true
+          = misc/qr-scanner on-valid-code=(action 'successAcquire') on-media-error=(action 'mediaError') autostart=true showControls=true
       = leaf-navs-panel parent=content idx='upload'
         = misc/qr-uploader on-confirm='successAcquire'
   /= leaf-modal-footer modal=mod

@@ -107,6 +107,13 @@ module.exports = function(environment) {
     csp['connect-src'] = "'self' wss://test-api.melis.io/stomp";
   }
 
+  if (deployTarget === 'preprod') {
+    ENV.APP.publicUrl= 'https://wallet.melis.io';
+    session.apiDiscoveryUrl =  'https://discover.melis.io/api/v1/endpoint/stomp';
+    ENV.APP.recoveryUrls = ['https://recovery.melis.io/', 'https://github.com/melis-wallet/melis-recovery']
+    csp['connect-src'] = "'self' wss://api.melis.io/stomp";
+  }  
+
   if (deployTarget === 'production') {
     ENV.APP.publicUrl= 'https://wallet.melis.io';
     session.apiDiscoveryUrl =  'https://discover.melis.io/api/v1/endpoint/stomp';

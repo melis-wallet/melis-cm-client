@@ -10,7 +10,9 @@
     h4 = t 'tfa.recovery.done.title'
     p = t 'tfa.recovery.done.caption'
     .row
-      .col-xs-6.col-xs-offset-6
+      .col-xs-3
+        p = leaf-button icon='fa fa-trash' type='default' on-click='cancelRecovery' block=true
+      .col-xs-6.col-xs-offset-3
         p = leaf-button icon='fa fa-check' type='default' on-click='resetRequest' block=true
 = else if recovering
   = leaf-note type='warning'

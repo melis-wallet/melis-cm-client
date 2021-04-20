@@ -4,7 +4,7 @@ import { alias, sort, empty } from '@ember/object/computed'
 import { get, set, getProperties } from '@ember/object'
 
 import SlyEnabled from 'ember-leaf-tools/mixins/sly-enabled'
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 
 import Logger from 'melis-cm-svcs/utils/logger'
 

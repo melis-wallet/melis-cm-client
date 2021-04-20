@@ -1,4 +1,4 @@
-= em-form model=this submitButton=false action='submitMnemonicEnter' as |f|
+% BsForm @model=this @onSubmit={ action 'submitMnemonicEnter' } as |f|
 
   /= em-text rows=3 property='mnemonic' label=(t 'wallet.mnemo.input.label') placeholder=(t 'wallet.mnemo.input.ph') cid='mnemonic_input'
 
@@ -7,7 +7,7 @@
     = leaf-multiple-toggler options=wordlists value=selectedList on-change=(action (mut selectedList)) class='btn-xs btn-outline' icon='fa fa-flag-o'
   .clearfix
 
-  = leaf-keywords-input source=wordlist value=mnemonic valid=isValid disabled=disabled placeholder=(t 'wallet.mnemo.input.ph')  as | ki |
+  = leaf-keywords-input source=wordlist value=mnemonic valid=validations.attrs.mnemonic.isValid disabled=disabled placeholder=(t 'wallet.mnemo.input.ph')  as | ki |
     = leaf-keywords-suggest [
       suggestions=ki.firstSuggestions
       active=ki.suggestActive
@@ -18,8 +18,8 @@
 
   = liquid-if encrypted use='toDown'
     br
-    = f.input property='passphrase' type='password' label=(t 'wallet.mnemo.pass.label')  placeholder=(t 'wallet.mnemo.pass.ph')  cid='passphrase_input'
-
+    % f.element @controlType='password' @property='passphrase' @label={t 'wallet.mnemo.pass.label'} as |el|
+      % el.control placeholder={ t 'wallet.mnemo.pass.ph'  } id='passphrase_input' autofocus=true
 br
-if isValid
+if validations.isValid
   p = leaf-button btype='button' type='primary' block=true icon='fa fa-check' on-click='submitMnemonic' id='submit-phrase'

@@ -88,9 +88,9 @@ StreamAddress = Component.extend(
   apiOps: taskGroup().drop()
 
   releaseAddr: task( (addr)->
-    service = @get('addrsvc')
+    svc = @get('addrsvc')
     try
-      yield service.releaseAddress(addr)
+      yield svc.releaseAddress(addr)
     catch error
       Logger.error "Error: ", error
 

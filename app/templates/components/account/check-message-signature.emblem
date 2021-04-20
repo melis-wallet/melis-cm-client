@@ -1,13 +1,16 @@
-= em-form model=this submitButton=false action='checkSignature' as |f|
+% BsForm @model=this @onSubmit={ action 'doCheck' } as |f|
   = leaf-note type='default'
     h4 = t 'sign.check.text'
     hr
-    p = f.text autoresize=true property='text' rows=2
+    p 
+      % f.element @controlType='textarea' @property='text' as |el|
+        = textarea class="form-control" autoresize=true rows=2 value=text
 
   = leaf-note type='info'
-    = f.input property='address' label=(t 'sign.check.address')
-    = f.text autoresize=true property='signature' rows=2 label=(t 'sign.check.signature')
-
+    % f.element @controlType='text' @property="address" @label={ t 'sign.check.address' } as |el|
+      % el.control 
+    % f.element @controlType='textarea' @property='signature' @label={ t 'sign.check.signature' } as |el|
+      = textarea class="form-control" autoresize=true rows=2 value=signature
   = if result
     = if valid
       .alert.alert-success.alert-dark
@@ -15,5 +18,6 @@
     = else
       .alert.alert-warning.alert-dark
         = t 'sign.check.invalid'
-  = if isValid
+  = if validations.isValid
     = leaf-button label=(t 'sign.check.check') on-click='doCheck' block=true
+    

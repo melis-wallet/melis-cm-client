@@ -4,7 +4,7 @@ import { filter, filterBy } from '@ember/object/computed'
 import { get } from '@ember/object'
 import { isEmpty } from '@ember/utils'
 
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 import { task, taskGroup } from 'ember-concurrency'
 import { waitTime, waitIdle, waitIdleTime } from 'melis-cm-svcs/utils/delayed-runners'
 

@@ -15,10 +15,23 @@ ScannerProvider = Service.extend(
 
   cordovaPlatform: service('ember-cordova/platform')
   device: service('device-support')
-  routing: service('-routing')
+  router: service('router')
 
   modalId: 'scanner-modal'
   modalOpen: false
+  nativeScannerActive: false
+
+  # use native scanner on Android, vs html5/js
+  useNative: true
+
+
+  init: ->
+    @_super(arguments...)
+    @router.on('routeWillChange', =>
+      if @get('nativeScannerActive')
+        @abortAcquire('aborted')
+    )
+
 
 
   getAddressFromData: (data, coin) ->
@@ -33,18 +46,18 @@ ScannerProvider = Service.extend(
     else
 
       # TODO
-      return addr
+    return addr
 
 
   actOnScan: (data) ->
     id = @get('cm.currentAccount.pubId')
     if (addr = @getAddressFromData(data))
-      @get("routing").transitionTo('main.account.ops.send', [id], {address: addr})
+      @router.transitionTo('main.account.ops.send', [id], {address: addr})
 
     if data.scheme
       switch data.scheme.toLowerCase()
         when 'bitcoin'
-          @get("routing").transitionTo('main.account.ops.send', [id], {address: data.address})
+          @router.transitionTo('main.account.ops.send', [id], {address: data.address})
         else
           # tbd
           Logger.error "Unknown scheme"
@@ -54,35 +67,30 @@ ScannerProvider = Service.extend(
 
 
   independentScan: (opts) ->
-    if @get('device.isMobile')
+    if @get('device.isMobile') && @get('useNative')
       return @nativeScan().then((r) ->
-        Logger.debug('NATIVE scanner succeded: ', r)
+        Logger.debug('[scansvc] NATIVE scanner succeded: ', r)
         return r
       )
 
     else
       return @acquireCode().then((r) =>
-        Logger.debug('JS scanner succeded: ', r)
+        Logger.debug('[scansvc] JS scanner succeded: ', r)
         return r
       )
 
 
   nativeScan: ->
-    pending = RSVP.defer()
-    cordova.plugins.barcodeScanner.scan(
-      ((data) =>
-        Logger.debug "Scanner success: ", data
-        try
-          res = parseURI(data.text)
-        catch e
-          Logger.error "Error in acquisition: ", e
-        pending.resolve(res)
-      ), ( (e) =>
-        pending.reject.e
-        Logger.error "Native scanner: ", e
-      )
-    )
-    return pending.promise
+    console.debug("NATIVE SCANNER OPEN")
+    if request = @get('pendingRequest')
+      RSVP.reject('Already acquiring')
+    else
+      pending = RSVP.defer()
+      @setProperties
+        pendingRequest: pending
+        nativeScannerActive: true
+
+      return pending.promise
 
   acquireCode: ->
     if request = @get('pendingRequest')
@@ -103,12 +111,21 @@ ScannerProvider = Service.extend(
 
 
   abortAcquire: (why) ->
+    Logger.debug('[scansvc] closing scanner')
+    @get('modalManager').hideModal(@get('modalId'), 'closed')
+    @setProperties
+      modalOpen: false
+      nativeScannerActive: false
+
     if request = @get('pendingRequest')
       @set('pendingRequest', null)
       request.reject(why)
 
   successAcquire: (data) ->
-    Logger.debug "Scanner data: ", data
+    Logger.debug "[scansvc] Scanner data: ", data
+    @setProperties
+      modalOpen: false
+      nativeScannerActive: false
 
     @get('modalManager').hideModal(@get('modalId'), 'success')
     if request = @get('pendingRequest')
@@ -117,7 +134,7 @@ ScannerProvider = Service.extend(
       try
         res = parseURI(data)
       catch e
-        Logger.error "Error in acquisition: ", e
+        Logger.error "[scansvc] Error in acquisition: ", e
       request.resolve(res)
 
 )

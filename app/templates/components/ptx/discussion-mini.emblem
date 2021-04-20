@@ -31,8 +31,10 @@
         = t 'tx.discussion.has-approved'
 
 = if input
-  = em-form model=this submitButton=false action='enterMessage' as |f|
-    = if prompt
-      = f.input property='newMessage' type='text' placeholder=prompt
-    = else
-      = f.input property='newMessage' type='text' placeholder=(t 'tx.discussion.enter')
+  % BsForm @formLayout="vertical" @model=this @onSubmit={ action 'enterMessage' } as |f|
+    % f.element @controlType='text' @property="newMessage" as |el|
+      = if prompt
+        % el.control placeholder=prompt 
+      = else
+        % el.control placeholder={ t 'tx.discussion.enter' }
+

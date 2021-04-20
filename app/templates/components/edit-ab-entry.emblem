@@ -1,14 +1,14 @@
-= em-form model=value submitButton=false action='submitEntry' as |f|
-
+% BsForm @model=value @onSubmit={ action 'submitEntry' } as |f|
 
   .form-group
     label.control-label = t 'ab.form.type.label'
 
 
-    = power-select options=contactTypes selected=currentType searchEnabled=false onchange=(action 'changeType') as |type|
+    = power-select options=contactTypes selected=currentType searchEnabled=false onChange=(action 'changeType') as |type|
       b = t type.label
 
-  = f.input property='name' label=(t 'ab.form.name.label') placeholder=(t 'ab.form.name.ph') class='form-group required'
+  % f.element @controlType='text' @property="name" @label={ t 'ab.form.name.label' } as |el|
+      % el.control placeholder={ t 'ab.form.name.ph' } class='required'
 
   = if value.isCm
     .form-group class="{{if aliasError 'has-error has-feedback'}}{{if aliasInfo 'has-success has-feedback'}} required"
@@ -56,13 +56,14 @@
     .form-group
       label.control-label = t 'ab.form.type.coin'
 
-      = power-select renderInPlace=true options=availableCoins selected=selectedCoin searchEnabled=false onchange=(action 'selectCoin') as |c|
+      = power-select renderInPlace=true options=availableCoins selected=selectedCoin searchEnabled=false onChange=(action 'selectCoin') as |c|
         img.tb-coin-icon style='height: 24px; padding-right: 15px;' src="{{coin-img-path c.unit}}"
         strong = t (concat "coins.unit." c.label)
 
     .row
       .col-xs-10
-        = f.input property='address' label=(t 'ab.form.address.label') placeholder=(t 'ab.form.address.ph')
+        % f.element @controlType='text' @property="address" @label={ t 'ab.form.address.label' } as |el|
+          % el.control placeholder={ t 'ab.form.address.ph' } class='required'        
       .col-xs-2
         = leaf-button type='default' icon='fa fa-camera' outline=true  type='sm' on-click='scanAddress' class="xr-top-sp-f"
 

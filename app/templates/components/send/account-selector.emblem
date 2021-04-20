@@ -3,7 +3,7 @@
     selected=selected
     searchEnabled=false
     placeholder=(t 'paysend.form.account.ph')
-    onchange=(action "changedAccount")
+    onChange=(action "changedAccount")
 ] as |c|
   span.label.colored-bg class=c.color style='min-width: 24px; margin-right: 5px;' = account-identifier account=c
   b = c.name

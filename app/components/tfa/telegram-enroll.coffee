@@ -3,7 +3,6 @@ import { inject as service } from '@ember/service'
 import { get } from '@ember/object'
 
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 import { task, taskGroup } from 'ember-concurrency'
 
 import Logger from 'melis-cm-svcs/utils/logger'
@@ -17,7 +16,7 @@ Validations = buildValidations(
   ]
 )
 
-TelegramEnroll = Component.extend(Validations, ValidationsHelper,
+TelegramEnroll = Component.extend(Validations, 
 
 
   cm: service('cm-session')

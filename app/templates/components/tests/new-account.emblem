@@ -3,11 +3,12 @@
 = leaf-note title="Create new account" type='info' class='no-margin-vr'
   | This allows you to create new accounts for tests.
 
-= em-form model=this submitButton=false action='submitSendFunds' as |f|
+% BsForm @model=this @onSubmit={ action 'submitSendFunds' } as |f|
   .panel-body
     .row
       .col-xs-12
-        = f.input property='name' label='Name' placeholder="Enter a name for the account..."
+        % f.element @controlType='text' @property="name" @label='Name' as |el|
+          % el.control placeholder="Enter a name for the account..."
         = leaf-select-2 content=accountTypes value=accountType optionValuePath="id" placeholder="Choose the account type..." searchEnabled=false
     .row
       .col-xs-12.padding-sm-vr

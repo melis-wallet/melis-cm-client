@@ -14,7 +14,7 @@
     .input-group
       = input type='text' value=newValue class='form-control bordered' placeholder=(t 'paysend.form.pubid.ph')
       span.input-group-btn
-        = leaf-button type='default' icon='fa fa-search' block=true on-click='lookupInfo' class=(if apiOps.isRunning 'btn-loading') disabled=(not isValid)
+        = leaf-button type='default' icon='fa fa-search' block=true on-click='lookupInfo' class=(if apiOps.isRunning 'btn-loading') disabled=(not validations.isValid)
     = if lookupError
       span.help-block
         = lookupError

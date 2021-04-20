@@ -10,14 +10,14 @@
     = leaf-note type='success'
       h5 = t 'view.nlock.recovery.time' days=lockTime
       .pull-right
-        = power-select options=lockTimeOpts selected=selectedLockOpt searchEnabled=false searchPlaceholder=(t 'view.nlock.time.ph') onchange=(action 'changeLockTime') as |v|
+        = power-select options=lockTimeOpts selected=selectedLockOpt searchEnabled=false searchPlaceholder=(t 'view.nlock.time.ph') onChange=(action 'changeLockTime') as |v|
           = t v.label
       .clearfix
   = else
     = leaf-note type='warning'
       h5 = t 'view.nlock.recovery.disabled'
       .pull-right
-        = power-select options=lockTimeOpts selected=selectedLockOpt searchEnabled=false searchPlaceholder=(t 'view.nlock.time.ph') onchange=(action 'changeLockTime') as |v|
+        = power-select options=lockTimeOpts selected=selectedLockOpt searchEnabled=false searchPlaceholder=(t 'view.nlock.time.ph') onChange=(action 'changeLockTime') as |v|
           = t v.label
       .clearfix
 

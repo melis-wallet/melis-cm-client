@@ -24,10 +24,12 @@
 
 
   = else
-    = em-form model=this submitButton=false action='enterAddress' as |f|
-      = f.input property='telegramAddress' type='text' placeholder=(t 'tfa.telegram.form.address.ph') cid='telegram_input'
+    % BsForm @model=this @onSubmit={ action 'enterAddress' } as |f|
+      % f.element @controlType='text' @property="telegramAddress" as |el|
+        % el.control placeholder={ t 'tfa.telegram.form.address.ph' } id='telegram_input' autofocus=true
 
-    = liquid-if isValid class='ll-down-up'
+
+    = liquid-if validations.isValid class='ll-down-up'
       .row
         .col-sm-4
           = leaf-button icon='fa fa-trash' type='default' block=true on-click='cancelEnroll' disabled=busy

@@ -33,8 +33,9 @@ p
     hr
     = leaf-alert type='danger' dismiss=false
       = t 'prefs.alias.once'
-    = em-form model=this submitButton=false as |f|
-      = f.input property='newAlias' type='text' placeholder=(t 'prefs.alias.ph')
+    % BsForm @model=this @onSubmit={ action 'confirmAliasChange' } as |f|
+      % f.element @controlType='text' @property="newAlias" as |el|
+        % el.control placeholder={ t 'prefs.alias.ph' }       
     = liquid-if canSubmit class='ll-down-up'
       = leaf-button type='warning' label=(t 'prefs.alias.button') block=true on-click='confirmAliasChange'
 = else

@@ -5,7 +5,6 @@ import { isBlank } from '@ember/utils'
 
 import Configuration from 'melis-cm-svcs/utils/configuration'
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 import Logger from 'melis-cm-svcs/utils/logger'
 
@@ -17,7 +16,7 @@ Validations = buildValidations(
   ]
 )
 
-SignInWidget = Component.extend(Validations, ValidationsHelper,
+SignInWidget = Component.extend(Validations, 
 
   cm: service('cm-session')
   credentials: service('cm-credentials')

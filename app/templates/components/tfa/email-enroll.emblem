@@ -6,10 +6,11 @@
     = leaf-alert type='danger' dark=true
       = enrollError
 
-  = em-form model=this submitButton=false action='enterEmail' as |f|
-    = f.input property='emailAddress' type='text' placeholder=(t 'tfa.email.form.email.ph')  cid='email_input'
+  % BsForm @model=this @onSubmit={ action 'enterEmail' } as |f|
+    % f.element @controlType='text' @property="emailAddress" as |el|
+      % el.control placeholder={ t 'tfa.email.form.email.ph' } id='email_input' autofocus=true    
 
-  = liquid-if isValid class='ll-down-up'
+  = liquid-if validations.isValid class='ll-down-up'
     .row
       .col-sm-4
         /= leaf-button icon='fa fa-trash' type='default' block=true on-click='cancelEnroll' disabled=busy

@@ -5,10 +5,9 @@ import { A } from '@ember/array'
 import { get, set } from '@ember/object'
 import { scheduleOnce } from '@ember/runloop'
 
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 import ModelFactory from 'melis-cm-svcs/mixins/simple-model-factory'
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 import Logger from 'melis-cm-svcs/utils/logger'
 
@@ -22,7 +21,7 @@ Validations = buildValidations(
   ]
 )
 
-CollectCosigners = Component.extend(Validations, ValidationsHelper, ModelFactory,
+CollectCosigners = Component.extend(Validations, ModelFactory,
 
   info: service('cm-account-info')
 
@@ -83,12 +82,12 @@ CollectCosigners = Component.extend(Validations, ValidationsHelper, ModelFactory
   ).observes('minSignatures', 'totalSignatures')
 
   validState: (->
-    return false unless @get('isValid')
+    return false unless @get('validations.isValid')
     if (s = @get('currentCosigner'))
       s.get('isValid')
     else
       true
-  ).property('isValid', 'currentCosigner', 'currentCosigner.isValid')
+  ).property('validations.isValid', 'currentCosigner', 'currentCosigner.isValid')
 
 
   feeEstimate: (->
@@ -166,7 +165,7 @@ CollectCosigners = Component.extend(Validations, ValidationsHelper, ModelFactory
       @doneEditMaster()
 
     doneMaster: ->
-      if @get('isValid')
+      if @get('validations.isValid')
         @set 'editMaster', false
 
     doneSigner: ->

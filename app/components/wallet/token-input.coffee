@@ -3,7 +3,6 @@ import { inject as service } from '@ember/service'
 
 import { task, taskGroup } from 'ember-concurrency'
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 
 Validations = buildValidations(
@@ -13,7 +12,7 @@ Validations = buildValidations(
   ]
 )
 
-TokenInput = Component.extend(Validations, ValidationsHelper,
+TokenInput = Component.extend(Validations,
 
   aa: service('aa-provider')
 
@@ -37,7 +36,7 @@ TokenInput = Component.extend(Validations, ValidationsHelper,
 
   actions:
     enterToken: ->
-      if @get('isValid') && (token = @get('token'))
+      if @get('validations.isValid') && (token = @get('token'))
         @get('enterToken').perform(token)
 
 

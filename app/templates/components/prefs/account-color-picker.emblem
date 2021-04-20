@@ -1,3 +1,3 @@
-= power-select options=colors renderInPlace=true searchEnabled=false selected=selected onchange=(action 'colorChanged') as |c|
+= power-select options=colors renderInPlace=true searchEnabled=false selected=selected onChange=(action 'colorChanged') as |c|
   .account-icon style='height: 28px; margin: 2px 0 0 0;'
     span.icon.colored-bg class=c = account.identifier

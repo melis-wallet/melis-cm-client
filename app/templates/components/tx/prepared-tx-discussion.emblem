@@ -56,8 +56,9 @@
     .handle
 
 = if input
-  = em-form model=this submitButton=false action='enterMessage' as |f|
-    = if prompt
-      = f.input property='newMessage' type='text' placeholder=prompt cid='message_input'
-    = else
-      = f.input property='newMessage' type='text' placeholder=(t 'tx.discussion.enter') cid='message_input'
+  % BsForm @formLayout="vertical" @model=this @onSubmit={ action 'enterMessage' } as |f|
+    % f.element @controlType='text' @property="newMessage" as |el|
+      = if prompt
+        % el.control placeholder=prompt id='message_input'
+      = else
+        % el.control placeholder={ t 'tx.discussion.enter' }

@@ -1,5 +1,5 @@
 = leaf-note type='default'
   h4 = t 'wallet.prefs.currency.title'
   p = t 'wallet.prefs.currency.caption'
-  p = power-select options=currencies selected=currency searchField='text' onchange=(action 'changeCurrency') as |cur|
+  p = power-select options=currencies selected=currency searchField='text' onChange=(action 'changeCurrency') as |cur|
     b = cur.text

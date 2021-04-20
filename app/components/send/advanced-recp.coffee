@@ -30,10 +30,7 @@ AdvancedRecp = Component.extend(ModelFactory,
     curr = @get('currency')
     unit = @get('account.subunit.symbol')
 
-    [ {id: unit, value: unit}
-      {id: curr, value: curr}
-    ]
-
+    [ unit, curr ]
   ).property('currency', 'account.subunit')
 
   setup: (->

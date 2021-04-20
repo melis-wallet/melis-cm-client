@@ -60,9 +60,7 @@ PaymentSend = Component.extend(Alertable,
     curr = @get('currency')
     unit = @get('cm.currentAccount.subunit.symbol')
 
-    [ {id: unit, value: unit}
-      {id: curr, value: curr}
-    ]
+    [ unit, curr ]
 
   ).property('currency', 'cm.currentAccount.subunit')
 

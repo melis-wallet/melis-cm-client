@@ -3,7 +3,7 @@ import { isBlank } from '@ember/utils'
 
 
 import BaseValidator from 'ember-cp-validations/validators/base'
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 
 NOT_AN_ALIAS = 'validations.not-alias'
 

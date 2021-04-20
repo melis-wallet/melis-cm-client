@@ -22,6 +22,8 @@ versionCode=`node $DIR/versioncode.js $version`
 echo $versionCode
 
 yarn remove corber --save
+yarn remove ember-cli-sri --save
+
 rm -rf tmp corber
 $SETUP $platform $target
 sed -i -e 's:__ver__:'$version':g' $file

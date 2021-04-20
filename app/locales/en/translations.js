@@ -72,18 +72,21 @@ export default {
       "allcoins": "All Coins",
       "btc": "Bitcoin",
       "bch": "Bitcoin Cash",
+      "abc": "Bitoin ABC",
       "ltc": "Litecoin",
       "grs": "Groestlcoin",
       "bsv": "Satoshi Vision",
       "doge": "Doge",
       "tbtc": "Testnet Bitcoin",
       "tbch": "Testnet Bitcoin Cash",
+      "tabc": "Testnet Bitcoin ABC",
       "tltc": "Testnet Litecoin",
       "tgrs": "Testnet Groestlcoin",
       "tbsv": "Testnet Satoshi Vision",
       "tdog": "Testnet Doge",
       "rbtc": "Regtest Bitcoin",
       "rbch": "Regtest Bitcoin Cash",
+      "rabc": "Regtest Bitcoin ABC",
       "rltc": "Regtest Litecoin",
       "rgrs": "Regtest Groestlcoin",
       "rbsv": "Regtest Satoshi Vision",
@@ -1272,6 +1275,7 @@ export default {
       "sms": "Text",
       "xmpp": "XMPP",
       "telegram": "Telegram",
+      "matrix": "Matrix",
       "rfc6238": "Authenticator Device",
       "regtest": "Regtest",
       "unknown": "Unknown Device"
@@ -1294,6 +1298,7 @@ export default {
       "sms": "Text",
       "xmpp": "Jabber/XMPP",
       "telegram": "Telegram",
+      "matrix": "Matrix",
       "rfc6238": "Authenticator App",
       "u2f": "U2F key",
       "regtest": "Regtest"
@@ -1331,6 +1336,20 @@ export default {
         "address": {
           "label": "Username",
           "ph": "@telegram_username"
+        }
+      }
+    },
+    "matrix": {
+      "title": "Matrix",
+      "caption": "Enter a matrix username where you want to receive authorization codes",
+      "invalid": "Not a valid matrix username",
+      "bot": "Send a message to the Matrix bot:",
+      "code": "containing the following code:",
+      "explain": "Then enter here the code the bot replies to you:",
+      "form": {
+        "address": {
+          "label": "Username",
+          "ph": "@matrix_username"
         }
       }
     },

@@ -32,8 +32,9 @@
             .col-xs-2
               img src='images/icons/master.svg'
 
-          = em-form model=this submitButton=false action='doneMaster' showErrorsOnRender=true as |f|
-            = f.input property='masterName' label=(t 'account.cosigners.form.mname.label')  placeholder=(t 'account.cosigners.form.mname.ph')
+          % BsForm @model=this @onSubmit={ action 'doneMaster' } as |f|
+            % f.element @controlType='text' @property="masterName" @label={t 'account.cosigners.form.mname.label'} as |el|
+              % el.control placeholder={ t 'account.cosigners.form.mname.ph' } 
 
             p: b = t 'account.cosigners.form.mmandatory'
             = leaf-switcher checked=masterMandatory size='sm' on-toggle='setMasterMandatory' disabled=cannotSetMandatory
@@ -46,9 +47,11 @@
               h5.uppercase = t 'account.wizard.cosigners.cosignerInfo'
             .col-xs-2
               img src='images/icons/avatar.svg'
+          
+          % BsForm @model=currentCosigner @onSubmit={ action 'doneSigner' } as |f|
+            % f.element @controlType='text' @property="name" @label={t 'account.cosigners.form.name.label' } as |el|
+              % el.control placeholder={ t 'account.cosigners.form.name.ph' } tabindex='0'
 
-          = em-form model=currentCosigner submitButton=false  action='doneSigner' showErrorsOnRender=true as |f|
-            = f.input property='name' label=(t 'account.cosigners.form.name.label') placeholder=(t 'account.cosigners.form.name.ph') tabindex='0'
 
             p: b Mandatory
             = leaf-switcher checked=currentCosigner.mandatory size='sm' item=currentCosigner on-toggle='setMandatory' disabled=cannotSetMandatory

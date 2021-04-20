@@ -1,8 +1,7 @@
 import Component from '@ember/component'
 import { inject as service } from '@ember/service'
 
-import randomBytes from 'npm:randombytes'
-import otplib from 'npm:otplib'
+import { authenticator, totp } from 'otplib'
 import { task, taskGroup } from 'ember-concurrency'
 
 import Logger from 'melis-cm-svcs/utils/logger'
@@ -11,7 +10,6 @@ import Logger from 'melis-cm-svcs/utils/logger'
 APP_ID = 'Melis'
 APP_ISSUER = 'CM'
 
-otp = otplib
 
 TotpEnroll = Component.extend(
 
@@ -39,9 +37,9 @@ TotpEnroll = Component.extend(
   ).property('cm.currentWallet')
 
 
-
+  
   enroll: task ( ->
-    secret = otp.authenticator.generateSecret()
+    secret = authenticator.generateSecret()
     @setProperties
       currentSecret: secret
       enrollError: null
@@ -92,7 +90,7 @@ TotpEnroll = Component.extend(
 
     showToken: ->
       if secret = @get('currentSecret')
-        @set 'validToken', otp.totp.generate(secret)
+        @set 'validToken', totp.generate(secret)
 
 )
 

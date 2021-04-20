@@ -31,12 +31,34 @@ DeviceRecovery = Component.extend(
       @set 'error', true
   )
 
+  cancelRecovery: task( ->
+    api = @get('cm.api')
+    @set 'error', false
+
+    op = (tfa) ->
+      api.tfaAuthValidate(tfa.payload)
+
+    try
+      res = yield @get('aa').tfaAuth(op, "Cancel Reset TFA Devices")
+      @setProperties 
+        doneRequest: false
+        recovering: false
+
+    catch error
+      Logger.error('Error cancel reset TFA', error)
+      @set 'error', true
+  )
+
   actions:
     startRecovery: ->
       @set('recovering', true)
 
+    cancelRecovery: ->
+      @get('cancelRecovery').perform()
+
     resetRequest: ->
       @setProperties
+        doneRequest: false
         recovering: false
         error: false
 

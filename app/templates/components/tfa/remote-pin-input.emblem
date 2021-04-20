@@ -5,22 +5,24 @@
 
 = else
 
-  p = em-form model=this submitButton=false action='enterPIN' as |f|
-    = liquid-if data.wrongPin class='ll-down-up'
-      p
-        = leaf-label type='danger'
-          = t 'tfa.pin.wrong'
-        '
-        = leaf-label type=attemptsType class='animated shake'
-          = t 'tfa.pin.left' count=data.attemptsLeft
-        '
-        = if (eq data.attemptsLeft 1)
-          = leaf-label type=attemptsType class='animated shake' type='warning'
-            = t 'tfa.pin.last-attempt'
-        '
-    = f.input property='pin' type='password' label=(t 'tfa.pin.label') placeholder=(t 'tfa.pin.ph') cid=inputId
+  p 
+    % BsForm @model=this @onSubmit={ action 'enterPIN' } as |f|
+      = liquid-if data.wrongPin class='ll-down-up'
+        p
+          = leaf-label type='danger'
+            = t 'tfa.pin.wrong'
+          '
+          = leaf-label type=attemptsType class='animated shake'
+            = t 'tfa.pin.left' count=data.attemptsLeft
+          '
+          = if (eq data.attemptsLeft 1)
+            = leaf-label type=attemptsType class='animated shake' type='warning'
+              = t 'tfa.pin.last-attempt'
+          '
+      % f.element @controlType='password' @property="pin" @label={t 'tfa.pin.label'} as |el|
+        % el.control placeholder={ t 'tfa.pin.ph'  } id=inputId autofocus=true
 
   br
-  = if isValid
+  = if validations.isValid
     = leaf-button type='primary' block=true icon='fa fa-check' on-click='enterPIN' id='enter-pin'
 

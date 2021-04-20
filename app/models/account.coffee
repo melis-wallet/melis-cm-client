@@ -1,9 +1,9 @@
 import { isBlank } from '@ember/utils'
 import { get, set } from '@ember/object'
+import { alias } from '@ember/object/computed'
 
 import Account from 'melis-cm-svcs/models/account'
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 Validations = buildValidations(
   name: [
@@ -27,13 +27,15 @@ Validations = buildValidations(
 
 )
 
-ValidatedAccount = Account.extend(Validations, ValidationsHelper,
+ValidatedAccount = Account.extend(Validations, 
 
   ensureMeta: ( ->
     if cmo = @get('cmo')
       set(cmo, 'meta', {}) if isBlank(get(cmo, 'meta'))
       set(cmo, 'pubMeta', {}) if isBlank(get(cmo, 'pubMeta'))
   ).observes('cmo').on('init')
+  
+  isValid: alias('validations.isValid')
 )
 
 

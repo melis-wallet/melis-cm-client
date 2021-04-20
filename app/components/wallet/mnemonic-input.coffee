@@ -5,7 +5,6 @@ import { get, set, computed } from '@ember/object'
 import { A } from '@ember/array'
 
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 
 Validations = buildValidations(
@@ -24,7 +23,7 @@ Validations = buildValidations(
 
 
 
-MnemonicInput = Component.extend(Validations, ValidationsHelper,
+MnemonicInput = Component.extend(Validations, 
 
   credentials: service('cm-credentials')
   cm: service('cm-session')
@@ -64,17 +63,17 @@ MnemonicInput = Component.extend(Validations, ValidationsHelper,
       @get('credentials').isMnemonicEncrypted(@get('cleanMnemonic'))
     else
       false
-  ).property('validations.attrs.mnemonic.isValid')
+  ).property('mnemonic')
 
 
   actions:
 
     submitMnemonicEnter: ->
-      if @get('isValid') && @get('enter-submit')
+      if @get('validations.isValid') && @get('enter-submit')
         @sendAction('on-valid-mnemonic', @get('cleanMnemonic'), @get('passphrase'))
 
     submitMnemonic: ->
-      if @get('isValid')
+      if @get('validations.isValid')
         @sendAction('on-valid-mnemonic', @get('cleanMnemonic'), @get('passphrase'))
 )
 

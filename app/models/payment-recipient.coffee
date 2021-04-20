@@ -10,7 +10,6 @@ import formatMoney from "accounting/format-money"
 import { mergeProperty } from 'melis-cm-svcs/utils/misc'
 import { translationMacro as t } from "ember-i18n"
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 import Logger from 'melis-cm-svcs/utils/logger'
 
@@ -42,7 +41,7 @@ Validations = buildValidations(
   ]
 )
 
-PaymentRecipient = Model.extend(Validations, ValidationsHelper,
+PaymentRecipient = Model.extend(Validations, 
 
   cm: service('cm-session')
   currencySvc: service('cm-currency')
@@ -70,6 +69,7 @@ PaymentRecipient = Model.extend(Validations, ValidationsHelper,
   isCm: equal('type', 'cm')
   isAccount: equal('type', 'account')
 
+  isValid: alias('validations.isValid')
 
   value: computed(
     get: (key) ->

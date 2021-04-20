@@ -6,7 +6,6 @@ import Configuration from 'melis-cm-svcs/utils/configuration'
 import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
 import BackButton from '../../mixins/backbutton-support'
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 import { task, taskGroup } from 'ember-concurrency'
 
 import Logger from 'melis-cm-svcs/utils/logger'
@@ -19,7 +18,7 @@ Validations = buildValidations(
   ]
 )
 
-PairWizard = Component.extend(AsWizard, Validations, ValidationsHelper, BackButton,
+PairWizard = Component.extend(AsWizard, Validations, BackButton,
 
   cm: service('cm-session')
   credentials: service('cm-credentials')

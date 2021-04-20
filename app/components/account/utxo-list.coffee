@@ -7,7 +7,7 @@ import RSVP from 'rsvp'
 
 import { task, taskGroup } from 'ember-concurrency'
 import groupBy from '../../utils/group-by'
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 
 import Logger from 'melis-cm-svcs/utils/logger'
 

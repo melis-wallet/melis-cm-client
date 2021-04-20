@@ -6,7 +6,7 @@ import { get, set } from '@ember/object'
 import Configuration from 'melis-cm-svcs/utils/configuration'
 import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
 import BackButton from '../../mixins/backbutton-support'
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 import { translationMacro as t } from "ember-i18n"
 import { task, taskGroup } from 'ember-concurrency'
 

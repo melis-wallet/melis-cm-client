@@ -24,8 +24,10 @@
 
       .row
         .col-md-9
-          = em-form model=this submitButton=false action='doneNameSelect' as |f|
-            = f.input property='deviceName' placeholder=(t 'pair.w.name.ph')
+          % BsForm @model=this @onSubmit={ action 'doneNameSelect' } as |f|
+            % f.element @controlType='text' @property="deviceName" as |el|
+              % el.control placeholder={ t 'pair.w.name.ph' } 
+
         .col-md-3
           = liquid-if isValid class='ll-left-right'
             = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneNameSelect'

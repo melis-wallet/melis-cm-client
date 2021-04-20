@@ -1,6 +1,8 @@
 'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
+const nodeSass = require('node-sass'),
+      environment = process.env.EMBER_ENV || 'development';
 
 
 module.exports = function(defaults) {
@@ -12,17 +14,18 @@ module.exports = function(defaults) {
     }, */
 
     'ember-bootstrap': {
-      whitelist: ['bs-collapse', 'bs-popover', 'bs-tooltip'],
       'bootstrapVersion': 3,
       'importBootstrapCSS': false,
-      'importBootstrapFont': true
+      'importBootstrapFont': false
     },
 
     SRI: {
       enabled: true
     },
 
-    sassOptions: {implementation: require("node-sass")},
+    sassOptions: {
+      implementation: nodeSass,
+    },    
 
     'ember-cli-image-transformer': {
       images: [
@@ -51,20 +54,30 @@ module.exports = function(defaults) {
     },
 
 
-    minifyJS: {
-      // test!
+    'ember-cli-terser': {
       //enabled: true,
-      // lele - bitcoinjs-lib breaks if mangled
-      // NOTE: When uglifying the javascript, you must exclude the following variable names from being mangled:
-      // Array, BigInteger, Boolean, Buffer, ECPair, Function, Number, Point and Script.
-      // This is because of the function-name-duck-typing used in typeforce.
-      //options: {mangle: false }
-      options: {mangle:
-        { reserved:
-          ['Array', 'BigInteger', 'Boolean', 'ECPair', 'Function', 'Number', 'Point', 'Script']
-        }
-      }
 
+      terser: { mangle:
+        { reserved:
+          ['Array', 'BigInteger', 'Boolean', 'ECPair', 'Function', 'Number', 'Point', 'Script', 'HDNode']
+        },
+        //keep_fnames: true,
+        safari10: true,
+      }
+    },
+    
+    autoImport: {
+      webpack: {  
+
+        node: { 
+          stream: true,
+          crypto: true,
+          fs: 'empty',
+        },
+        optimization: {
+          minimize: false
+        }        
+      }
     },
 
     minifyCSS: {

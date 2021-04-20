@@ -7,10 +7,10 @@
   = leaf-alert type='warning' dark=true dismiss=false
     = t  'aa.modal.token.invalid'
 
-
-= em-form model=this submitButton=false action='enterToken' as |f|
-  = f.input property='token' label=(t 'aa.modal.token.label') placeholder=(t 'aa.modal.token.ph')
+% BsForm @model=this @onSubmit={ action 'enterToken' } as |f|
+  % f.element @controlType='text' @property='token' @label={t 'aa.modal.token.label'} as |el|
+    % el.control placeholder={ t 'a.modal.token.ph'  } autofocus=true
 
 br
-= if isValid
+= if validations.isValid
   = leaf-button type='primary' block=true icon='fa fa-check' on-click='enterToken' disabled=enterToken.isRunning

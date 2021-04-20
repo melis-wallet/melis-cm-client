@@ -1,6 +1,6 @@
 import Component from '@ember/component'
 import { inject as service } from '@ember/service'
-
+import { get } from '@ember/object'
 import { task, taskGroup } from 'ember-concurrency'
 
 import Logger from 'melis-cm-svcs/utils/logger'

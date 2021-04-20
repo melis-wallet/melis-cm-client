@@ -4,7 +4,6 @@ import { alias } from '@ember/object/computed'
 
 import { task, taskGroup } from 'ember-concurrency'
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 import Logger from 'melis-cm-svcs/utils/logger'
 
@@ -25,8 +24,7 @@ Validations = buildValidations(
 
 )
 
-CheckSignature = Component.extend(Validations, ValidationsHelper,
-
+CheckSignature = Component.extend(Validations, 
   cm: service('cm-session')
 
   account: null

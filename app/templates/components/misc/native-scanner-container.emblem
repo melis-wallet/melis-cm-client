@@ -1,0 +1,50 @@
+= if active
+  .scanner-native
+    .controls.top
+      .row
+        .col-xs-2.col-xs-offset-10
+          .pull-right
+            % BsButton @onClick={ action 'abortAcquire' } @type="primary" class='btn-outline'
+              i.fa.fa-window-close
+    = if mediaError
+      .row
+        .col-xs-12
+          = leaf-alert type='danger' dark='true' dismiss=false
+            = t 'qr.scan.errors.no-perms'
+
+    .target
+      = if displayGrid
+        img src='images/big-square-target.svg' class='animated fadeIn delay-1s'
+
+    = if showControls
+      .controls.bottom
+        .row
+          .col-xs-6
+            = if showMediaControls
+              = if scanning
+                % BsButton @onClick={ action 'stopScan' } @type="primary" class='btn-outline'
+                  i.fa.fa-stop
+              = else
+                % BsButton @onClick={ action 'startScan' } @type="primary" class='btn-outline'
+                  i.fa.fa-play
+
+          .col-xs-6
+            .pull-right
+              = if flash
+                % BsButton @onClick={ action 'toggleFlash' } @type="primary" class='btn-outline'
+                  i.fa.fa-sun-o
+              = else
+                % BsButton @onClick={ action 'toggleFlash' } @type="primary" class='btn-outline'
+                  i.fa.fa-flash
+              span.spacer
+              = if true //if multipleSources
+                = if frontCamera
+                  % BsButton @onClick={ action 'nextSource' } @type="primary" class='btn-outline'
+                    i.fa.fa-image
+                = else
+                  % BsButton @onClick={ action 'nextSource' } @type="primary" class='btn-outline'
+                    i.fa.fa-user-o
+
+
+.content-container class={ if active 'hidden' }
+  = yield

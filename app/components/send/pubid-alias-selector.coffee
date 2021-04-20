@@ -5,7 +5,6 @@ import { isEmpty, isBlank } from '@ember/utils'
 import { get, set, getProperties } from '@ember/object'
 
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 import { task, taskGroup } from 'ember-concurrency'
 
 import Logger from 'melis-cm-svcs/utils/logger'
@@ -18,7 +17,7 @@ Validations = buildValidations(
   ]
 )
 
-CmSelector = Component.extend(Validations, ValidationsHelper,
+CmSelector = Component.extend(Validations, 
 
   cm: service('cm-session')
   accounts: alias('cm.accounts')
@@ -69,7 +68,7 @@ CmSelector = Component.extend(Validations, ValidationsHelper,
 
   actions:
     lookupInfo: ->
-      if @get('isValid')
+      if @get('validations.isValid')
         @get('lookupInfo').perform()
 
     confirmInfo: ->

@@ -106,20 +106,20 @@ PaymentNewaddress = Component.extend(Alertable,
   ).group('apiOps')
 
   newActiveAddress: task( ->
-    service = @get('service')
+    svc = @get('service')
 
     try
-      yield service.createActiveAddr(@get('i18n').t(PLACEHOLDER).toString())
+      yield svc.createActiveAddr(@get('i18n').t(PLACEHOLDER).toString())
     catch error
       Logger.error "Error: ", error
   ).drop()
 
 
   releaseAddr: task( (addr)->
-    service = @get('service')
+    svc = @get('service')
 
     try
-      yield service.releaseAddress(addr)
+      yield svc.releaseAddress(addr)
       @set('activeAddress', null)
       @sendAction('on-select-active', null)
 

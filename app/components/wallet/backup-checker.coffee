@@ -7,7 +7,6 @@ import { task, taskGroup } from 'ember-concurrency'
 import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
 import { parseURI } from '../../utils/uris'
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 import Logger from 'melis-cm-svcs/utils/logger'
 
@@ -21,7 +20,7 @@ Validations = buildValidations(
 
 BACKUP_SCHEME = 'melis+seed'
 
-BackupChecker = Component.extend(AsWizard, Validations, ValidationsHelper,
+BackupChecker = Component.extend(AsWizard, Validations, 
   cm: service('cm-session')
   credentials: service('cm-credentials')
   scanner: service('scanner-provider')

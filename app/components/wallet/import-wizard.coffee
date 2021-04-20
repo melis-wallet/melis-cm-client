@@ -4,7 +4,7 @@ import { inject as service } from '@ember/service'
 import Configuration from 'melis-cm-svcs/utils/configuration'
 import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
 import BackButton from '../../mixins/backbutton-support'
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 import { task, taskGroup } from 'ember-concurrency'
 
 import Logger from 'melis-cm-svcs/utils/logger'

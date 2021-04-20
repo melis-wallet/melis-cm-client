@@ -6,10 +6,11 @@
   span.input-group-btn
     = leaf-button icon='fa fa-check' on-click='updateLabels'
 = power-select-multiple [
+  searchEnabled=true
   options=allLabels
   selected=selection
-  onchange=(action (mut selection))
-  onkeydown=(action "createOnEnter")
-  onclose=(action 'lostFocus')
+  onChange=(action (mut selection))
+  onKeydown=(action "createOnEnter")
+  onClose=(action 'lostFocus')
   ] as |label|
   = label

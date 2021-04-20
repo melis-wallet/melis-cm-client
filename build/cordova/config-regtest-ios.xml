@@ -25,7 +25,6 @@
         <preference name="StatusBarStyle" value="lightcontent" />
         <preference name="StatusBarBackgroundColor" value="#cccccc" />
     </platform>
-    <engine name="android" spec="~7.1.4" />
     <preference name="loadUrlTimeoutValue" value="90000" />
     <preference name="AppendUserAgent" value="Melis" />
     <preference name="android-minSdkVersion" value="24" />
@@ -33,6 +32,5 @@
     <preference name="FadeSplashScreen" value="true" />
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="SplashMaintainAspectRatio" value="true" />
-    <engine name="ios" spec="~5.0.2" />
-    <plugin name="cordova-plugin-wkwebview-engine" spec="~1.1.4" />
+    <engine name="ios" spec="~6.1.0" />
 </widget>

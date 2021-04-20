@@ -2,7 +2,7 @@ import Component from '@ember/component'
 import { inject as service } from '@ember/service'
 import { alias } from '@ember/object/computed'
 
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 
 C = CMCore.C
 

@@ -1,6 +1,11 @@
-= em-form model=this submitButton=false action='submitNewPIN' as |f|
-  = f.input property='pin' type='password' label=(t 'wallet.pin.set.label') placeholder=(t 'wallet.pin.set.ph') cid='set_pin_input' tabindex='0' autofocus=true
-  = f.input property='pinCheck' type='password' label=(t 'wallet.pin.check.label')placeholder=(t 'wallet.pin.check.ph') cid='set_pin_check' tabindex='0'
+
+% BsForm @model=this @onSubmit={ action 'submitNewPIN' } as |f|
+  % f.element @controlType='password' @property='pin' @label={t 'wallet.pin.set.label'} as |el|
+    % el.control placeholder={ t 'wallet.pin.set.ph'  } id='set_pin_input' autofocus=true
+
+  % f.element @controlType='password' @property='pinCheck' @label={t 'wallet.pin.check.label'} as |el|
+    % el.control placeholder={ t 'wallet.pin.check.ph'  } id='set_pin_check'
+
 br
-if isValid
+if validations.isValid
   = leaf-button type='primary' block=true icon='fa fa-check' on-click='submitNewPIN' id='submit-pin' tabindex='0'

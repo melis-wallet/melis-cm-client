@@ -200,6 +200,7 @@ AAProvider = Service.extend(InviteMixin,
           @dismissAndReject(err)
       ).finally( ->
         set(operation, 'running', false)
+        set(operation, 'done', true)
       )
     else
       @dismissAndResolve(null)
@@ -241,6 +242,7 @@ AAProvider = Service.extend(InviteMixin,
           @dismissAndReject(err)
       ).finally( ->
         set(operation, 'running', false)
+        set(operation, 'done', true)
       )
     else
       @dismissAndResolve(null)
@@ -257,6 +259,7 @@ AAProvider = Service.extend(InviteMixin,
             @dismissAndResolve(res)
           ).finally( ->
             set(operation, 'running', false)
+            set(operation, 'done', true)
           )
       else
         @dismissAndResolve(null)

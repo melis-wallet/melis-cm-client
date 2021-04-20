@@ -1,5 +1,5 @@
 import Service, { inject as service } from '@ember/service'
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 import CmAddressbook from 'melis-cm-svcs/services/cm-addressbook'
 import RSVP from 'rsvp'
 

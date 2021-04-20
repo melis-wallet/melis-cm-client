@@ -1,11 +1,12 @@
 
-.main-wrapper id='main-wrapper'
-  = partial 'common/navbar-main'
-  = partial 'common/menu-main'
-  = if cm.connected
-    = outlet
-  = else
-    .content-wrapper id='content-wrapper'
+= misc/native-scanner-container
+  .main-wrapper id='main-wrapper'
+    = partial 'common/navbar-main'
+    = partial 'common/menu-main'
+    = if cm.connected
+      = outlet
+    = else
+      .content-wrapper id='content-wrapper'
 
-  div id='main-menu-bg'
+    div id='main-menu-bg'
 = common/scanner-modal

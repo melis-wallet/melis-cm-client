@@ -44,7 +44,6 @@ LabelPicker = Component.extend(
       @get('newLabels').pushObject(text)
 
     lostFocus: (select) ->
-      console.error "lostfocus"
       selection = @get('selection')
       @updateLabels()
       waitIdle().then( => @sendAction('on-finish', @get('selection')))
@@ -56,6 +55,7 @@ LabelPicker = Component.extend(
 
     createOnEnter: (select, e) ->
       if (((e.keyCode == 13) || (e.keyCode == 32))  && select.isOpen && !select.highlighted && !isBlank(select.searchText))
+
         selection = @get('selection')
         if (!selection.includes(select.searchText))
           this.get('newLabels').pushObject(select.searchText)

@@ -6,7 +6,7 @@ import { isBlank, isEmpty } from '@ember/utils'
 import { get, set, getProperties } from '@ember/object'
 import { getOwner } from '@ember/application'
 
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 import AbEntry from '../models/ab-entry'
 import { task, taskGroup } from 'ember-concurrency'
 

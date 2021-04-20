@@ -174,10 +174,11 @@
             h4 = t 'account.wizard.name.title'
             p = t 'account.wizard.name.caption'
 
-          = em-form model=this submitButton=false action='doneNameSelect' as |f|
-            = f.input property='accountName' placeholder=(t 'account.wizard.advanced.name.ph')
+          % BsForm @model=this @onSubmit={ action 'doneNameSelect' } as |f|
+            % f.element @controlType='text' @property="accountName"  as |el|
+              % el.control placeholder={ t 'account.wizard.advanced.name.ph' } 
 
-          = liquid-if isValid class='ll-down-up'
+          = liquid-if validations.isValid class='ll-down-up'
             = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneNameSelect'
 
 
@@ -190,8 +191,9 @@
             h4 = t 'account.wizard.name.title'
             p = t 'account.wizard.name.caption'
 
-          = em-form model=this submitButton=false action='doneNameSelect' as |f|
-            = f.input property='accountName' placeholder=(t 'account.wizard.advanced.name.ph')
+          % BsForm @model=this @onSubmit={ action 'doneNameSelect' } as |f|
+            % f.element @controlType='text' @property="accountName"  as |el|
+              % el.control placeholder={ t 'account.wizard.advanced.name.ph' } 
 
-          = liquid-if isValid class='ll-down-up'
+          = liquid-if validations.isValid class='ll-down-up'
             = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneNameSelect'

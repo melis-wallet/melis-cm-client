@@ -5,7 +5,7 @@ import { isEmpty, isBlank } from '@ember/utils'
 import { scheduleOnce, later } from '@ember/runloop'
 import Scheduler from 'ember-leaf-tools/utils/scheduler'
 
-import Instascan from 'npm:instascan'
+import Instascan from 'instascan'
 import { task } from 'ember-concurrency'
 
 import Logger from 'melis-cm-svcs/utils/logger'
@@ -188,7 +188,7 @@ QrScanner = Component.extend(
     @get('on-data')(data, this) if @get('on-data')
 
     if @stopOnFound
-      @stopScanner.perform().then(=>
+      @stopScanner.perform().then( =>
         @get('on-valid-code')(data, this) if @get('on-valid-code')
         @get('on-dismiss')(data) if @get('on-dismiss')
       )

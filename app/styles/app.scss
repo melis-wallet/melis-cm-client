@@ -479,7 +479,7 @@ img.icon-opt {
 
 
 html body.page-signin {
-  background: #fff !important;
+  background: #fff;
 }
 
 
@@ -787,4 +787,60 @@ a, a:hover, a:focus {
   button {
     margin: 2px;
   }
+}
+
+
+body.native-scanner {
+  background: transparent !important;
+  background-color: transparent !important;
+
+}
+
+.scanner-native {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  .error {
+    padding: 20px;
+  }
+
+  .target {
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    img {
+      width: 100%;
+    }
+  }
+
+  .controls {
+    height: 50px;
+    background-color: #aaa;
+    opacity: 0.7;
+    z-index: 10;
+    width: 100%;
+    padding: 10px;
+
+    .btn {
+      min-width: 40px !important;
+    }
+
+    span.spacer {
+      padding: 2px;
+    }
+    &.top {
+    }
+    &.bottom {
+    }
+  }
+}
+
+
+.ember-power-select-trigger:focus {
+  outline-color: $primary-color !important;
 }

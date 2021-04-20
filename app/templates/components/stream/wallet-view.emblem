@@ -4,7 +4,7 @@
 
 = each streamEntries as |entry|
   = if (eq entry.subclass 'evt')
-    = component (concat 'stream/entry-' entry.subclass '-' entry.content.type) entry=entry id=entry.id on-goto='goto'
+    = component (concat 'stream/entry-' entry.subclass '-' entry.contentType) entry=entry id=entry.id on-goto='goto'
   = else
     = component (concat 'stream/entry-' entry.subclass) entry=entry id=entry.id on-goto='goto'
 

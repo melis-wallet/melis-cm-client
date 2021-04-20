@@ -2,7 +2,7 @@ import { inject as service } from '@ember/service'
 import { isBlank } from '@ember/utils'
 
 import BaseValidator from 'ember-cp-validations/validators/base'
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 
 
 NOT_A_PUBID = 'validations.not-pubid'

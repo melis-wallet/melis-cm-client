@@ -5,7 +5,6 @@ import { schedule, later } from '@ember/runloop'
 
 import PinInputMixin from '../../mixins/pin-input'
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 import Fpa from 'melis-cm-client/mixins/fingerprint-auth'
 import { task, taskGroup } from 'ember-concurrency'
 
@@ -19,7 +18,7 @@ Validations = buildValidations(
   ]
 )
 
-PinInput = Component.extend(Validations, ValidationsHelper, Fpa,
+PinInput = Component.extend(Validations, Fpa,
 
   cm: service('cm-session')
   credentials: service('cm-credentials')

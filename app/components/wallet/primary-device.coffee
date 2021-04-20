@@ -29,11 +29,11 @@ PrimaryDevice = Component.extend(
       api.deviceSetRecoveryHours(days*24, tfa.payload)
 
     try
-      res = yield @get('aa').tfaOrLocalPin(op)
+      res = yield @get('aa').tfaAuth(op)
 
     catch e
       @set 'error', e.msg
-      Logger.error "Make Primary error: ", e
+      Logger.error "Update Recovery error: ", e
 
   ).group('apiOps')
 
@@ -44,7 +44,7 @@ PrimaryDevice = Component.extend(
       api.devicePromoteToPrimary(device, tfa.payload)
 
     try
-      res = yield @get('aa').tfaOrLocalPin(op)
+      res = yield @get('aa').tfaAuth(op)
       if res && (date = get(res, 'dateExecutable'))
         @set 'dateExecutable', date
 
@@ -52,6 +52,27 @@ PrimaryDevice = Component.extend(
       @set 'error', e.msg
       Logger.error "Make primary error: ", e
   ).group('apiOps')
+
+
+
+  cancelPrimary: task( ->
+    api = @get('cm.api')
+
+    op = (tfa) ->
+      console.debug('cancelprim', tfa.payload)
+      api.deviceCancelPromotion(tfa.payload)
+
+    try
+      res = yield @get('aa').tfaAuth(op)
+      if res && (date = get(res, 'dateExecutable'))
+        @set 'dateExecutable', date
+
+    catch e
+      @set 'error', e.msg
+      Logger.error "Cancel primary error: ", e
+  ).group('apiOps')
+
+
 
 
   getRecovery: task( ->
@@ -84,6 +105,9 @@ PrimaryDevice = Component.extend(
     updateRecovery: ->
       @get('updateRecovery').perform(@get('recoveryDays'))
 
+
+    cancelPrimary: ->
+      @get('cancelPrimary').perform()
 
     makePrimary: ->
       if device = @get('creds.deviceId')

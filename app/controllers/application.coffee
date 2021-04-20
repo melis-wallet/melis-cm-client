@@ -3,9 +3,11 @@ import { schedule } from '@ember/runloop'
 
 ApplicationController = Controller.extend(
 
-  removeSpinner: (->
+  init: (->
+    @_super()
+    console.debug("FIX: init")
     schedule 'afterRender', this, (-> $(".preloading").remove())
-  ).on('init')
+  )
 )
 
 export default ApplicationController

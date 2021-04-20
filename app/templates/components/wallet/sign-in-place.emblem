@@ -33,6 +33,6 @@ form id='signin-form_id' submit='tryLogin'
         .col-xs-4
 
           .form-actions
-            = liquid-if isValid class='ll-down-up'
+            = liquid-if validations.isValid class='ll-down-up'
               = leaf-button type='primary' on-click='tryLogin' block=true icon=signinIcon disabled=signingIn
 

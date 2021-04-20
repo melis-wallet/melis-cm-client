@@ -39,7 +39,10 @@
             span.hidden-sm.visible-xs = d.value
             = if d.expireDate
                 .alert.alert-warning
+                  .pull-right 
+                    = leaf-button size='sm' icon='fa fa-trash' on-click='cancelRecovery' value=d  outline=true
                   = t 'tfa.state.expire' when=(live-moment-from-now d.expireDate)
+
           td.break-words.hidden-xs = d.value
           td = leaf-button size='sm' icon='fa fa-trash' on-click='disableDevice' value=d  outline=true
         = if (not d.verified)

@@ -1,11 +1,10 @@
 import Component from '@ember/component'
 
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 import { task } from 'ember-concurrency'
 import { waitTime } from 'melis-cm-svcs/utils/delayed-runners'
 
-DEVICES_WITH_TOKEN = ['email', 'xmpp', 'sms', 'telegram']
+DEVICES_WITH_TOKEN = ['email', 'xmpp', 'sms', 'telegram', 'matrix']
 SEND_GUARD = 10000
 
 Validations = buildValidations(
@@ -17,7 +16,7 @@ Validations = buildValidations(
 )
 
 
-EnterToken = Component.extend(Validations, ValidationsHelper,
+EnterToken = Component.extend(Validations, 
 
   device: null
   token: null
@@ -26,6 +25,11 @@ EnterToken = Component.extend(Validations, ValidationsHelper,
   tokenSent: false
 
   running: false
+  done: false
+
+  isDisabled: ( -> 
+    @get('running') || @get('done')
+  ).property('running', 'done')
 
   showSendButton: ( ->
     @get('sendButton') && DEVICES_WITH_TOKEN.includes(@get('device.name'))
@@ -49,7 +53,7 @@ EnterToken = Component.extend(Validations, ValidationsHelper,
       @get('sendToken').perform()
 
     enterToken: ->
-      if @get('isValid') && (token = @get('token')) && (device = @get('device'))
+      if @get('validations.isValid') && (token = @get('token')) && (device = @get('device'))
         @sendAction('on-valid-token', device, token)
 
 )

@@ -1,33 +1,34 @@
-= misc/resizable-background class='page-signin-bg animated fadeIn delay-1s' id='page-signin-bg' image='images/splash-bg-2.jpg' overlay=false
-= if connected
-  .signin-backdrop
-  .signin-bd-deco.animated.fadeIn.delay-1s
-  = wallet/heading-container message=cm.connectMessage class='animated fadeIn delay-05s'
-    = outlet
-= else
-  = if cm.connectSucceeded
-    .signin-container.animated.fadeInLeft.quick
-      /.col-md-6
-        = leaf-alert type=warning dark=true dismiss=false
-          h4 = t 'netstatus.mainDisconnection.title'
-          p = t 'netstatus.mainDisconnection.text'
-  = else if cm.connectFailed
-    .signin-container.animated.fadeInLeft.quick
-      .col-md-6
-        = leaf-alert type=warning dark=true dismiss=false
-          h4 = t 'cnfail.title'
-          p = t 'cnfail.caption'
-          br
-          br
-          p.animated.fadeIn.delay-1s = leaf-button icon='fa fa-refresh' outline=true type='warning' block=true on-click='retryConnect'
-          hr
-          p.animated.fadeIn.delay-5s = link-to 'info.noserver' class='btn btn-warning btn-block btn-outline'
-            = t 'cnfail.button'
-
-  = else
+= misc/native-scanner-container
+  = misc/resizable-background class='page-signin-bg animated fadeIn delay-1s' id='page-signin-bg' image='images/splash-bg-2.jpg' overlay=false
+  = if connected
     .signin-backdrop
-    .postloading
-      img.logo-splash src='images/melis-badger.svg'
-      img.logo-text src='images/melis-text.svg'
-      .loader Connecting...
+    .signin-bd-deco.animated.fadeIn.delay-1s
+    = wallet/heading-container message=cm.connectMessage class='animated fadeIn delay-05s'
+      = outlet
+  = else
+    = if cm.connectSucceeded
+      .signin-container.animated.fadeInLeft.quick
+        /.col-md-6
+          = leaf-alert type=warning dark=true dismiss=false
+            h4 = t 'netstatus.mainDisconnection.title'
+            p = t 'netstatus.mainDisconnection.text'
+    = else if cm.connectFailed
+      .signin-container.animated.fadeInLeft.quick
+        .col-md-6
+          = leaf-alert type=warning dark=true dismiss=false
+            h4 = t 'cnfail.title'
+            p = t 'cnfail.caption'
+            br
+            br
+            p.animated.fadeIn.delay-1s = leaf-button icon='fa fa-refresh' outline=true type='warning' block=true on-click='retryConnect'
+            hr
+            p.animated.fadeIn.delay-5s = link-to 'info.noserver' class='btn btn-warning btn-block btn-outline'
+              = t 'cnfail.button'
+
+    = else
+      .signin-backdrop
+      .postloading
+        img.logo-splash src='images/melis-badger.svg'
+        img.logo-text src='images/melis-text.svg'
+        .loader Connecting...
 = common/scanner-modal

@@ -18,7 +18,8 @@ MainController = Controller.extend(
   app_state: service('app-state')
   scanner: service('scanner-provider')
 
-  setup: ( ->
+  init: ->
+    @_super()
     # force preloading of services
     @getProperties(
       'coin',
@@ -32,7 +33,7 @@ MainController = Controller.extend(
       'ptxsvc',
       'glbNotif'
     )
-  ).on('init')
+  
 
 
   actions:

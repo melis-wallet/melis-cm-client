@@ -102,8 +102,9 @@
             .h5.uppercase Test Mode
           .col-md-8
             = leaf-note type='default'
-              = em-form model=this submitButton=false action='importFromData' as |f|
-                = f.text rows=4 property='importData' placeholder=(t 'recover.import.data.ph')
+              % BsForm @model=this @onSubmit={ action 'importFromData' } as |f|
+                % f.element @controlType='textarea' @property="importData" as |el|
+                  % el.control placeholder={ t 'recover.import.data.ph' } rows='4'                   
             = leaf-button type='default' icon='fa fa-check' block=true on-click='importFromData'
 
 
@@ -128,10 +129,11 @@
               p = t 'recover.import.passphrase.caption'
           .row
             .col-md-9
-              = em-form model=this submitButton=false action='doneInputPass' as |f|
-                = f.input property='passphrase' placeholder=(t 'recover.import.passphrase.ph')
+              % BsForm @model=this @onSubmit={ action 'doneInputPass' } as |f|
+                % f.element @controlType='password' @property="passphrase" as |el|
+                  % el.control placeholder={ t 'recover.import.passphrase.ph' }                 
             .col-md-3
-              = liquid-if isValid class='ll-down-up'
+              = liquid-if validations.isValid class='ll-down-up'
                 = leaf-button type='primary' icon='fa fa-check' block=true on-click='doneInputPass'
 
 

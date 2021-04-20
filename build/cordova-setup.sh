@@ -44,7 +44,7 @@ case "$platform" in
     echo "-- unknown target '$2'"
     exit -1
     ;;
-esac   
+esac
 
 $corber init --name=$appname --cordovaid=$cid
 
@@ -57,9 +57,19 @@ $corber platform add $platform
 if [ "$platform" == "ios" ]; then
   pushd $CDV
     cordova platform rm ios
-    cordova platform add ios@5.0.1
+    cordova platform add ios@6.1.0
+	cordova plugin remove cordova-plugin-wkwebview-engine
   popd
 fi
+
+# temporary workaround
+#if [ "$platform" == "android" ]; then
+#  pushd $CDV
+#    cordova platform rm android
+#    cordova platform add android@9.0.0
+#  popd
+#fi
+
 
 mkdir $CDV/res
 cp $APP/public/images/melis-badger-r.svg $CDV/res/melis.svg
@@ -70,8 +80,7 @@ $corber make-icons --source $CDV/res/melis.svg --platform $platform
 $corber make-splashes --source $CDV/res/melis-splash.svg --platform $platform
 
 $corber prepare
-$corber plugin add cordova-plugin-barcodescanner
-#$corber plugin add cordova-plugin-qrscanner
+$corber plugin add cordova-plugin-qrscanner
 $corber plugin add ionic-plugin-keyboard
 $corber plugin add cordova-plugin-network-information
 $corber plugin add cordova-plugin-statusbar

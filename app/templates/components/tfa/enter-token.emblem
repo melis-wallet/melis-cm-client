@@ -10,8 +10,10 @@
 = liquid-if showForm class='ll-down-up'
   .row
     .col-sm-8
-      = em-form model=this submitButton=false action='enterToken' validationIcons=false as |f|
-        = f.input property='token' type='text' placeholder=(t 'tfa.token.form.token.ph' )
+      % BsForm @model=this @onSubmit={ action 'enterToken' } as |f|
+        % f.element @controlType='text' @property="token" as |el|
+          % el.control placeholder={ t 'tfa.token.form.token.ph' } autofocus=true
+      
     .col-sm-4
-      = if isValid
-        = leaf-button icon='fa fa-check' type='primary' block=true on-click='enterToken' class=(if running 'btn-loading') disabled=running
+      = if validations.isValid
+        = leaf-button icon='fa fa-check' type='primary' block=true on-click='enterToken' class=(if running 'btn-loading') disabled=isDisabled

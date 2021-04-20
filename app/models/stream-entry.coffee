@@ -1,4 +1,5 @@
 import StreamEntry from 'melis-cm-svcs/models/stream-entry'
+import { dasherize } from '@ember/string';
 
 ClientStreamEntry = StreamEntry.extend(
 
@@ -29,6 +30,10 @@ ClientStreamEntry = StreamEntry.extend(
           'cm-icon cmi-acc-sing'
 
   ).property('subclass', 'content')
+
+  contentType: ( ->
+    dasherize(@get('content.type')) if @get('content.type')
+  ).property('content.type')
 )
 
 export default ClientStreamEntry

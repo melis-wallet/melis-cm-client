@@ -4,9 +4,8 @@ import { alias, equal } from '@ember/object/computed'
 import { get } from '@ember/object'
 import { A } from '@ember/array'
 
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
 import { task, taskGroup } from 'ember-concurrency'
 
@@ -27,7 +26,7 @@ Validations = buildValidations(
   ]
 )
 
-NewAccountWizard = Component.extend(AsWizard, Validations, ValidationsHelper,
+NewAccountWizard = Component.extend(AsWizard, Validations, 
 
   cm: service('cm-session')
   coinsvc: service('cm-coin')

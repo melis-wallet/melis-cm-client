@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route'
 import { get } from '@ember/object'
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 
 
 C = CMCore.C

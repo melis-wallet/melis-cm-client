@@ -1,0 +1,6 @@
+#!/bin/bash
+set -ex
+
+export FASTBOOT_DISABLED=true 
+export DEPLOY_TARGET='production' 
+ember serve "$@" --environment production

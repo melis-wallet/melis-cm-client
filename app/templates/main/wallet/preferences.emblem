@@ -14,7 +14,7 @@
         tbody
           tr
             td = t 'wallet.prefs.app.version'
-            td: b = app-version
+            td: b = app-version versionOnly=true showExtended=true
           tr
             td = t 'wallet.prefs.app.network'
             td: span.label.label-danger.uppercase = cm.config.network

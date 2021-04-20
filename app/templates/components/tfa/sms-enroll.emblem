@@ -6,10 +6,11 @@
     = leaf-alert type='danger' dark=true
       = enrollError
 
-  = em-form model=this submitButton=false action='enterSms' as |f|
-    = f.input property='phoneNumber' type='text' placeholder=(t 'tfa.sms.form.sms.ph')  cid='sms_input'
+  % BsForm @model=this @onSubmit={ action 'enterSms' } as |f|
+    % f.element @controlType='text' @property="phoneNumber" as |el|
+      % el.control placeholder={ t 'tfa.sms.form.sms.ph' } id='sms_input' autofocus=true
 
-  = liquid-if isValid class='ll-down-up'
+  = liquid-if validations.isValid class='ll-down-up'
     .row
       .col-sm-4
         /= leaf-button icon='fa fa-trash' type='default' block=true on-click='cancelEnroll' disabled=busy

@@ -3,7 +3,6 @@ import { inject as service } from '@ember/service'
 import { get } from '@ember/object'
 
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 import { task, taskGroup } from 'ember-concurrency'
 
 import Logger from 'melis-cm-svcs/utils/logger'
@@ -15,7 +14,7 @@ Validations = buildValidations(
   ]
 )
 
-JoinIn = Component.extend(Validations, ValidationsHelper,
+JoinIn = Component.extend(Validations, 
 
   cm: service('cm-session')
 
@@ -86,7 +85,7 @@ JoinIn = Component.extend(Validations, ValidationsHelper,
 
     enterJoinCode: ->
       code = @get('joinCode')
-      if code && @get('isValid')
+      if code && @get('validations.isValid')
         @get('getJoinInfo').perform(code)
 
     doJoin: ->

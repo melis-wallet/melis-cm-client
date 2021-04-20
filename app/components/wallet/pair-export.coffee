@@ -2,12 +2,11 @@ import Component from '@ember/component'
 import { inject as service } from '@ember/service'
 import { get } from '@ember/object'
 
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 import Configuration from 'melis-cm-svcs/utils/configuration'
 import AsWizard from 'ember-leaf-core/mixins/leaf-as-wizard'
 import TrackEvents from '../../mixins/track-events'
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 import { task, taskGroup } from 'ember-concurrency'
 
 import Logger from 'melis-cm-svcs/utils/logger'
@@ -23,7 +22,7 @@ Validations = buildValidations(
 )
 
 
-PairExportWizard = Component.extend(AsWizard, Validations, ValidationsHelper, TrackEvents,
+PairExportWizard = Component.extend(AsWizard, Validations, TrackEvents,
 
   cm: service('cm-session')
   credentials: service('cm-credentials')

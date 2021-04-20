@@ -3,7 +3,7 @@ import { A } from '@ember/array'
 
 import Model from './cm-model'
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
+import { alias } from '@ember/object/computed'
 
 
 Validations = buildValidations(
@@ -16,7 +16,7 @@ Validations = buildValidations(
   ]
 )
 
-PaymentNewaddress = Model.extend(Validations, ValidationsHelper,
+PaymentNewaddress = Model.extend(Validations, 
 
   address: null
   meta: {}
@@ -46,6 +46,8 @@ PaymentNewaddress = Model.extend(Validations, ValidationsHelper,
       "bitcoin:#{address}"
   ).property('address')
 
+
+  isValid: alias('validations.isValid')
 )
 
 export default PaymentNewaddress

@@ -7,6 +7,7 @@ ICONS = {
   sms:  'fa fa-phone-square'
   xmpp:  'fa fa-comments-o'
   telegram:  'fa fa-telegram'
+  matrix: 'fa fa-mobile'
   rfc6238: 'fa fa-mobile'
   regtest: 'fa fa-cogs'
   unknown: 'fa fa-get-pocket'

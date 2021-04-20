@@ -16,6 +16,7 @@ AAModal = Component.extend(
 
   componentData: alias('provider.componentData')
   running:  alias('provider.tfaOperation.running')
+  done: alias('provider.tfaOperation.done')
 
 
   actions:

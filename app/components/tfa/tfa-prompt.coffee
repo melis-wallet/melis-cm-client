@@ -18,6 +18,7 @@ TFAPrompt = Component.extend(
   infoText: null
 
   running: false
+  done: false
 
   apiOps: taskGroup().drop()
 

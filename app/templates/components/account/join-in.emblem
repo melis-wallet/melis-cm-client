@@ -28,15 +28,17 @@ hr
     .col-sm-4
       p = leaf-button icon='fa fa-trash' type='default' block=true on-click='cancelJoin' disabled=apiOps.isRunning
     .col-sm-8
-      = liquid-if isValid class='ll-down-up'
+      = liquid-if validations.isValid class='ll-down-up'
         p = leaf-button icon='fa fa-check' type='primary' block=true on-click='doJoin' disabled=apiOps.isRunning
 
 = else
-  = em-form model=this submitButton=false action='enterJoinCode' as |f|
-    = f.input property='joinCode' type='text' label=(t 'account.multi.join.code.label') placeholder=(t 'account.multi.join.code.ph')
+  % BsForm @model=this @onSubmit={ action 'enterJoinCode' } as |f|
+    % f.element @controlType='text' @property="joinCode" @label={ t 'account.multi.join.code.label' } as |el|
+      % el.control placeholder={ t 'account.multi.join.code.ph' } 
+
   .row
     .col-sm-4
       p = leaf-button icon='fa fa-trash' type='default' block=true on-click='cancelJoin' disabled=apiOps.isRunning
     .col-sm-8
-      = liquid-if isValid class='ll-down-up'
+      = liquid-if validations.isValid class='ll-down-up'
         p = leaf-button icon='fa fa-check' type='primary' block=true on-click='enterJoinCode' disabled=apiOps.isRunning

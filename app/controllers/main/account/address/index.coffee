@@ -5,7 +5,7 @@ import { get, set } from '@ember/object'
 
 import { mergedProperty } from 'melis-cm-svcs/utils/misc'
 import { task, taskGroup } from 'ember-concurrency'
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 
 import Logger from 'melis-cm-svcs/utils/logger'
 

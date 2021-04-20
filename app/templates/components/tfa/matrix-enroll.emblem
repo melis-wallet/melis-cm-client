@@ -1,0 +1,36 @@
+= leaf-note type='default' class='no-margin-b'
+  h4 = t 'tfa.matrix.title'
+  = unless currentResponse
+    p = t 'tfa.matrix.caption'
+
+  = if enrollError
+    = leaf-alert type='danger' dark=true
+      = enrollError
+
+  = if currentResponse
+    .row
+      .col-md-5
+        .well
+          p: b = t 'tfa.matrix.bot'
+          p.label = currentResponse.botName
+          p: b = t 'tfa.matrix.code'
+          p.label.label-warning = currentResponse.code
+
+      .col-md-5
+        p: b = t 'tfa.matrix.explain'
+        br
+        br
+        p = tfa/enter-token device=currentDevice on-valid-token='enrollFinish'
+
+
+  = else
+    % BsForm @model=this @onSubmit={ action 'enterAddress' } as |f|
+      % f.element @controlType='text' @property="matrixAddress" as |el|
+        % el.control placeholder={ t 'tfa.matrix.form.address.ph' } id='matrix_input' autofocus=true
+
+    = liquid-if validations.isValid class='ll-down-up'
+      .row
+        .col-sm-4
+          = leaf-button icon='fa fa-trash' type='default' block=true on-click='cancelEnroll' disabled=busy
+        .col-sm-8
+          = leaf-button icon='fa fa-check' type='primary' on-click='enterAddress' icon-executing='fa fa-refresh fa-spin' block=true disabled=busy btnstate=btnstate

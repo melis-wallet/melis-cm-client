@@ -26,15 +26,17 @@
     on-recipient-selected='addRecipientFromAb' ]
 
 = else
-  = em-form model=currentRecipient submitButton=false action='submitRecipient' as |f|
+  % BsForm @model=currentRecipient @onSubmit={ action 'submitRecipient' } as |f|
     // dummy button as a workaround to a bug with forms sending stray clicks
     span style="display: none;"
       = leaf-button outline=true  
     .panel-body
-      .row
+      .row style='margin-bottom: 15px;'
         .col-xs-8
           = if currentRecipient.isAddress
-            = f.input property='value' label=(t 'paysend.form.recipient.label') placeholder=(t 'paysend.form.recipient.ph')  class='form-group required'
+            // = f.input property='value' label=(t 'paysend.form.recipient.label') placeholder=(t 'paysend.form.recipient.ph')  class='form-group required'
+            % f.element @controlType='text' @property="value" @label={ t 'paysend.form.recipient.label' } class='required' as |el|
+              % el.control placeholder={ t 'paysend.form.recipient.ph' } required=true         
           = else if currentRecipient.isAccount
             .form-group.required
               label.control-label = t 'paysend.form.account.label'
@@ -61,7 +63,7 @@
             //= leaf-clipboard receiver=true  content=currentRecipient.address size='sm' tooltip=(t 'paysend.form.clipboard') tooltip-placement='left'
 
 
-      .row
+      .row style='margin-bottom: 15px;'
         .col-sm-4.col-xs-8
           = if currentRecipient.entireBalance
             label.control-label = t 'paysend.form.amount.label'
@@ -71,18 +73,27 @@
               = else
                 b = t 'paysend.form.entire-balance'
           = else
-            = f.input type='number' property='amount' label=(t 'paysend.form.amount.label')  placeholder=(t 'paysend.form.amount.ph') class='form-group required'
+            // = f.input type='number' property='amount' label=(t 'paysend.form.amount.label')  placeholder=(t 'paysend.form.amount.ph') class='form-group required'
+            % f.element @controlType='number' @property="amount" @label={ t 'paysend.form.amount.label' } class='required' as |el|
+              % el.control placeholder={ t 'paysend.form.amount.ph' }  required=true            
         .col-sm-1.col-xs-4.xr-top-sp-f
           = leaf-button size='sm' icon='fa fa-fire' outline=true on-click='toggleEntireBalance' active=currentRecipient.entireBalance disabled=(not canToggleEntireBalance)
 
         .col-sm-3.col-xs-5 class="{{if currentRecipient.entireBalance 'hidden'}}"
-          = f.select label=(t 'paysend.form.currency.label') content=currencies property='currency'
+          //= f.select label=(t 'paysend.form.currency.label') content=currencies property='currency'
+          % f.element @controlType='power-select' @property="currency" @options=currencies @label={ t 'paysend.form.currency.label' } as |el|
+            % el.control as |co|
+              = co
+
         .col-sm-4.col-xs-7 class="{{if currentRecipient.entireBalance 'hidden'}}"
           = if currentRecipient.currencyIsCrypto
-            = f.input property='amountInCurrFmt' label=currencySvc.currencySymbol disabled=true
+            // = f.input property='amountInCurrFmt' label=currencySvc.currencySymbol disabled=true
+            % f.element @controlType='text' @property="amountInCurrFmt" @label=currencySvc.currencySymbol as |el|
+              % el.control disabled=true 
           = else
-            = f.input property='amountInCryptoUnit' label=(unit-id account=cm.currentAccount) disabled=true
-
+            //= f.input property='amountInCryptoUnit' label=(unit-id account=cm.currentAccount) disabled=true
+            % f.element @controlType='text' @property="amountInCryptoUnit" @label={ unit-id account=cm.currentAccount } as |el|
+              % el.control disabled=true 
 
       /.row
         .col-xs-3.col-xs-offset-9
@@ -95,7 +106,9 @@
       .row
         .col-xs-12
           = misc/more-info prompt=(t 'paysend.form.more') class='no-padding-t'
-            = f.input property='info'  label=(t 'paysend.form.info.label') placeholder=(t 'paysend.form.info.ph')
+            //= f.input property='info'  label=(t 'paysend.form.info.label') placeholder=(t 'paysend.form.info.ph')
+            % f.element @controlType='text' @property="info" @label={ t 'paysend.form.info.label' } as |el|
+              % el.control placeholder={ t 'paysend.form.info.ph' }             
             = label-picker selection=currentRecipient.labels label=(t 'paysend.form.labels.label') labelsSet='txLabels'
             .well.no-margin-b
               .row.hidden-sm.hidden-xs

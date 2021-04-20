@@ -10,7 +10,7 @@
             = leaf-note type='warning'
               h4 = t 'aa.modal.pin.title'
               p = t 'aa.modal.pin.caption'
-            = component aComponent on-valid-pin='validPin' running=running data=componentData inputId='aa_pin'
+            = component aComponent on-valid-pin='validPin' running=running done=done data=componentData inputId='aa_pin'
 
     = else if (eq type 'remotepin')
       = leaf-modal-body
@@ -21,7 +21,7 @@
             = leaf-note type='warning'
               h4 = t 'aa.modal.pin.title'
               p = t 'aa.modal.pin.caption'
-            = component aComponent on-valid-pin='validRemotePin' running=running data=componentData inputId='aa_pin'
+            = component aComponent on-valid-pin='validRemotePin' running=running done=done data=componentData inputId='aa_pin'
             /= if currentError
               = leaf-alert type='danger' dark=true
                 = currentError
@@ -29,7 +29,7 @@
     = else if (eq type 'tfa')
       = leaf-modal-body
 
-        = if running
+        //= if running
           h1 RUNNING
         .row
           .col-sm-4.hidden-xs.text-center
@@ -38,7 +38,7 @@
             = leaf-note type='warning'
               h4 = t 'aa.modal.tfa.title'
               p = t 'aa.modal.tfa.caption'
-            = component aComponent on-valid-tfa='validTfa' running=running data=componentData
+            = component aComponent on-valid-tfa='validTfa' running=running done=done data=componentData
             = if currentError
               = leaf-alert type='danger' dark=true
                 = currentError
@@ -52,4 +52,4 @@
             = leaf-note type='warning'
               h4 = t 'aa.modal.token.title'
               p = t 'aa.modal.token.caption'
-            = component aComponent on-valid-token='validToken' running=running data=componentData
+            = component aComponent on-valid-token='validToken' running=running done=done data=componentData

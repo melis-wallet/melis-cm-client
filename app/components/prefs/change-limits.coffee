@@ -5,7 +5,7 @@ import { get, set, setProperties } from '@ember/object'
 import { A } from '@ember/array'
 import { isBlank } from '@ember/utils'
 
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 import { task, timeout } from 'ember-concurrency'
 
 import Logger from 'melis-cm-svcs/utils/logger'

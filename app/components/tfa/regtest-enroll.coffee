@@ -2,7 +2,6 @@ import Component from '@ember/component'
 import { inject as service } from '@ember/service'
 
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 
 import Logger from 'melis-cm-svcs/utils/logger'
 
@@ -14,7 +13,7 @@ Validations = buildValidations(
   ]
 )
 
-RegtestEnroll = Component.extend(Validations, ValidationsHelper,
+RegtestEnroll = Component.extend(Validations, 
 
   cm: service('cm-session')
   aa: service('aa-provider')

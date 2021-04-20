@@ -1,6 +1,6 @@
 import Service, { inject as service } from '@ember/service'
 
-import API from 'npm:melis-api-js'
+import API from 'melis-api-js'
 
 import CmSessionService from 'melis-cm-svcs/services/cm-session'
 import config from '../config/environment'

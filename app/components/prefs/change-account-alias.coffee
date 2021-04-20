@@ -3,7 +3,6 @@ import { inject as service } from '@ember/service'
 import { alias } from '@ember/object/computed'
 
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 import { task, timeout } from 'ember-concurrency'
 
 import Logger from 'melis-cm-svcs/utils/logger'
@@ -18,7 +17,7 @@ Validations = buildValidations(
 
 )
 
-ChangeAccountAlias = Component.extend(Validations, ValidationsHelper,
+ChangeAccountAlias = Component.extend(Validations, 
 
   cm: service('cm-session')
 

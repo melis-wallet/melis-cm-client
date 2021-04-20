@@ -19,11 +19,15 @@
       .col-md-2.text-right
         =leaf-clipboard size='xs' block=false outline=true content=formattedSig
 = else
-  = em-form model=this submitButton=false action='findAddr' as |f|
+  % BsForm@ model=this @onSubmit={ action 'findAddr' } as |f|
     = leaf-note type='info'
       h4 = t 'sign.message.findaddr.title'
       p = t 'sign.message.findaddr.caption'
       hr
-      = f.input property='addressText' label=(t 'sign.check.address')
-      = if isValid
+      % f.element @controlType='text' @property="addressText" @label={ t 'sign.check.address' } as |el|
+        % el.control 
+      = if validations.isValid
         p = leaf-button icon='fa fa-search' block=true outline=true on-click='searchAddress'
+
+
+

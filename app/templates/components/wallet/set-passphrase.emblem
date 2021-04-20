@@ -1,13 +1,19 @@
-= em-form model=this submitButton=false action='submitNewPassPhrase' as |f|
-  = f.input property='phrase' type='password' label=(t 'wallet.passphrase.pass.label') placeholder=(t 'wallet.passphrase.pass.ph') cid='phrase_input'
-  = f.input property='phraseCheck' type='password' label=(t 'wallet.passphrase.check.label') placeholder=(t 'wallet.passphrase.check.ph') cid='phrase_check'
+
+% BsForm @model=this @onSubmit={ action 'submitNewPassPhrase' } as |f|
+  % f.element @controlType='password' @property='phrase' @label={t 'wallet.passphrase.pass.label'} as |el|
+    % el.control placeholder={ t 'wallet.passphrase.pass.ph'  } id='phrase_input' autofocus=true
+
+  % f.element @controlType='password' @property='phraseCheck' @label={t 'wallet.passphrase.check.label'} as |el|
+    % el.control placeholder={ t 'wallet.passphrase.check.ph'  } id='phrase_input'
+
+
 br
 = if hasBlock
   .row
     .col-sm-6
       yield this
     .col-sm-6
-      = if isValid
+      = if validations.isValid
         = leaf-button type='primary' block=true icon='fa fa-check' on-click='submitNewPassPhrase' id='submit-phrase'
-= else if isValid
+= else if validations.isValid
   = leaf-button type='primary' block=true icon='fa fa-check' on-click='submitNewPassPhrase' id='submit-phrase'

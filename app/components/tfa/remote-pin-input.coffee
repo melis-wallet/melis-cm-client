@@ -3,7 +3,6 @@ import { inject as service } from '@ember/service'
 import { schedule, later } from '@ember/runloop'
 
 import { validator, buildValidations } from 'ember-cp-validations'
-import ValidationsHelper from 'ember-leaf-tools/mixins/ember-cp-validations-helper'
 import Fpa from 'melis-cm-client/mixins/fingerprint-auth'
 
 Validations = buildValidations(
@@ -13,7 +12,7 @@ Validations = buildValidations(
   ]
 )
 
-RemotePinInput = Component.extend(Validations, ValidationsHelper, Fpa,
+RemotePinInput = Component.extend(Validations, Fpa,
 
   cm: service('cm-session')
   credentials: service('cm-credentials')
@@ -35,7 +34,7 @@ RemotePinInput = Component.extend(Validations, ValidationsHelper, Fpa,
 
   actions:
     enterPIN: ->
-      if @get('isValid')
+      if @get('validations.isValid')
         @sendAction('on-valid-pin', @get('pin'))
 )
 

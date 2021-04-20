@@ -8,7 +8,7 @@ import { isPresent, isEmpty } from '@ember/utils'
 
 import groupBy from '../../utils/group-by'
 import TreeNode from '../../utils/treenode'
-import CMCore from 'npm:melis-api-js'
+import CMCore from 'melis-api-js'
 
 import Logger from 'melis-cm-svcs/utils/logger'
 
