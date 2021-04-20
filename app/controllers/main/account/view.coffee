@@ -82,7 +82,6 @@ AccountIndexController = Controller.extend(Alertable, ModalAlerts,
 
 
   accountSecure: task((account) ->
-    api = @get('cm.api')
     try
       if @get('cm.currentWallet.info.isPrimaryDevice')
         prompt =
@@ -97,24 +96,16 @@ AccountIndexController = Controller.extend(Alertable, ModalAlerts,
 
       ok = yield @showModalAlert(prompt)
       return unless ok == 'ok'
-      op = (tfa) ->
-        api.accountUpdate(account.get('cmo'), hidden: true, tfa: tfa.payload)
-      res = yield @get('aa').tfaOrLocalPin(op)
-      if (pubId = get(res, 'account.pubId'))
-        @get('cm').accountSecure(pubId, get(res, 'account.hidden'))      
+
+      yield @get('cm.api').accountUpdate(account.get('cmo'), hidden: true)
     catch e
       @alertDanger(e.msg, true)
       Logger.error 'Error: ', e
   ).group('apiOps')
 
   accountUnSecure: task((account) ->
-    api = @get('cm.api')
     try
-      op = (tfa) ->
-        api.accountUpdate(account.get('cmo'), hidden: false, tfa: tfa.payload)    
-      res = yield @get('aa').tfaOrLocalPin(op)
-      if (pubId = get(res, 'account.pubId'))
-        @get('cm').accountSecure(pubId, get(res, 'account.hidden'))
+      yield @get('cm.api').accountUpdate(account.get('cmo'), hidden: false)
     catch e
       @alertDanger(e.msg, true)
       Logger.error 'Error: ', e

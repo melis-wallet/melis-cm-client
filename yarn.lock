@@ -10045,10 +10045,10 @@ melis-api-js@^0.14.3:
     bufferutil "^4.0.3"
     utf-8-validate "^5.0.4"
 
-melis-cm-svcs@^0.40.8:
-  version "0.40.8"
-  resolved "https://registry.yarnpkg.com/melis-cm-svcs/-/melis-cm-svcs-0.40.8.tgz#d86bf5032c36af98b49dbcbb9096ebc7d88313cc"
-  integrity sha512-ed0b5VQsq7GH/+Fp6feAv/qvjrDwEwz1Q923USitEFGhvm3W/4qpSoACo1GUli3Fvgliv6xV/dzteyXLGRw4yA==
+melis-cm-svcs@^0.40.6:
+  version "0.40.6"
+  resolved "https://registry.yarnpkg.com/melis-cm-svcs/-/melis-cm-svcs-0.40.6.tgz#cb1098b93ea04b5c6e356350a648ae32efa424d1"
+  integrity sha512-pmKqe1mIS8mQcdHGbfYFBFr+gy+2oLSl+rc1YP3l2WnW4no96hn01VOc2xcM+HHNiBYLgIBwXv8v0+V6W/Teqg==
   dependencies:
     ember-auto-import "^1.10.1"
     ember-cli-babel "^7.23.1"

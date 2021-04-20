@@ -11,7 +11,7 @@ According to the License you may:
 
 a. use the supplied Licensed Material to build the Application for your own personal use.
 
-b. use the built Application containing the Licensed Material on the devices you own only for your personal use.
+b. use the built Application containing the Licensed Material on the devices you own.
 
 
 You may NOT:
@@ -31,5 +31,3 @@ f. transfer any right or license regarding the License Material.
 g. use the Licensed Material to create promotional materials, images, artwork, videos.
 
 h. use the Licensed Material to misrepresent yourself, or your products, applications, services, promotional materials as Melis srl or any of its services or products.
-
-i. use the Licensed Material to create a web site, web application, mobile application, desktop application, other than for your exclusive personal use.
