@@ -8,9 +8,12 @@ The wallet can be built as a:
 * A Cordova based application for Android/iOS
 * An Electron based desktop application for Windows, MacOS and Linux
 
-The wallet is written using [Ember](http://emberjs.com/). Part of the wallet are also the following packages:
+The three platforms share the same code, with only an handful of native plugins to handle specific hardware requirements (camera and barcode scanner, fingerprint unlock, etc...)
 
-* [melis-cm-svcs](https://github.com/melis-wallet/melis-cm-svcs) which implements most of the wallet internal state ('headless' wallet) to which tis project is the UI.
+
+The wallet is written using [Ember](http://emberjs.com/). The following packages are also part of the wallet:
+
+* [melis-cm-svcs](https://github.com/melis-wallet/melis-cm-svcs) which implements most of the wallet internal state ('headless' wallet) to which this repository is the frontend/UI.
 * [melis-api-js](https://github.com/melis-wallet/melis-api-js) a library that provides a JavaScript API to access the remote Melis STOMP APIs.
 
 
@@ -21,7 +24,7 @@ This project depends on a a separate project `ember-leaf-theme-basic`, containin
 
 **Please note that, while the Melis Wallet itself is completely free and open source under the MIT License, the accompanying assets are not.**
 
-You are welcome to use the assets to build your own personal copy for the Melis Wallet. You can also use the wallet's source under the term of the MIT License, but in that case you'll have to provide your own Assets.
+You are welcome to use the assets to build your own personal copy for the Melis Wallet. You can also use the wallet's source under the term of the MIT License, but in that case you'll have to provide your own assets.
 For these reasons the assets package is *not published in npm, so you will need to download it separately*.
 
 Please refer to [The Assets License](ASSETS-LICENSE.md)
@@ -30,12 +33,12 @@ Please refer to [The Assets License](ASSETS-LICENSE.md)
 
 
 #### Note
-The project is in the process of rewriting the Melis Wallet using modern *Ember Octane* and Typescript. The new releases will be based on the rewrite, and this will only be maintained for bugfixes. This project is provided for transparency and to provide our users with the ability to run a verifiable copy of the wallet on their own hardware.
+The Melis project is in the process of rewriting the Melis Wallet using modern, more current, *Ember Octane* and Typescript. The new releases are going to be based on the upcoming rewrite, and this repository will only be maintained for bugfixes. This project is provided for transparency and to provide our users with the ability to run a verifiable build of the wallet on their own hardware.
 
 
 ## Prerequisites
 
-The build process has only been verified on Linux and MacOS unfortunately. Windows might work, but is unsupported.
+The build is entirely based on `ember-cli`, so it should be fairly portable, but the process has only been tested on Linux and MacOS ì. Windows might work, but is unsupported.
 
 You will need:
 
@@ -54,7 +57,7 @@ Install all the global dependencies, if you do not have them already. You'll nee
 
 To be able to build a working application you will need to download and unpack the `ember-leaf-theme-basic` package from [https://github.com/melis-wallet/melis-cm-client/releases](https://github.com/melis-wallet/melis-cm-client/releases). 
 
-Please note that the content of this page is subject to a separate license (see [The Assets License](ASSETS-LICENSE.md)), and can not be redistributed totally or in part. 
+Please note that the content of this page is subject to a separate license (see [The Assets License](ASSETS-LICENSE.md)), and **can not be redistributed** totally or in part. 
 
 * download `ember-leaf-theme-basic-<version>` (the latest), from [https://github.com/melis-wallet/melis-cm-client/releases](https://github.com/melis-wallet/melis-cm-client/releases) and unzip it and rename as `ember-leaf-theme-basic` in the same folder as this `melis-cm-client`
 
@@ -79,6 +82,8 @@ To run your own wallet, locally, after having performed the *installation* steps
 * `./wallet`
 * Visit your wallet at [http://localhost:4200](http://localhost:4200).
 
+**DO NOT** use the integrated webserver on the public internet. It is only meant to be used locally.
+
 
 ## Buiding a static web application 
 
@@ -96,7 +101,8 @@ The static application will be in `dist/`
 
 ## Android/iOS App
 
-At this point, we can only support the build of the *web version* of this client: the following steps are provided only as a reference for building the Cordova Android/iOS application.
+At this point, we can only support the build of the *web version* of this client. While everything is provided to build the Android/iOS application, we can not provide step-by-step instructions for setting up your Android Studio, Xcode environment.
+The following steps are provided only as a reference for building the Cordova Android/iOS application.
 You're on your own here. We understand this part is not user-friendly, we're working on it.
 
 
