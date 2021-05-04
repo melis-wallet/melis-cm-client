@@ -87,6 +87,9 @@
 
 
     = misc/more-info prompt=(t 'paysend.form.more') class='no-padding-t'
+      = if (or recipient.isCm recipient.isAccount)
+        % f.element @controlType='text' @property="senderMemo" @label={ t 'paysend.form.memo.label' } as |el|
+          % el.control placeholder={ t 'paysend.form.memo.ph' }          
       % f.element @controlType='text' @property="info" @label={ t 'paysend.form.info.label' } as |el|
         % el.control placeholder={ t 'paysend.form.info.ph' }          
       = label-picker selection=recipient.labels label=(t 'paysend.form.labels.label') labelsSet='txLabels'

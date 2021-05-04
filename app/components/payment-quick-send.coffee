@@ -42,9 +42,7 @@ PaymentQuickSend = Component.extend(ModelFactory,
   recipient: ( ->
     return if isBlank('activeAccount')
 
-    console.error @get('recipientInfo')
-
-    @createSimpleModel('payment-recipient',
+    z = @createSimpleModel('payment-recipient',
       type: if @get('recipientInfo') then 'cm' else 'address'
       value: if @get('recipientInfo') then {pubId: @get('recipientInfo.pubId')} else @get('recipientAddr')
       account: @get('activeAccount')
@@ -52,7 +50,9 @@ PaymentQuickSend = Component.extend(ModelFactory,
       currency: @get('currencySvc.currency')
       info: @get('info')
     )
-  ).property('coin', 'recipientInfo', 'recipientAddr', 'activeAccount', 'amount')
+    console.debug(z)
+    return z
+  ).property('coin', 'recipientInfo', 'recipientAddr', 'activeAccount', 'amount', 'info')
 
 
   changedAccts: ( ->
@@ -68,8 +68,6 @@ PaymentQuickSend = Component.extend(ModelFactory,
 
   setup: ( ->
     Logger.error("[QuickSend] Unit is required") if isBlank('unit')
-
-    console.error "Recipient", @get('recipientId')
 
     if @get('recipientId') && isBlank(@get('recipientInfo'))
       @get('findRecipient').perform()

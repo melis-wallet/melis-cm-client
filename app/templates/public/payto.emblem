@@ -46,7 +46,7 @@
               br
 
     .public-total click='setEditAmount'
-      = leaf-editable-number local-template=true editing=editAmount as |value displayedValue editing isvalid displayedError|
+      = leaf-editable-number local-template=true editing=editAmount positive=true as |value displayedValue editing isvalid displayedError|
         = if editing
           .pull-left = coin.subunit.symbol
           .pull-right.padding-xs-vr
@@ -56,7 +56,6 @@
           = leaf-tooltip class='value' tooltip=(t 'public.payto.amount.ph')
             = fmtdAmount
           = t 'public.payto.total' unit=coin.subunit.symbol
-
 
     .public-total.border-t
       = currencySvc.currency

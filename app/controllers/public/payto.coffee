@@ -106,7 +106,7 @@ PayToController = Controller.extend(
 
   actions:
     currencyConfirm: (po)->
-      if (i = @get('currencyAmount'))
+      if (i = Math.abs(@get('currencyAmount')))
         a = @get('currencySvc').convertFrom(@get('unit'), i)
         @set('amount', a)
 
@@ -127,6 +127,7 @@ PayToController = Controller.extend(
       false
 
     changeAmount: (newValue) ->
+      newValue = Math.abs(newValue)
       if newValue
         @setProperties
           editAmount: false

@@ -131,7 +131,11 @@ AccountIndexController = Controller.extend(Alertable, ModalAlerts,
         caption: 'account.maint.delete.w.caption'
       )
       return unless ok == 'ok'
-      yield cm.accountDelete(account)
+
+      op = (tfa) ->
+        cm.accountDelete(account, tfa.payload)
+
+      yield @get('aa').tfaOrLocalPin(op)
       @transitionToRoute('main.account.dashboard', @get('cm.accounts.firstObject.pubId'))
     catch e
       @alertDanger(e.msg, true)

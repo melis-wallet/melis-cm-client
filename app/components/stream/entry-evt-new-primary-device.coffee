@@ -13,8 +13,11 @@ StreamEvt = Component.extend(
   classNames: ['stream-entry', 'row', 'animated', 'fadeIn']
 
   event: alias('entry.content')
-
   label: alias('event.cmo.name')
+
+  isThis: ( ->
+    @get('event.cmo.ideviceId') == @get('cm.credentials.deviceId')
+  ).property('event.cmo.deviceId', 'cm.credentials.deviceId')
 
   inFuture: ( ->
     @get('event.cmo.dateExecutable') > moment.now()

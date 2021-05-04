@@ -52,6 +52,10 @@
                     td.lowercase = currency-unit
                     td.text-right = to-currency address.cmo.meta.amount account=address.account
 
+                = if address.cmo.meta.senderMemo
+                  tr style='height: 48px;'
+                    td: i.fa.fa-comment
+                    td.text-right.break-words = address.cmo.meta.senderMemo 
 
                 tr style='height: 48px;'
                   td: i.fa.fa-file-text

@@ -11,7 +11,7 @@ table.table.table-compact
           = if (eq d.deviceId cm.currentWallet.info.nextDeviceId)
             '
             span.label.label-warning = t 'wallet.devices.list.new-prim'
-        td = live-moment-from-now d.lu
+        td = live-moment-from-now d.lastSuccess
         td
           = if (eq d.deviceId cm.credentials.deviceId)
             .label.label-info = t 'wallet.devices.list.this'

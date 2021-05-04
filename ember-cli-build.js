@@ -39,6 +39,11 @@ module.exports = function(defaults) {
       ]
     },
 
+    'ember-service-worker': {
+      versionStrategy: 'project-revision',
+      enabled: (environment === 'production') ? true : false
+    },
+        
     'asset-cache': {
       include: [
         'assets/**/*',

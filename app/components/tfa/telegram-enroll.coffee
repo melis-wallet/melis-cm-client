@@ -16,6 +16,8 @@ Validations = buildValidations(
   ]
 )
 
+URL = 'https://t.me/'
+
 TelegramEnroll = Component.extend(Validations, 
 
 
@@ -33,6 +35,11 @@ TelegramEnroll = Component.extend(Validations,
   currentResponse: null
 
   apiOps: taskGroup().drop()
+
+
+  telegramUrl: ( ->
+    URL + @get('currentResponse.botName')
+  ).property('currentResponse.botName')
 
 
   enrollFinish: task( (device, token)->

@@ -57,7 +57,10 @@
             td.break-words.text-right.text-small
               = link-to 'main.account.address.detail' tx.account.pubId tx.cmo.address
                 = tx.cmo.address
-
+        = if tx.cmo.meta.senderMemo
+          tr
+             td: i.fa.fa-comment
+             td.text-right.break-words = tx.cmo.meta.senderMemo      
         tr
           td: b.break-words = t 'tx.detail.info'
           td.text-right = leaf-editable-text value=tx.cmo.meta.info if-empty='---' on-change='changeTxInfo' ident=tx max-length=160

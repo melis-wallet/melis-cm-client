@@ -8,11 +8,22 @@
       .row
         .col-xs-3
         .col-xs-9
-          = if inFuture
-            .note.note-danger.no-margin-b
-              h4  = t 'stream.evt.newp-f.title'
-              p  = t 'stream.evt.newp-f.caption' label=label   time=(live-moment-from-now  event.cmo.dateExecutable)
+
+          = if isThis
+            = if inFuture
+              .note.note-danger.no-margin-b
+                h4  = t 'stream.evt.newp-sf.title'
+                p  = t 'stream.evt.newp-sf.caption' label=label time=(live-moment-from-now  event.cmo.dateExecutable)
+            = else
+              .note.note-warning.no-margin-b
+                h4  = t 'stream.evt.newp-s.title'
+                p  = t 'stream.evt.newp-s.caption' label=label time=(live-moment-from-now  event.cmo.dateExecutable)
           = else
-            .note.note-warning.no-margin-b
-              h4  = t 'stream.evt.newp.title'
-              p  = t 'stream.evt.newp.caption' label=label   time=(live-moment-from-now  event.cmo.dateExecutable)
+            = if inFuture
+              .note.note-danger.no-margin-b
+                h4  = t 'stream.evt.newp-f.title'
+                p  = t 'stream.evt.newp-f.caption' label=label time=(live-moment-from-now  event.cmo.dateExecutable)
+            = else
+              .note.note-warning.no-margin-b
+                h4  = t 'stream.evt.newp.title'
+                p  = t 'stream.evt.newp.caption' label=label time=(live-moment-from-now  event.cmo.dateExecutable)

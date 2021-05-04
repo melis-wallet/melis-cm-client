@@ -308,10 +308,9 @@ export default {
           "ph": "Come i cofirmatari vedranno te"
         },
         "mmandatory": "La tua firma è obbligatoria?",
-        "fees": "Le commissioni per i pagamenti di questo conto saranno <b>{{fees}}x</b> di quelle di un conto a firma singola.",
-        "readonly": "In questo schema alcuni cofirmatari non possono firmare"
+        "fees": "Le commissioni per i pagamenti di questo conto saranno <b>{{fees}}x</b> di quelle di un conto a firma singola."
       },
-      "readonly": "in this scheme some co-signers are read-only "
+      "readonly": "In questo schema alcuni cofirmatari non possono firmare"
     },
     "multi": {
       "i-master": {
@@ -918,8 +917,8 @@ export default {
       "not-bitcoin": "Non è un indirizzo della coin.",
       "entire-balance": "Tutti i fondi",
       "entire-balance-r": "Tutti i fondi restanti",
-      "entire-source": "Tutti gli input",
-      "entire-source-r": "Tutti gli input restanti",
+      "entire-sources": "Tutti gli input",
+      "entire-sources-r": "Tutti gli input restanti",
       "more": "Aggiungi ulteriori informazioni",
       "scan": "Acquisisci un indirizzo",
       "ab": "Scegli un indirizzo dalla rubrica",
@@ -943,6 +942,10 @@ export default {
         "label": "Informazioni",
         "ph": "Queste informazioni verranno memorizzate per un tuo riferimento..."
       },
+      "memo": {
+        "label": "Memo",
+        "ph": "Queste informazioni verranno mandate al ricevente, se possibile."
+      },
       "pubid": {
         "label": "Conto Melis",
         "ph": "Cerca un alias o ID Pubblica"
@@ -957,10 +960,7 @@ export default {
       "feesperbyte": "Commissioni per byte: (satoshi, {{unit}})",
       "fees-provider": "Ottenute da {{provider}}",
       "feesrefresh": "Aggiorna",
-      "feesnr": "Stima non disponibile",
-      "entire-sources": "Selected inputs",
-      "entire-sources-r": "Remaining inputs",
-      "feesrefresg": "refresh"
+      "feesnr": "Stima non disponibile"
     }
   },
   "prefs": {
@@ -1194,6 +1194,14 @@ export default {
       "newp-f": {
         "title": "Il dispositivo primario sta per cambiare",
         "caption": "Il dispositivo '<b>{{label}}</b>' diventerà il primario <b>{{time}}</b>."
+      },
+      "newp-s": {
+        "title": "Il dispositivo primario è cambiato",
+        "caption": "Questo dispositivo ('<b>{{label}}</b>') è diventato il dispositivo primario <b>{{time}}</b>."
+      },
+      "newp-sf": {
+        "title": "Il dispositivo primario sta per cambiare",
+        "caption": "Questo dispositivo ('<b>{{label}}</b>') diventerà il primario <b>{{time}}</b>."
       }
     },
     "ph": {
@@ -1451,11 +1459,11 @@ export default {
       "hash": "TxID",
       "address": "All'indirizzo",
       "received-ad": "Sull'indirizzo",
+      "orig-currency": "(in origine {{amount}}{{unit}} - {{when}})",
       "ptx": {
         "sigs": "Firme",
         "cosigners-no": "{{count}} cofirmatari"
-      },
-      "orig-currency": "(originally {{amount}}{{unit}} - {{when}})"
+      }
     },
     "discussion": {
       "has-approved": "ha approvato questo pagamento.",

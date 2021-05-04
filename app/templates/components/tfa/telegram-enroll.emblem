@@ -12,7 +12,11 @@
       .col-md-5
         .well
           p: b = t 'tfa.telegram.bot'
-          p.label = currentResponse.botName
+          p
+            label = currentResponse.botName
+            br
+            small: a href=telegramUrl 
+              =telegramUrl
           p: b = t 'tfa.telegram.code'
           p.label.label-warning = currentResponse.code
 

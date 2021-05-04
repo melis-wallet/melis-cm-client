@@ -72,6 +72,10 @@ table.table.table-condensed
       tr style='height: 48px;'
         td: i.fa.fa-file-text
         td.text-right.break-words = leaf-editable-text value=tx.cmo.meta.info if-empty='---' on-change='changeTxInfo' ident=tx max-length=160
+      = if tx.cmo.meta.senderMemo
+        tr style='height: 48px;'
+          td: i.fa.fa-comment
+          td.text-right.break-words = tx.cmo.meta.senderMemo      
       tr style='height: 58px;'
         td: i.fa.fa-tags
         td.text-right = misc/tags-list selection=tx.cmo.labels labelsSet='txLabels' on-done-edit='changeTxLabels' control='right'

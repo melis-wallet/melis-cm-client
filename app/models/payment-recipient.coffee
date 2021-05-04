@@ -55,7 +55,6 @@ PaymentRecipient = Model.extend(Validations,
 
   amount: null
 
-  info: null
   labels: null
   meta: null
 
@@ -103,6 +102,15 @@ PaymentRecipient = Model.extend(Validations,
       @setMeta('info', val)
   )
 
+  senderMemo: computed('meta', 
+    get: (key) ->
+      @get('meta.senderMemo')
+
+    set: (key, val) ->
+      @setMeta('senderMemo', val)
+
+  )
+
   currencyIsCrypto: (->
     (@get('currency') == @get('account.subunit.id'))
   ).property('currency', 'account.subunit.id')
@@ -113,6 +121,7 @@ PaymentRecipient = Model.extend(Validations,
 
 
   setMeta: (key, value) ->
+    console.debug('----')
     @set('meta',  {}) if !@get('meta')
     v = {}; v[key] = value
     mergeProperty(this, 'meta', v)

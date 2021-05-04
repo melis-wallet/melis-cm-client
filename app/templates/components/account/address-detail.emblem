@@ -80,6 +80,10 @@
               td.lowercase = currency-unit
               td.text-right = to-currency address.meta.amount account=cm.currentAccount
 
+          = if address.meta.senderMemo
+            tr style='height: 48px;'
+              td: i.fa.fa-comment
+              td.text-right.break-words = address.meta.senderMemo               
 
           tr style='height: 48px;'
             td: i.fa.fa-file-text

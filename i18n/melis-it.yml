@@ -252,7 +252,7 @@ it:
           ph: 'Come i cofirmatari vedranno te'
         mmandatory: 'La tua firma è obbligatoria?'
         fees: 'Le commissioni per i pagamenti di questo conto saranno <b>{{fees}}x</b> di quelle di un conto a firma singola.'
-        readonly: "In questo schema alcuni cofirmatari non possono firmare"
+      readonly: "In questo schema alcuni cofirmatari non possono firmare"
     multi:
       i-master:
         title: 'Questo è un conto multifirma'
@@ -723,8 +723,8 @@ it:
       not-bitcoin: 'Non è un indirizzo della coin.'
       entire-balance: 'Tutti i fondi'
       entire-balance-r: 'Tutti i fondi restanti'
-      entire-source: 'Tutti gli input'
-      entire-source-r: 'Tutti gli input restanti'
+      entire-sources: 'Tutti gli input'
+      entire-sources-r: 'Tutti gli input restanti'
       more: 'Aggiungi ulteriori informazioni'
       scan: 'Acquisisci un indirizzo'
       ab: 'Scegli un indirizzo dalla rubrica'
@@ -743,6 +743,9 @@ it:
       info:
         label: 'Informazioni'
         ph: 'Queste informazioni verranno memorizzate per un tuo riferimento...'
+      memo:
+        label: "Memo"
+        ph: 'Queste informazioni verranno mandate al ricevente, se possibile.'
       pubid:
         label: 'Conto Melis'
         ph: 'Cerca un alias o ID Pubblica'
@@ -935,6 +938,13 @@ it:
       newp-f:
         title: 'Il dispositivo primario sta per cambiare'
         caption: "Il dispositivo '<b>{{label}}</b>' diventerà il primario <b>{{time}}</b>."
+      newp-s:
+        title: 'Il dispositivo primario è cambiato'
+        caption: "Questo dispositivo ('<b>{{label}}</b>') è diventato il dispositivo primario <b>{{time}}</b>."
+      newp-sf:
+        title: 'Il dispositivo primario sta per cambiare'
+        caption: "Questo dispositivo ('<b>{{label}}</b>') diventerà il primario <b>{{time}}</b>."
+
     ph:
       started: 'Il tuo conto è pronto!'
       welcome: 'Questa pagina contiene una lista delle attività del tuo conto. Scopri le altre sezioni nel menù di sinistra.'
@@ -1138,6 +1148,7 @@ it:
       hash: 'TxID'
       address: "All'indirizzo"
       'received-ad': "Sull'indirizzo"
+      'orig-currency': '(in origine {{amount}}{{unit}} - {{when}})'
       ptx:
         sigs: 'Firme'
         cosigners-no: '{{count}} cofirmatari'

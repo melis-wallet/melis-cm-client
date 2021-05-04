@@ -32,4 +32,4 @@ g. use the Licensed Material to create promotional materials, images, artwork, v
 
 h. use the Licensed Material to misrepresent yourself, or your products, applications, services, promotional materials as Melis srl or any of its services or products.
 
-i. use the Licensed Material to create a public accessible web site, web application, mobile application, desktop application, other than for your exclusive personal use.
+i. use the Licensed Material to create a web site, web application, mobile application, desktop application, other than for your exclusive personal use.

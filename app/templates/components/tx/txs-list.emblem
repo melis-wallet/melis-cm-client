@@ -13,12 +13,16 @@
     / search form\
 
 .history-controls
+  .pull-right
+    = leaf-button icon='fa fa-download' on-click=(action 'downloadTxs') tooltip='Download' disabled=doExport.isRunning
+
   .btn-group
     = leaf-button icon='fa fa-inbox' on-click='toggleFilter' value='in' active=(eq filter 'in') tooltip='Only Incoming'
     '
     = leaf-button icon='fa fa-credit-card' on-click='toggleFilter' value='out' active=(eq filter 'out') tooltip='Only Outgoing' tooltip-placement='bottom'
     '
     = leaf-button icon='fa fa-star' on-click='toggleFilter' value='star' active=(eq filter 'star') tooltip='Starred'
+  
 ul.history-list
   = each txsFiltered as |tx|
     li.history-item class={ if (eq tx selected) 'active' } class={ if tx.cmo.meta.starred 'starred'}

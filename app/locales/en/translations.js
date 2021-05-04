@@ -941,6 +941,10 @@ export default {
         "label": "Info",
         "ph": "These info will be stored for your reference..."
       },
+      "memo": {
+        "label": "Memo",
+        "ph": "These info will be sent to the recipient, if possible."
+      },
       "pubid": {
         "label": "Melis Account",
         "ph": "Search an alias or Public ID"
@@ -954,7 +958,7 @@ export default {
       "fees": "Fees",
       "feesperbyte": "Fees per byte: (satoshi, {{unit}})",
       "fees-provider": "Retrieved from {{provider}}",
-      "feesrefresg": "refresh",
+      "feesrefresh": "refresh",
       "feesnr": "Can't determine fees"
     }
   },
@@ -995,7 +999,7 @@ export default {
     },
     "payto": {
       "app": "PAY TO",
-      "caption": "Send coins<br>Easy<br>to any Melis account",
+      "caption": "Send coins<br>easily<br>to any Melis account",
       "total": "Total ({{unit}}):",
       "showcode": "Show the payment address",
       "error": {
@@ -1189,6 +1193,14 @@ export default {
       "newp-f": {
         "title": "The primary device will change",
         "caption": "The device '<b>{{label}}</b>' will become the primary device <b>{{time}}</b>."
+      },
+      "newp-s": {
+        "title": "Primary device has changed",
+        "caption": "This device ('<b>{{label}}</b>') has become the primary device <b>{{time}}</b>."
+      },
+      "newp-sf": {
+        "title": "The primary device will change",
+        "caption": "This device ('<b>{{label}}</b>') will become the primary device <b>{{time}}</b>."
       }
     },
     "ph": {
