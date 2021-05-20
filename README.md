@@ -85,7 +85,7 @@ To run your own wallet, locally, after having performed the *installation* steps
 **DO NOT** use the integrated webserver on the public internet. It is only meant to be used locally.
 
 
-## Buiding a static web application 
+## Building a static web application 
 
 `melis-cm-client` can be assembled into a static web application, that can be served through any webserver:
 
@@ -99,41 +99,51 @@ The static application will be in `dist/`
 `--environment [production|development]` controls the level of optimization (logging, minification, etc...) for the resulting build.
 
 
-## Android/iOS App
+## Android Application
 
-At this point, we can only support the build of the *web version* of this client. While everything is provided to build the Android/iOS application, we can not provide step-by-step instructions for setting up your Android Studio, Xcode environment.
-The following steps are provided only as a reference for building the Cordova Android/iOS application.
-You're on your own here. We understand this part is not user-friendly, we're working on it.
+At this point, we can only directly support building the *web version* of this client. 
+While everything is provided to build the Android/iOS application, we can not provide step-by-step instructions for setting up your Android Studio, android SDK or Xcode environment.
+The following steps are provided only as a reference for building the Cordova Android application.
+
+**You're on your own here**. We understand this part is not user-friendly, we're working on it.
 
 
 ### Setting your environment
 
-* Perform the `installation` steps above and make sure the web application builds and runs successfully
+* **Perform the `installation` steps above and make sure the web application builds and runs successfully**
+* install **Corber** and Cordova
+* You need to set `JAVA_HOME` and `ANDROID_HOME` environment variables, and have a working environment for building Android and *Cordova* appliications. 
 
-* You need to set `JAVA_HOME` and `ANDROID_SDK` environment variables
+#### Dependencies:
+* [Corber](http://corber.io/)
+* [Apache Cordova](https://cordova.apache.org/)
 
-### Preparing the build
+###  Building a production application
+
+* `build/build-android.sh <target>`
+
+Target is one of `production`, `testnet`, `regtest`.
+
+Artifacts will be in `buìld/dist/` unless you set `APKDIR`
+
+### Building for development
+( don't do this if you only intend to build the apk )
+
+Setup the cordova build environment:
 
 * `build/cordova-setup.sh`
 
-### Building for develop
-
-Build an android app for live reload
+Build an android app for live reload:
 
 * `ember cdv:serve --platform=[android|ios] --reload-url=<url>`
 
-###  Building a standalone app
+Building a standalone app
 
 * `DEPLOY_TARGET='<target>' ember cordova:build --environment=production --platform=[android|ios]`
 
-###  Building a production app
 
-* `build/build-android.sh <target> <version-number> <signing-key-password>`
-
-or
-
-```
-* DEPLOY_TARGET='<target>' ember cordova:build --environment=production --platform=[android|ios] --release
-* jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore <path-to-keystore> <path-to-apk> <key-id>
-* zipalign -v 4 <input.apk> <output.apk>
-```
+### Notes
+#### Analytics
+* The application doesn't send analytics, and doesn't use any unique identifiers, but for those necessary to log in (ie: your wallet credentials), and a per device unique-id that changes each time you pair or enroll that device)
+* it **will** send a stack trace, and error details, in case of an exception. You can opt-out from error reporting in the wallet preferences.
+* `ember-cli`, which is used for building the application, by default, sends anonymous analytics to its authors (not us!) when you build the project (**not** when you run it in production). You can opt out by editing `.ember-cli` 

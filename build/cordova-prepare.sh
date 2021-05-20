@@ -8,18 +8,23 @@ file=corber/cordova/config.xml
 
 SETUP=$DIR/cordova-setup.sh
 
-if [ "$#" -le 2 ]; then
-   echo "Usage: prepare <ios|android> <target> <version>"
+if [ "$#" -le 1 ]; then
+   echo "Usage: prepare <ios|android> <target>"
    exit -1
 fi
 
 platform=$1
 target=$2
-version=$3
+version=$(cat package.json \
+  | grep version \
+  | head -1 \
+  | awk -F: '{ print $2 }' \
+  | sed 's/[",]//g' \
+  | tr -d '[[:space:]]')
 
 versionCode=`node $DIR/versioncode.js $version`
 
-echo $versionCode
+echo "Version: '$version', versioncode: '$versionCode'"
 
 yarn remove corber --save
 yarn remove ember-cli-sri --save
