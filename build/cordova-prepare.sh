@@ -28,6 +28,7 @@ echo "Version: '$version', versioncode: '$versionCode'"
 
 yarn remove corber --save
 yarn remove ember-cli-sri --save
+yarn postinstall
 
 rm -rf tmp corber
 $SETUP $platform $target
