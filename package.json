@@ -121,7 +121,7 @@
     "instascan": "schmich/instascan",
     "liquid-fire": "0.31.0",
     "loader.js": "4.7.0",
-    "node-sass": "^5.0.0",
+    "node-sass": "^7.0.0",
     "melis-cm-svcs": "^0.41.2",
     "melis-credentials-seed": "^1.0.1",
     "moment": "2.29.1",
